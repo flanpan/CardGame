@@ -1,0 +1,17 @@
+{
+    "development": {
+        "host" : "112.124.70.138",
+        "port" : "27017",
+        "database" : "liangshan",
+        "user" : "root",
+        "password" : ""
+    },
+
+    "production": {
+        "host" : "127.0.0.1",
+        "port" : "27017",
+        "database" : "liangshan",
+        "user" : "root",
+        "password" : ""
+    }
+}

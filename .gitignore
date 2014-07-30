@@ -1,0 +1,9 @@
+client_old/
+hello/
+old/
+client/
+admin/node_modules/
+game-server/node_modules/
+web-server/node_modules/
+.idea/
+*.map

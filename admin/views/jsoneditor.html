@@ -1,0 +1,45 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="/jsoneditor-min.css">
+    <script type="text/javascript" src="/jsoneditor-min.js"></script>
+</head>
+<body>
+    <button type="button" onclick = "save();">保存</button>
+    <div id="jsoneditor"></div>
+    <script type="text/javascript" >
+        var container = document.getElementById("jsoneditor");
+        var editor = new jsoneditor.JSONEditor(container);
+        var xhr = new XMLHttpRequest();
+        var url = "http://"+location.host;
+        xhr.open("POST", url+'/getJson');
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState != 4)
+                return;
+            if (xhr.responseText == "") {
+                // 失败
+                return;
+            }
+            var data = JSON.parse(xhr.responseText);
+            editor.set(data);
+        };
+        xhr.send(location.search.substr(1));
+        function save() {
+            var data = editor.get();
+            xhr.open("POST",url+'/saveJson');
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState != 4)
+                    return;
+                if (xhr.responseText == "") {
+                    // 失败
+                    return;
+                }
+                alert(xhr.responseText);
+            };
+            xhr.send(location.search.substr(1)+'&data='+JSON.stringify(editor.get()));
+        }
+    </script>
+</body>
+</html>

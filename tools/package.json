@@ -1,0 +1,16 @@
+{
+    "name": "tools",
+    "version": "0.0.0",
+    "description": "",
+    "main": "genData.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "dependencies": {
+        "coffee-script": "",
+        "mongodb": "",
+        "mongoose": ""
+    },
+    "author": "",
+    "license": "BSD-2-Clause"
+}

@@ -1,0 +1,4 @@
+底层两个netstat -tln 改成 netstat -an
+-------------
+pomelo stop gate-server-1
+pomelo add id=gate-server-1 host=127.0.0.1 port=10000 serverType=gate

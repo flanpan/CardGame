@@ -1,0 +1,637 @@
+《暗黑世界V1.4》API说明文档
+
+ 
+账号注册   100
+请求信息
+{
+username   str     用户名
+password   str     密码
+}
+返回信息
+{
+result     bool    指令调用是否成功
+message    str     指令调用返回的信息
+}
+ 
+账号登陆   101
+请求信息
+{
+username   str     用户名
+password   str     密码
+}
+返回信息
+{
+result     bool    指令调用是否成功
+message    str     指令调用返回的信息
+data{
+userId         int     用户ID
+hasRole        bool    是否创建了角色
+characterId    int     用户的角色ID
+      }
+}
+ 
+创建角色   102
+请求信息
+{
+rolename   str     角色的名称
+profession int     角色的职业类型
+}
+返回信息
+{
+result     bool    指令调用是否成功
+message    str     指令调用返回的信息
+data{
+characterId    int     用户的角色ID
+     }
+}
+ 
+角色登陆   103
+请求信息
+{
+characterId    int     角色的ID
+}
+返回信息
+{
+result     bool    指令调用是否成功
+message    str     指令调用返回的信息
+data{
+cid    int     角色ID
+name       str    角色的名称
+level          int     角色的等级
+exp            int     角色的当前经验值
+maxexp         int     角色的最大经验值
+yuanbao            int     黄金的数量
+coin           int     银子的数量
+power          int     当前体力值（最大值一样）
+gas            int     当前活力值(最大为30)
+profession     int     角色的职业  
+}
+}
+ 
+角色状态栏信息 105
+请求信息
+{
+characterId    int     角色的ID
+}
+返回信息
+{
+result     bool    指令调用是否成功
+message    str     指令调用返回的信息
+data{
+characterId    int     角色ID
+rolename       str    角色的名称
+level          int     角色的等级
+exp            int     角色的当前经验值
+maxexp         int     角色的最大经验值
+gold           int     黄金的数量
+coin           int     银子的数量
+tili           int     当前体力值
+tilimax        int     最大体力值
+huoli          int     当前活力值
+maxhuoli       int     最大活力值
+viplevel       int     vip等级
+profession     int     角色的职业  
+}
+}
+ 
+战役信息   4500
+请求信息
+{
+characterId    int     用户的角色ID
+index          index   当前地图在屏数的ID（初始时设置为0）
+}
+返回信息
+{
+result     bool    指令调用是否成功
+message    str     指令调用返回的信息
+data{
+     cityid     int     地图的id
+     citylist[
+       pj       int     通关的评级（0,1,2,3星）
+      }
+  }
+}
+ 
+战役战斗   4501
+{
+characterId    str     用户的角色ID
+zjid           int     怪物的id
+}
+返回信息
+{
+result     bool    指令调用是否成功                                 
+message    str     指令调用返回的信息
+data{
+battleResult   int     战斗结果 1胜利 2失败
+setData{               战斗结算数据
+star           int     战斗评价
+huoli          int     活力消耗
+exp            int     威望
+coin           int     战斗获得的银两                                
+item[
+{ itemid    int     物品的ID物品的唯一标示
+  icon      int     物品的图标信息
+  tempid    int     物品的模板id（物品的类型）
+}]}
+startData[             战斗初始化信息
+{chaId         int     角色的id
+  chaBattleId   int     角色的战场id（唯一标示）
+  chaName       int     角色的名称
+  chaLevel      int     角色的等级
+  chaCurrentHp  int     角色的当前血量
+  chaTotalHp    int     角色的最大血量
+  chaDirection  int     角色的阵营 1下方 2上方
+  chaPos        int     角色的阵法位置
+  chaIcon       int     角色的头像ID
+  difficulty    int     角色的品质
+  chaCurrentPower int   角色的当前能量
+  },
+stepData[              战斗回合数据
+{chaBattleId   int     攻击方的战场ID
+  chaExpendHp   int     攻击方的血量变化
+  chaId         int     攻击方的ID
+  actionId      int     攻击方的攻击动作ID
+  chaCurrendHp  int     攻击方的当前血量
+  chaTotalHp    int     攻击方的最大血量
+  skill         int     攻击方所用的技能的ID
+  chaCurrentPower int   攻击方的当前能量
+  chaBuffArr    list[int] 攻击方的当前能量
+  enemyChaArr[          受攻击方的人的信息
+      {enemyBattleId    int 角色的战场ID
+       enemyChaId       int 角色的ID
+       enemyActionId    int 角色的受攻击动作
+       enemyChangeHp    int 角色的血量变化
+       enemyCurrentHp   int 角色的当前血量
+       enemyTotalHp     int 角色的总血量
+       enemyTxtEffectId int     攻击方的文字特效  9996暴击
+       enemyCurrentPower int    攻击方的当前能量
+       enemyBuffArr list[int] 攻击方的当前能量
+  } ,
+}
+}
+ 
+获取好友排行   302
+请求信息
+{
+characterId    str     用户的角色ID
+tag            int     标签的标示 1过关排行 2等级排行 3全服排行
+index          int     好友的起始排名号
+}
+返回信息
+{
+result     bool    指令调用是否成功
+message    str     指令调用返回的信息
+data
+{
+  end       int     当前好友列表的结束排名
+  friendlist[
+  {rolename str     角色的名称
+   level    int     角色的等级
+   skill    str     技能的名称
+   price    int     角色的身价
+   rank     int     角色的排名
+  }
+}
+ 
+获取单个角色的信息 221
+{
+characterId    str     用户的角色ID
+type           int     角色的类型 1角色自身 2好友 3宠物
+tid            int     对象角色的ID
+}
+返回信息
+{
+result     bool    指令调用是否成功
+message    str     指令调用返回的信息
+data
+{
+  chaid     int     角色的ID
+  rolename  str     角色的名称
+  icon      str     角色的头像ID
+  level     int     角色的等级
+  skill     str     角色的技能名称
+  guanqia   str     角色所在的关卡的名称
+  attack    int    角色的伤害值
+  fangyu    int     角色的额防御值
+  tili      int     角色的体力值
+  minjie    int     角色的敏捷值
+  price     int     角色的身价
+  }
+}
+ 
+获取角色的阵法信息 2306
+{
+characterId    str     用户的角色ID
+}                                                        
+返回信息
+{
+result     bool    指令调用是否成功
+message    str     指令调用返回的信息
+data
+{matrix[
+  {pos      int     阵法的位置
+   chaid    int     角色的id
+   chatype  int     角色的类型  1角色自身 2好友 3宠物
+   tempid   int     角色的图标ID
+  },]}
+  }
+}
+ 
+获取可以上阵角色列表  2300
+{
+characterId    str     用户的角色ID
+}
+返回信息
+{
+result     bool    指令调用是否成功
+message    str     指令调用返回的信息
+data
+{
+  petlist[
+  {chaid    int     角色的id
+   chatype  int     角色的类型  1角色自身 2好友 3宠物
+   tempid   int     角色的图标ID
+  },
+}
+ 
+获取单个物品的信息 211
+{
+characterId    str     用户的角色ID
+itemid         int     物品的id（唯一标示）
+}
+返回信息
+{
+result     bool    指令调用是否成功
+message    str     指令调用返回的信息
+data
+{
+   itemid   int     物品的ID物品的唯一标示
+   icon     int     物品的图标信息
+   itemname str     物品的名称
+   itemdesc str     物品的描述
+   tempid   int     物品的模板id（物品的类型）
+   qlevel   int     物品的强化等级
+   attack   int     物品的伤害值
+   fangyu   int     物品的防御值
+   tili     int     物品的体力增加
+   minjie   int     物品的敏捷附加
+   price    int     物品的价格
+   stack    int     物品的堆叠数
+   qh       bool    是否能强化
+}
+}
+ 
+获取合成界面包裹的信息 2109
+{
+characterId    str     用户的角色ID
+}
+返回信息
+{
+result     bool    指令调用是否成功
+message    str     指令调用返回的信息
+data
+{
+  itemlist[
+  {itemid   int     物品的ID物品的唯一标示
+   icon     int     物品的图标信息
+   stack    int     物品的数量
+   tempid   int     物品的模板id（物品的类型）
+}
+}
+ 
+获取能合成的物品的信息 205
+{
+characterId    str     用户的角色ID
+tempid         int     物品的模版ID
+}
+返回信息
+{
+result     bool    指令调用是否成功
+message    str     指令调用返回的信息
+data
+{
+  hcprice   int     物品合成的价格
+  iteminfo{
+   itemid   int     物品的ID物品的唯一标示
+   icon     int     物品的图标信息
+   itemname str     物品的名称
+   itemdesc str     物品的描述
+   tempid   int     物品的模板id（物品的类型）
+   qlevel   int     物品的强化等级
+   attack   int     物品的伤害值
+   fangyu   int     物品的防御值
+   tili     int     物品的体力增加
+   minjie   int     物品的敏捷附加
+   price    int     物品的价格
+   stack    int     物品的堆叠数
+   qh       bool    是否能强化
+  }
+}
+ 
+合成物品       2116
+{
+characterId    str     用户的角色ID
+tempid         int     物品的模版ID
+}
+返回信息
+{
+result     bool    指令调用是否成功
+message    str     指令调用返回的信息
+data               返回合成包裹中物品的信息
+{
+  itemlist[
+  {itemid   int     物品的ID物品的唯一标示
+   icon     int     物品的图标信息
+   stack    int     物品的数量
+   tempid   int     物品的模板id（物品的类型）
+}
+}
+ 
+个人装备栏信息 203
+{
+characterId    str     用户的角色ID
+}
+返回信息
+{
+result     bool    指令调用是否成功
+message    str     指令调用返回的信息
+data 
+{
+  attack    int     角色的伤害值
+  fangyu    int     角色的防御值
+  minjie    int     角色的敏捷值
+  equip[
+  {pos      int     装备的位置
+   item{            装备的信息
+   itemid   int     物品的ID物品的唯一标示
+   icon     int     物品的图标信息
+   tempid   int     物品的模板id（物品的类型）      
+       }
+   },
+}
+}
+ 
+获取包裹的信息 204   
+{
+characterId    str     用户的角色ID
+}
+返回信息
+{
+result     bool    指令调用是否成功
+message    str     指令调用返回的信息
+data               返回包裹中物品的信息
+{
+  itemlist[
+  {itemid   int     物品的ID物品的唯一标示
+   icon     int     物品的图标信息
+   stack    int     物品的数量
+   tempid   int     物品的模板id（物品的类型）
+}
+}
+ 
+强化装备   2102
+{
+characterId    str     用户的角色ID
+itemId         int     物品的ID
+}
+返回信息
+{
+result     bool    指令调用是否成功
+message    str     指令调用返回的信息
+data           
+{
+   iteminfo{        返回物品强化后的信息
+   itemid   int     物品的ID物品的唯一标示
+   icon     int     物品的图标信息
+   itemname str     物品的名称
+   itemdesc str     物品的描述
+   tempid   int     物品的模板id（物品的类型）
+   qlevel   int     物品的强化等级
+   attack   int     物品的伤害值
+   fangyu   int     物品的防御值
+   tili     int     物品的体力增加
+   minjie   int     物品的敏捷附加
+   price    int     物品的价格
+   stack    int     物品的堆叠数
+   qh       bool    是否能强化
+  }
+}
+ 
+使用物品、装备装备 210
+{
+characterId    str     用户的角色ID
+tempid         int     物品的ID
+}
+返回信息
+{
+result     bool    指令调用是否成功
+message    str     指令调用返回的信息
+data               返回包裹中物品的信息
+{
+  itemlist[
+  {itemid   int     物品的ID物品的唯一标示
+   icon     int     物品的图标信息
+   tempid   int     物品的模板id（物品的类型）
+  }
+}
+ 
+设置阵法   2307
+{
+characterId    str     用户的角色ID
+petId          int     宠物的ID
+chatype        int     角色的类型 1角色自身 2好友 3宠物
+operType       int     操作类型 0宠物列表到阵法1阵法到宠物列表2阵法到阵法
+fromPos        int     起始位置
+toPos          int     结束位置
+}
+返回信息
+{
+result     bool    指令调用是否成功
+message    str     指令调用返回的信息
+}
+ 
+雇佣好友   2301
+{
+characterId    str     用户的角色ID
+friendid           int     好友的ID
+}
+返回信息
+{
+result     bool    指令调用是否成功
+message    str     指令调用返回的信息
+}
+ 
+获取雇用记录   2309
+{
+characterId    str     用户的角色ID
+}
+返回信息
+{
+result     bool    指令调用是否成功
+message    str     指令调用返回的信息
+data{
+recordlist[
+{datestr   str     雇用的时间
+  rolename  str     好友的名称
+  zyname    str     关卡的名称
+  bresult   str     胜利或失败
+  coin      int     赚取的钱
+  huoli     int     获得的活力
+  },
+}
+}
+ 
+物品吞噬   212
+{
+characterId    str     用户的角色ID
+itemid         int     吞噬物品的ID
+toitemid       int     被吞噬的物品的ID
+}
+返回信息
+{
+result     bool    指令调用是否成功
+message    str     指令调用返回的信息
+  }
+}
+ 
+卸下装备   215
+{
+characterId    str     用户的角色ID
+itemid         int     卸下的装备的ID
+}
+返回信息
+{
+result     bool    指令调用是否成功
+message    str     指令调用返回的信息
+}
+ 
+获取将要强化的物品信息 2117
+{
+characterId    str     用户的角色ID
+itemid         int     卸下的装备的ID
+}
+返回信息
+{
+result     bool    指令调用是否成功
+message    str     指令调用返回的信息
+data
+{
+  itemId    int     物品的ID
+  strEff    str     被强化的属性信息  （伤害，防御等）
+  effValue  int     强化的效果值    （+14）
+  reqCoin   int     强化需要消耗的钱数
+  qhlevel   int     物品的强化等级
+}
+}
+ 
+获取公告信息      1002
+{
+characterId    str     用户的角色ID
+}
+返回信息
+{
+result     bool    指令调用是否成功
+message    str     指令调用返回的信息
+data{
+msglist[]  str     公告列表    30秒获取一次
+}
+}
+ 
+武将吞噬 3505
+{
+characterId    str     用户的角色ID
+petid          int     武将的ID
+tpetid         int     被吞噬的武将的ID
+}
+返回信息
+{
+result     bool    指令调用是否成功
+message    str     指令调用返回的信息
+}
+ 
+获取邮件列表   501
+{
+characterId    int  用户的角色ID
+}
+返回信息
+{
+result     bool    指令调用是否成功
+message    str  指令调用返回的信息
+data{
+  maillist[
+  {id    int    邮件的id
+   title    str  邮件的标题
+   sender   str  发送者的名称
+   isReaded int  是否阅读 0未读 1已读
+   sendTime str  邮件发送时间
+   }
+  ]
+}
+}
+ 
+获取（阅读）邮件内容  505
+{
+characterId    int  用户的角色ID
+mailID  int     邮件的ID
+}
+返回信息
+{
+result     bool    指令调用是否成功
+message    str  指令调用返回的信息
+data{
+id  int     邮件的id
+title  str  邮件的标题
+sender str  发送者的名称
+isReaded   是否阅读 0未读 1已读
+sendTime   str  邮件发送时间
+content    str  邮件的内容
+}
+}
+ 
+发送邮件   502
+{
+characterId    int  用户的角色ID
+pname   str     对方的名称
+title   str     邮件标题
+content     str    邮件内容
+}
+返回信息
+{
+result     bool    指令调用是否成功
+message    str  指令调用返回的信息
+}
+ 
+获取竞技场信息 3700
+{
+characterId    int  用户的角色ID
+}
+返回信息
+{
+result     bool    指令调用是否成功
+message    str  指令调用返回的信息
+data
+{
+  ranking   int  当前排名
+  sptimes   int    剩余次数
+  dsList            对手列表
+  [{
+    characterId     int  对手的id
+    nickname     int    对手的名称
+    level    int    对手的等级
+    profession   int     对手的职业
+    ranking  int     对手的排名
+   }
+}
+}
+ 
+竞技场战斗 3704
+{
+characterId    int  用户的角色ID
+tid     int    对手的id
+}
+返回信息
+{
+result     bool    指令调用是否成功
+message    str  指令调用返回的信息
+data       和普通战斗消息一致
+}

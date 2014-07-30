@@ -1,0 +1,1 @@
+pomelo add id=gate-server-1 host=127.0.0.1 port=10000 serverType=gate
