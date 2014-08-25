@@ -3,46 +3,49 @@ var express = require('express');
 var fs = require('fs');
 
 var path = require('path');
-
+var bodyParser = require('body-parser');
+var methodOverride = require('method-override');
+var errorhandler = require('errorhandler')
 var app = express();
 
 //var db = require('mongoose');
 
 //db.connect('mongodb://112.124.70.138/liangshan');
-
+/*
+ if (process.env.NODE_ENV === 'development') {
+ app.use(errorhandler())
+ }
+ */
 var pub = __dirname + '/public';
 
 var view = __dirname + '/views';
 
-app.configure(function() {
-    app.set('view engine', 'html');
-    app.set('views', view);
-    app.engine('.html', require('ejs').__express);
-    app.use(express.methodOverride());
-    app.use(express.bodyParser());
-    return app.set('basepath', __dirname);
-});
+app.set('view engine', 'html');
+app.set('views', view);
+app.engine('.html', require('ejs').__express);
+//app.use(methodOverride('_method'))
+app.use(methodOverride());
+//app.use(express.bodyParser());
+//app.use(bodyParser.urlencoded());
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }))
 
-app.configure('development', function() {
-    app.use(express["static"](pub));
-    return app.use(express.errorHandler(function() {
-      return {
-        dumpExceptions: true,
-        showStack: true
-      };
-    }));
-});
+// parse application/json
+app.use(bodyParser.json())
 
-app.configure('production', function() {
-    var oneYear;
-    oneYear = 31557600000;
-    app.use(express["static"](pub, function() {
-      return {
-        maxAge: oneYear
-      };
-    }));
-    return app.use(express.errorHandler());
-});
+// parse application/vnd.api+json as json
+app.use(bodyParser.json({ type: 'application/vnd.api+json' }))
+app.set('basepath', __dirname);
+
+
+app.use(express["static"](pub));
+app.use(errorhandler(function() {
+  return {
+    dumpExceptions: true,
+    showStack: true
+  };
+}));
+
 
 app.on('error', function(err) {
     return console.error("app on error:" + err.stack);
@@ -52,6 +55,7 @@ var getJsonPath = function(name) {
     var config, node;
     config = require('./design/main');
     node = config['JSON管理'];
+    var path;
     if (node) {
       path = node[name];
     }
@@ -59,9 +63,9 @@ var getJsonPath = function(name) {
       path = './design/' + name + '.json';
     }
     return path;
-    };
+};
 
-    app.post('/getFileJson', function(req, res) {
+app.post('/getJson', function(req, res) {
     var file, json, resourceFullPath;
     file = getJsonPath(req.body.json);
     resourceFullPath = path.resolve(file);
@@ -72,7 +76,7 @@ var getJsonPath = function(name) {
     return res.send(json);
 });
 
-app.post('/saveFileJson', function(req, res) {
+app.post('/saveJson', function(req, res) {
     var desPath, srcPath;
     srcPath = getJsonPath(req.body.json);
     desPath = "./design/bak/" + req.body.json + "_" + (new Date().getTime()) + ".json";
@@ -83,6 +87,7 @@ app.post('/saveFileJson', function(req, res) {
     return res.send('保存成功!');
 });
 
+/*
 app.post('/getDBJson', function(req, res) {
     var data;
     data = req.body.json;
@@ -97,6 +102,7 @@ app.post('/saveDBJson', function(req, res) {
     //});
     return res.send('保存成功!');
 });
+*/
 
 app.get('/', function(req, resp) {
     var config;
