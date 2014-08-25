@@ -20,6 +20,8 @@ var pub = __dirname + '/public';
 
 var view = __dirname + '/views';
 
+var designMainPath = './design/main';
+
 app.set('view engine', 'html');
 app.set('views', view);
 app.engine('.html', require('ejs').__express);
@@ -53,7 +55,7 @@ app.on('error', function(err) {
 
 var getJsonPath = function(name) {
     var config, node;
-    config = require('./design/main');
+    config = require(designMainPath);
     node = config['JSON管理'];
     var path;
     if (node) {
@@ -66,12 +68,15 @@ var getJsonPath = function(name) {
 };
 
 app.post('/getJson', function(req, res) {
-    var file, json, resourceFullPath;
-    file = getJsonPath(req.body.json);
-    resourceFullPath = path.resolve(file);
+    var json;
+    var file = getJsonPath(req.body.json);
+    var resourceFullPath = path.resolve(file);
     delete require.cache[resourceFullPath];
     if (fs.existsSync(file)) {
-      json = require(file);
+        json = require(file);
+        if(req.body.json === 'main') {
+            json = formathMain(json);
+        }
     }
     return res.send(json);
 });
@@ -117,6 +122,27 @@ app.get('/design/', function(req, resp) {
 app.get('/module/:mname', function(req, resp) {
     return resp.render(req.params.mname);
 });
+
+var clone = function(origin) {
+    if(!origin) {
+        return;
+    }
+
+    var obj = {};
+    for(var f in origin) {
+        if(origin.hasOwnProperty(f)) {
+            obj[f] = origin[f];
+        }
+    }
+    return obj;
+};
+
+var formathMain = function(json) {
+    json = json['菜单管理'];
+    var res = JSON.stringify(json);
+    res = JSON.parse(res);
+    //for()
+};
 
 app.listen(7001);
 
