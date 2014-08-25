@@ -20,7 +20,7 @@ var pub = __dirname + '/public';
 
 var view = __dirname + '/views';
 
-var designMainPath = './design/main';
+var designMainPath = './design/main.json';
 
 app.set('view engine', 'html');
 app.set('views', view);
@@ -53,6 +53,7 @@ app.on('error', function(err) {
     return console.error("app on error:" + err.stack);
 });
 
+/*
 var getJsonPath = function(name) {
     var config, node;
     config = require(designMainPath);
@@ -66,15 +67,16 @@ var getJsonPath = function(name) {
     }
     return path;
 };
-
+*/
 app.post('/getJson', function(req, res) {
     var json;
-    var file = getJsonPath(req.body.json);
+    var file = req.body.jsonPath;
+    if(!file) return;
     var resourceFullPath = path.resolve(file);
     delete require.cache[resourceFullPath];
     if (fs.existsSync(file)) {
         json = require(file);
-        if(req.body.json === 'main') {
+        if(file === designMainPath && !req.body.isDesign) {
             json = formathMain(json);
         }
     }
@@ -82,13 +84,7 @@ app.post('/getJson', function(req, res) {
 });
 
 app.post('/saveJson', function(req, res) {
-    var desPath, srcPath;
-    srcPath = getJsonPath(req.body.json);
-    desPath = "./design/bak/" + req.body.json + "_" + (new Date().getTime()) + ".json";
-    if (fs.existsSync(srcPath)) {
-      fs.renameSync(srcPath, desPath);
-    }
-    fs.writeFileSync(srcPath, req.body.data);
+    fs.writeFileSync(req.body.jsonPath, req.body.json);
     return res.send('保存成功!');
 });
 
@@ -111,7 +107,7 @@ app.post('/saveDBJson', function(req, res) {
 
 app.get('/', function(req, resp) {
     var config;
-    config = require('./design/main');
+    config = require(designMainPath);
     return resp.render('index', config['登录管理']);
 });
 
@@ -123,25 +119,66 @@ app.get('/module/:mname', function(req, resp) {
     return resp.render(req.params.mname);
 });
 
-var clone = function(origin) {
-    if(!origin) {
-        return;
-    }
-
-    var obj = {};
-    for(var f in origin) {
-        if(origin.hasOwnProperty(f)) {
-            obj[f] = origin[f];
-        }
-    }
-    return obj;
-};
-
 var formathMain = function(json) {
-    json = json['菜单管理'];
-    var res = JSON.stringify(json);
-    res = JSON.parse(res);
-    //for()
+    var data = json['菜单管理'];
+
+    var jsonDirFormat = function(dir) {
+        var arr = []
+        var files = fs.readdirSync(dir);
+        for(var i = 0; i<files.length;i++) {
+            var newPath = dir+'/'+files[i];
+            if (fs.existsSync(newPath)) {
+                var stat = fs.statSync(newPath);
+                if(stat.isDirectory()) {
+                    var obj = {};
+                    obj.id = newPath;
+                    obj.text = files[i];
+                    obj['children'] = jsonDirFormat(newPath);
+                    obj['expanded'] = false;
+                    obj['leaf'] = false;
+                    arr.push(obj);
+                } else if(stat.isFile) {
+                    if(path.extname(files[i]) !== '.json') continue;
+                    var obj = {};
+                    obj.text = path.basename(files[i], '.json');
+                    obj.id = newPath;
+                    obj.jsonPath = newPath;
+                    obj['leaf'] = true;
+                    arr.push(obj);
+                }
+            }
+        }
+        return arr;
+    }
+
+    var format = function(children) {
+        var arr = [];
+        for(var text in children) {
+            var obj = children[text];
+            for(var key in obj) {
+                if(key == 'children') {
+                    obj[key] = format(obj[key]);
+                }
+                if(key == 'jsonPath') {
+                    var path = obj[key];
+                    if (fs.existsSync(path)) {
+                        var stat = fs.statSync(path);
+                        if(stat.isDirectory()) {
+                            obj['children'] = jsonDirFormat(path);
+                            obj['expanded'] = false;
+                            obj['leaf'] = false;
+                        }
+                    }
+                }
+            }
+            obj.text = text;
+            arr.push(obj);
+        }
+        return arr;
+    };
+
+    data['children'] = format(data['children']);
+    return json;
 };
 
 app.listen(7001);

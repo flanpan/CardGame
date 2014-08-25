@@ -12,7 +12,7 @@
         var container = document.getElementById("jsoneditor");
         var editor = new jsoneditor.JSONEditor(container);
         var url = "http://"+location.host;
-        httpPost(url+'/getJson','json=main',function(data) {
+        httpPost(url+'/getJson','jsonPath=./design/main.json&isDesign=true',function(data) {
             editor.set(JSON.parse(data));
         });
         /*
@@ -48,7 +48,8 @@
             };
             xhr.send('json=main&data='+JSON.stringify(editor.get()));
             */
-            httpPost(url+'/saveJson','json=main&data='+JSON.stringify(editor.get()),function(data){
+
+            httpPost(url+'/saveJson','jsonPath=./design/main.json&json='+JSON.stringify(editor.get()),function(data){
                 alert(data);
             });
         }

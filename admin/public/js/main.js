@@ -2,7 +2,7 @@
  * @author lwj Admin Console
  */
 var centerPanel = '';
-httpPost("http://" + location.host + '/getJson', 'json=main', function(data) {
+httpPost("http://" + location.host + '/getJson', 'jsonPath=./design/main.json', function(data) {
     var config = JSON.parse(data);
     Ext.onReady(function() {
         Ext.BLANK_IMAGE_URL = '../ext-4.0.7-gpl/resources/themes/images/default/tree/s.gif';
@@ -28,10 +28,14 @@ httpPost("http://" + location.host + '/getJson', 'json=main', function(data) {
                     }
                     if (id === 'profiler') {
                         var url = '/front/inspector.html?host=' + window.location.hostname + ':2337&page=0';
-                    } else if (id.search('jsoneditor_') !== -1) {
+                    } /*else if (id.search('jsoneditor_') !== -1) {
                         var url = '/module/jsoneditor.html?json=' + id.substr('jsoneditor_'.length)
-                    } else {
+                    } */else {
                         var url = '/module/' + id + '.html';
+                    }
+                    var jsonPath = re.raw.jsonPath;
+                    if(jsonPath) {
+                        var url = '/module/jsoneditor.html?jsonPath='+jsonPath;
                     }
                     addIframe(title, url, id);
 
