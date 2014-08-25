@@ -4,12 +4,10 @@
     "private": false,
     "dependencies": {
         "pomelo": "",
-        "generic-pool": ">=1.0.9",
-        "mysql": ">=2.0",
-        "pomelo-logger": "0.0.3",
-        "pomelo-sync-plugin": "0.0.1",
+        "pomelo-logger": "",
         "crc": "0.2.0",
-        "coffee-script": "1.7.x",
-        "mongoose": "3.8.x"
+        "mongoose": "3.8.x",
+        "bearcat":"",
+        "async":""
     }
 }
