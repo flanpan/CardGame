@@ -1,58 +1,78 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-    <link rel="stylesheet" type="text/css" href="/jsoneditor-min.css">
-    <script type="text/javascript" src="/jsoneditor-min.js"></script>
+    <link href="/jsoneditor/app.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" type="text/css" href="/jsoneditor/jsoneditor-min.css">
+    <script type="text/javascript" src="/jsoneditor/jsoneditor-min.js"></script>
+
+    <script type="text/javascript" src="/jsoneditor/notify.js"></script>
+    <script type="text/javascript" src="/jsoneditor/splitter.js"></script>
+    <script type="text/javascript" src="/jsoneditor/app.js"></script>
+
+    <script type="text/javascript" src="/jsoneditor/lib/jsonlint/jsonlint.js"></script>
+    <script type="text/javascript" src="/jsoneditor/lib/ace/ace.js"></script>
+    <script type="text/javascript" src="/jsoneditor/lib/ace/mode-json.js"></script>
+    <script type="text/javascript" src="/jsoneditor/lib/ace/theme-textmate.js"></script>
+    <script type="text/javascript" src="/jsoneditor/lib/ace/theme-jsoneditor.js"></script>
+
     <script type="text/javascript" src="/js/httpReq.js"></script>
+
+    <style type="text/css">
+        div.convert-right {
+            background: url('/jsoneditor/img/jsoneditor-icons.png') -0 -48px;
+        }
+        div.convert-left {
+            background: url('/jsoneditor/img/jsoneditor-icons.png') -24px -48px;
+        }
+    </style>
 </head>
 <body>
-    <button type="button" onclick = "save();">保存</button>
-    <div id="jsoneditor"></div>
-    <script type="text/javascript" >
-        var container = document.getElementById("jsoneditor");
-        var editor = new jsoneditor.JSONEditor(container);
-        var url = "http://"+location.host;
-        httpPost(url+'/getJson','jsonPath=./design/main.json&isDesign=true',function(data) {
-            editor.set(JSON.parse(data));
-        });
-        /*
-        var xhr = new XMLHttpRequest();
-        var url = "http://"+location.host;
-        xhr.open("POST", url+'/getJson');
-        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState != 4)
-                return;
-            if (xhr.responseText == "") {
-                // 失败
-                return;
-            }
-            var data = JSON.parse(xhr.responseText);
-            editor.set(data);
-        };
-        xhr.send('json=main');
-        */
-        function save() {
-            var data = editor.get();
-            /*
-            xhr.open("POST",url+'/saveJson');
-            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState != 4)
-                    return;
-                if (xhr.responseText == "") {
-                    // 失败
-                    return;
-                }
-                alert(xhr.responseText);
-            };
-            xhr.send('json=main&data='+JSON.stringify(editor.get()));
-            */
+<div id="auto">
 
-            httpPost(url+'/saveJson','jsonPath=./design/main.json&json='+JSON.stringify(editor.get()),function(data){
-                alert(data);
+    <div id="contents">
+
+        <div id="codeEditor"></div>
+
+        <div id="splitter">
+            <div id="buttons">
+                <div>
+                    <button id="toTree" class="convert" title="Copy code to tree editor">
+                        <div class="convert-right"></div>
+                    </button>
+                </div>
+                <div>
+                    <button id="toCode" class="convert" title="Copy tree to code editor">
+                        <div class="convert-left"></div>
+                    </button>
+                </div>
+
+            </div>
+            <div id="drag">
+            </div>
+            <div>
+                <button type="button" onclick = "save();">保存</button>
+            </div>
+        </div>
+
+        <div id="treeEditor"></div>
+        <script type="text/javascript" >
+            var url = "http://"+location.host;
+            httpPost(url+'/getJson','jsonPath=./design/main.json&isDesign=true',function(data) {
+                app.load(JSON.parse(data));
+                app.resize();
             });
-        }
-    </script>
+            function save() {
+                var data = treeEditor.get();
+                httpPost(url+'/saveJson','jsonPath=./design/main.json&json='+JSON.stringify(data),function(data){
+                    alert(data);
+                });
+            }
+        </script>
+    </div>
+</div>
+
+<script type="text/javascript">
+    app.resize();
+</script>
 </body>
 </html>

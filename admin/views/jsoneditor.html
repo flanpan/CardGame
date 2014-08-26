@@ -74,7 +74,7 @@
                 };
                 xhr.send(location.search.substr(1));
                 function save() {
-                    var data = codeEditor.get();
+                    var data = treeEditor.get();
                     xhr.open("POST",url+'/saveJson');
                     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
                     xhr.onreadystatechange = function() {
