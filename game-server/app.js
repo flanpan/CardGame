@@ -7,7 +7,8 @@ var app = pomelo.createApp();
 
 var Configure = function() {
     app.set('name', 'CardGame');
-
+    app.enable('systemMonitor');
+    app.enable('rpcDebugLog');
     // app configuration
     app.configure('production|development', 'connector', function() {
         app.set('connectorConfig', {
