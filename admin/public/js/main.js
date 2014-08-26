@@ -18,6 +18,7 @@ httpPost("http://" + location.host + '/getJson', 'jsonPath=./design/main.json', 
             store: treeStore,
             enableDD: true,
             rootVisible: false,
+            split: true,
             listeners: {
                 'itemclick': function(view, re) {
                     var title = re.data.text;
