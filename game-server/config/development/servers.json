@@ -11,7 +11,7 @@
         "frontend": true,
         "clusterCount": 2
     }],
-    "game": [{
+    "chat": [{
         "host": "127.0.0.1",
         "port": "11931++",
         "clusterCount": 2
