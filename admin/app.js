@@ -75,7 +75,12 @@ app.post('/getJson', function(req, res) {
     var resourceFullPath = path.resolve(file);
     delete require.cache[resourceFullPath];
     if (fs.existsSync(file)) {
-        json = require(file);
+        try{
+            json = require(file);
+        } catch(e) {
+            json = {};
+        }
+
         if(file === designMainPath && !req.body.isDesign) {
             json = formathMain(json);
         }
