@@ -1,7 +1,7 @@
 {
-    "name": "CardGame",
-    "imports": ["./base.json"],
-    "beans":[{
+    "name": "base",
+    "namespace":"base",
+    "beans": [{
         "id": "base",
         "func": "${data.context.basePath}/index"
     }]
