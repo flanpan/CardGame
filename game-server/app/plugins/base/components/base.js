@@ -5,6 +5,11 @@
 var Component = function(app, opts) {
     this.name = 'base';
 };
-module.exports = Component;
+
+module.exports = function(app,opts) {
+    var component =  new Component(app,opts);
+    //app.set('base', component, true);
+    return component;
+};
 var pro = Component.prototype;
 

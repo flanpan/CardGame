@@ -1,0 +1,18 @@
+{
+    "name": "base",
+    "namespace":"base",
+    "beans": [{
+        "id":"index",
+        "func":"index"
+    },{
+        "id":"dispatcher",
+        "func":"utils.dispatcher"
+    },{
+        "id":"routeUtil",
+        "func":"utils.routeUtil",
+        "props": [{
+            "name": "dispatcher",
+            "ref": "base:dispatcher"
+        }]
+    }]
+}

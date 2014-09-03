@@ -7,13 +7,9 @@ var app = pomelo.createApp();
 
 var Configure = function() {
     app.set('name', 'CardGame');
-    app.enable('systemMonitor');
-    app.enable('rpcDebugLog');
-    // app configuration
-    console.log(11111);
-    var base = bearcat.getBean('base');
-    console.log(11111,base);
-    //app.use(bearcat.getBean('base'),{});
+    //app.enable('systemMonitor');
+    //app.enable('rpcDebugLog');
+    app.use(bearcat.getBean('base:index'),{});
     app.configure('production|development', 'connector', function() {
         app.set('connectorConfig', {
             connector: pomelo.connectors.hybridconnector,
@@ -30,19 +26,15 @@ var Configure = function() {
         });
     });
 
-    // app configure
     app.configure('production|development', function() {
-        // route configures
-        //var routeUtil = bearcat.getBean('routeUtil');
+        var routeUtil = bearcat.getBean('base:routeUtil');
 
-        //app.route('chat', routeUtil.chat.bind(routeUtil));
-
-        // filter configures
+        app.route('chat', routeUtil.chat.bind(routeUtil));
         app.filter(pomelo.timeout());
     });
 };
 
-var contextPath = require.resolve('./config/development/context/context.json');
+var contextPath = require.resolve('./context.json');
 bearcat.createApp([contextPath]);
 
 bearcat.start(function() {

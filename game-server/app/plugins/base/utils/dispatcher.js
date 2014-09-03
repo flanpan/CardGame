@@ -1,7 +1,7 @@
 var crc = require('crc');
 
 var Dispatcher = function() {
-	this.$id = "dispatcher";
+	//this.$id = "dispatcher";
 }
 
 Dispatcher.prototype.dispatch = function(uid, connectors) {

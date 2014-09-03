@@ -1,8 +1,6 @@
 {
     "name": "CardGame",
-    "imports": ["./base.json"],
-    "beans":[{
-        "id": "base",
-        "func": "${data.context.basePath}/index"
-    }]
+    "imports": [
+        "app/plugins/base/context.json"
+    ]
 }

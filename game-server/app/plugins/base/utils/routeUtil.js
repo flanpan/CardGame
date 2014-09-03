@@ -1,6 +1,6 @@
 var RouteUtil = function() {
-	this.$id = "routeUtil";
-	this.$dispatcher = null;
+	//this.$id = "routeUtil";
+	this.dispatcher = null;
 }
 
 RouteUtil.prototype.chat = function(session, msg, app, cb) {
@@ -11,7 +11,7 @@ RouteUtil.prototype.chat = function(session, msg, app, cb) {
 		return;
 	}
 
-	var res = this.$dispatcher.dispatch(session.get('rid'), chatServers);
+	var res = this.dispatcher.dispatch(session.get('rid'), chatServers);
 
 	cb(null, res.id);
 };
