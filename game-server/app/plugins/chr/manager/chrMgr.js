@@ -28,7 +28,6 @@ pro.removeAll = function(cb) {
 
 };
 
-
 pro.stop = function(cb) {
     this.removeAll(function() {
         logger.info('remove all chrs..');
