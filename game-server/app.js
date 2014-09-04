@@ -14,6 +14,7 @@ var Configure = function() {
     //'mongodb://admin:admin@localhost/game';
     global.mongoose.connect('mongodb://localhost/game');
     app.use(bearcat.getBean('base:index'),{});
+    app.use(bearcat.getBean('chr:index'),{});
     app.configure('production|development', 'connector', function() {
         app.set('connectorConfig', {
             connector: pomelo.connectors.hybridconnector,
@@ -36,6 +37,9 @@ var Configure = function() {
         app.route('chat', routeUtil.chat.bind(routeUtil));
         app.filter(pomelo.timeout());
     });
+
+    var chrMgr = app.get('com.chr');
+    chrMgr.add(111,null,function(){});
 };
 
 var contextPath = require.resolve('./context.json');

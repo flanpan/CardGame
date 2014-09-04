@@ -4,5 +4,8 @@
     "beans": [{
         "id":"index",
         "func":"index"
+    },{
+        "id":"chrMgr",
+        "func":"manager.chrMgr"
     }]
 }

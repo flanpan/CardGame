@@ -4,8 +4,8 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var Bag = require('./bag');
-var Pet = require('./pet');
-var Task = require('./task');
+//var Pet = require('./pet');
+//var Task = require('./task');
 
 var Chr = new Schema({
     id:Number,
@@ -15,10 +15,13 @@ var Chr = new Schema({
     cash:Number,
     createdDate:Date,
     loginDate:Date,
-    bag:Bag//,
+    bag:[Bag]//,
     //pet:Pet,
     //task:Task
 });
+var model = mongoose.model('chr', Chr);
+module.exports = model;
+
 
 Chr.methods.test = function() {
 
@@ -28,4 +31,3 @@ Chr.static.test1 = function() {
 
 };
 
-module.exports = Chr;
