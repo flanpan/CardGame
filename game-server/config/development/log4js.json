@@ -1,96 +1,32 @@
 {
-  "appenders": [{
-    "type": "console"
-  }, {
-    "type": "file",
-    "filename": "${opts:base}/logs/con-log-${opts:serverId}.log",
-    "pattern": "connector",
-    "maxLogSize": 1048576,
-    "layout": {
-      "type": "basic"
-    },
-    "backups": 5,
-    "category": "con-log"
-  }, {
-    "type": "file",
-    "filename": "${opts:base}/logs/rpc-log-${opts:serverId}.log",
-    "maxLogSize": 1048576,
-    "layout": {
-      "type": "basic"
-    },
-    "backups": 5,
-    "category": "rpc-log"
-  }, {
-    "type": "file",
-    "filename": "${opts:base}/logs/forward-log-${opts:serverId}.log",
-    "maxLogSize": 1048576,
-    "layout": {
-      "type": "basic"
-    },
-    "backups": 5,
-    "category": "forward-log"
-  }, {
-    "type": "file",
-    "filename": "${opts:base}/logs/rpc-debug-${opts:serverId}.log",
-    "maxLogSize": 1048576,
-    "layout": {
-      "type": "basic"
-    },
-    "backups": 5,
-    "category": "rpc-debug"
-  }, {
-    "type": "file",
-    "filename": "${opts:base}/logs/crash.log",
-    "maxLogSize": 1048576,
-    "layout": {
-      "type": "basic"
-    },
-    "backups": 5,
-    "category": "crash-log"
-  }, {
-    "type": "file",
-    "filename": "${opts:base}/logs/admin.log",
-    "maxLogSize": 1048576,
-    "layout": {
-      "type": "basic"
-    },
-    "backups": 5,
-    "category": "admin-log"
-  }, {
-    "type": "file",
-    "filename": "${opts:base}/logs/pomelo.log",
-    "maxLogSize": 1048576,
-    "layout": {
-      "type": "basic"
-    },
-    "backups": 5,
-    "category": "pomelo"
-  }, {
-    "type": "file",
-    "filename": "${opts:base}/logs/pomelo-admin.log",
-    "maxLogSize": 1048576,
-    "layout": {
-      "type": "basic"
-    },
-    "backups": 5,
-    "category": "pomelo-admin"
-  }, {
-    "type": "file",
-    "filename": "${opts:base}/logs/pomelo-rpc.log",
-    "maxLogSize": 1048576,
-    "layout": {
-      "type": "basic"
-    },
-    "backups": 5,
-    "category": "pomelo-rpc"
-  }],
+    "appenders": [
+        {
+            "type": "console"
+        },
+        {
+            "type": "dateFile",
+            "filename": "${opts:base}/logs/all",
+            "pattern": "-yyyy-MM-dd.log",
+            "alwaysIncludePattern": true,
+            "maxLogSize": 1048576000,
+            "layout": {
+                "type": "basic"
+            }
+            ,"backups": 5,
+            "category":"[all]"
+        }
+    ],
 
-  "levels": {
-    "rpc-log": "ERROR",
-    "forward-log": "ERROR"
-  },
+    "levels": {
+        "[all]": "TRACE",
+        "rpc-log" : "TRACE",
+        "forward-log": "TRACE",
+        "transcript":"TRACE",
+        "pomelo":"TRACE",
+        "rpc-debug":"TRACE"
+    },
 
-  "replaceConsole": true,
-
-  "lineDebug": true
+    "replaceConsole": false,
+    "reloadSecs": 3,
+    "lineDebug": false
 }

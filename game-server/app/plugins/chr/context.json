@@ -1,0 +1,8 @@
+{
+    "name": "chr",
+    "namespace":"chr",
+    "beans": [{
+        "id":"index",
+        "func":"index"
+    }]
+}
