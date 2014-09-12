@@ -8,7 +8,7 @@ var app = pomelo.createApp();
 global.app = app;
 var Configure = function() {
     app.set('name', 'CardGame');
-    //app.enable('systemMonitor');
+    app.enable('systemMonitor');
     //app.enable('rpcDebugLog');
     global.mongoose = require("mongoose");
     //'mongodb://admin:admin@localhost/game';

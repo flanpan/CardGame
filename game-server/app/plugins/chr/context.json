@@ -5,7 +5,22 @@
         "id":"index",
         "func":"index"
     },{
+        "id":"chrModel",
+        "func":"db.chrModel",
+        "abstract":true
+    },{
+        "id":"Chr",
+        "func":"service.chr",
+        "abstract":true
+    },{
         "id":"chrMgr",
-        "func":"manager.chrMgr"
+        "func":"manager.chrMgr",
+        "props": [{
+            "name": "ChrModel",
+            "ref": "chr:chrModel"
+        },{
+            "name": "Chr",
+            "ref": "chr:Chr"
+        }]
     }]
 }

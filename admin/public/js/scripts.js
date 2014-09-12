@@ -50,13 +50,16 @@ Ext.onReady(function() {
 			layout: 'column',
 			border: false,
 			anchor: '95%',
-			items: [{
-				xtype: 'label',
-				text: 'Run Script:',
-				columnWidth: .99
-			},
-			serverCom, scriptCom]
-		}, {
+			items: [
+                {
+                    xtype: 'label',
+                    text: 'Run Script:',
+                    columnWidth: .99
+			    },
+                serverCom,
+                scriptCom
+            ]
+        }, {
 			xtype: 'textareafield',
 			height: 150,
 			//region: 'center',
@@ -67,31 +70,38 @@ Ext.onReady(function() {
 			anchor: '95%',
 			border: false,
 			items: [{
-				// colspan: 2
+				 colspan: 2,
 				xtype: 'button',
 				text: 'Run',
 				handler: run,
-				width: 150,
-				margin: '10 0 10 900'
+				width: 150//,
+				//margin: '10 0 10 900'
 			}, {
-				// colspan: 2
+				 colspan: 2,
 				xtype: 'button',
 				text: 'Save',
 				handler: saveForm,
-				width: 150,
-				margin: '10 0 10 100'
+				width: 150//,
+				//margin: '10 0 10 100'
 			}]
 		}, {
 			xtype: 'label',
 			text: 'Result:'
 			// height:20
-		}, {
+		}, /*{
 			xtype: 'textareafield',
 			id: 'tesultTextId',
 			height: 350,
 			name: 'scriptId',
 			anchor: '95%'
-		}]
+		}*/{
+            //<div id="jsoneditor" style="width: 400px; height: 400px;"></div>
+            anchor: '95%',
+            height: '100%',
+            xtype:'box',
+            autoEl: 'div',
+            id:'jsoneditor'
+        }]
 	});
 
 	list();
@@ -207,7 +217,12 @@ var run = function() {
 			alert(err);
 			return;
 		}
-		Ext.getCmp('tesultTextId').setValue(msg);
+        var container = document.getElementById("jsoneditor");
+        var editor = new jsoneditor.JSONEditor(container);
+        editor.set(msg);
+        // get json
+        //var json = editor.get();
+		//Ext.getCmp('tesultTextId').setValue(msg);
 	});
 };
 

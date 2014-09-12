@@ -3,10 +3,12 @@
  */
 
 var logger = require('pomelo-logger').getLogger(__filename);
-var Chr = require('../schema/chr');
+//var ChrModel = require('../schema/chrModel');
 
 var ChrMgr = function() {
     this.chrs = {};
+    this.ChrModel = null;
+    this.Chr = null;
     this.updateInterval = null;
 };
 
@@ -20,24 +22,26 @@ pro.get = function(uid) {
 pro.add = function(uid,opts,cb) {
     if(this.get(uid)) return cb({code:500});
     var self = this;
-    Chr.find({uid:uid},function(err,data) {
+    this.ChrModel.find({uid:uid},function(err,data) {
         if(err) {
             ////////////
             return;
         }
         if(data) {
-            self.chrs[uid] = data;
-            data.setUpdateInterval(self.updateInterval);
+            var chr = new self.Chr(data);
+            self.chrs[uid] = chr;
+            chr.setUpdateInterval(self.updateInterval);
             return cb({code:200});
         } else {
-            var chr = new Chr(opts);
+            var chr = new self.ChrModel(opts);
             chr.save(function(err,data) {
                 if(err) {
                     /////////
                     return;
                 }
-                self.chrs[uid] = data;
-                data.setUpdateInterval(self.updateInterval);
+                var chr = new self.Chr(data);
+                self.chrs[uid] = chr;
+                chr.setUpdateInterval(self.updateInterval);
                 cb({code:200});
             });
         }
