@@ -13,8 +13,8 @@ var Configure = function() {
     global.mongoose = require("mongoose");
     //'mongodb://admin:admin@localhost/game';
     global.mongoose.connect('mongodb://localhost/game');
-    app.use(bearcat.getBean('base:index'),{});
-    app.use(bearcat.getBean('chr:index'),{});
+    app.use(bearcat.getBean('base.index'),{});
+    app.use(bearcat.getBean('chr.index'),{});
     app.configure('production|development', 'connector', function() {
         app.set('connectorConfig', {
             connector: pomelo.connectors.hybridconnector,
@@ -38,13 +38,14 @@ var Configure = function() {
         app.filter(pomelo.timeout());
     });
 
+    console.log(11111111111, g.requires.code.ok.code);
     var chrMgr = app.get('com.chr');
     chrMgr.add(111,null,function(){});
 };
 
 var contextPath = require.resolve('./context.json');
 bearcat.createApp([contextPath]);
-
+//console.log(g)
 bearcat.start(function() {
     Configure();
     // start app

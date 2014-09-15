@@ -7,13 +7,13 @@ var Component = function(app,opts) {
     this.$id = 'com.chr';
     this.name = 'com.chr';
     app.set('com.chr', this);
-    return bearcat.get
+    //return bearcat.get
 };
 
 module.exports = function(app,opts) {
     //var component =  new Component(app,opts);
    // return component;
-    var com = bearcat.getBean('chr:chrMgr');
+    var com = bearcat.getBean('chr.mgr.chr');
     com.name = 'com.chr';
     app.set('com.chr',com);
     return com;

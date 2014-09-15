@@ -4,11 +4,12 @@
 
 var logger = require('pomelo-logger').getLogger(__filename);
 //var ChrModel = require('../schema/chrModel');
+var bearcat = require('bearcat');
 
 var ChrMgr = function() {
     this.chrs = {};
-    this.ChrModel = null;
-    this.Chr = null;
+    this.ChrModel = bearcat.getFunction('chr.db.chrModel');
+    this.Chr = bearcat.getFunction('chr.service.chr');
     this.updateInterval = null;
 };
 
