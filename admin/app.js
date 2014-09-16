@@ -84,11 +84,81 @@ app.post('/getJson', function(req, res) {
         if(file === designMainPath && !req.body.isDesign) {
             json = formathMain(json);
         }
+
+        if(req.body.isBearcat) {
+            json = bearcat2json(json);
+        }
     }
     return res.send(json);
 });
 
+var bearcat2json = function(obj) {
+    if(obj.beans) {
+        var beans = {};
+        obj.beans.forEach(function(bean){
+            beans[bean.id] = bean;
+            bean.id = undefined;
+            if(bean.props) {
+                var props = {};
+                bean.props.forEach(function(prop){
+                    props[prop.name] = prop;
+                    prop.name = undefined;
+                });
+                bean.props = props;
+            }
+
+            if(bean.args) {
+                var args = {};
+                bean.args.forEach(function(arg){
+                    args[arg.name] = arg;
+                    arg.name = undefined;
+                });
+                bean.args = args;
+            }
+        });
+        obj.beans = beans;
+    }
+    return obj;
+};
+
+var json2bearcaat = function(str) {
+    var obj = JSON.parse(str);
+    if(obj.beans) {
+        var beans = [];
+        for(var key in obj.beans) {
+            var bean = obj.beans[key];
+            bean.id = key;
+            beans.push(bean);
+            if(bean.props) {
+                var props = [];
+                for(var key in bean.props) {
+                    var prop = bean.props[key];
+                    prop.name = key;
+                    props.push(prop);
+                }
+                bean.props = props;
+            }
+
+            if(bean.args) {
+                var args = [];
+                for(var key in bean.args) {
+                    var arg = bean.args[key];
+                    arg.name = key;
+                    args.push(arg);
+                }
+                bean.args = args;
+            }
+
+        }
+        obj.beans = beans;
+    }
+    return JSON.stringify(obj);
+};
+
 app.post('/saveJson', function(req, res) {
+    if(req.body.isBearcat) {
+        req.body.json = json2bearcaat(req.body.json);
+    }
     fs.writeFileSync(req.body.jsonPath, req.body.json);
     return res.send('保存成功!');
 });

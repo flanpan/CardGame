@@ -37,6 +37,9 @@ httpPost("http://" + location.host + '/getJson', 'jsonPath=./design/main.json', 
                     var jsonPath = re.raw.jsonPath;
                     if(jsonPath) {
                         var url = '/module/jsoneditor.html?jsonPath='+jsonPath;
+                        if(re.raw.isBearcat) {
+                            url += '&isBearcat=true';
+                        }
                     }
                     addIframe(title, url, id);
 
