@@ -7,7 +7,7 @@ var Globals = function(name) {
 }
 
 Globals.prototype.init = function() {
-    var clone = bearcat.getBean('base.utils.utils').clone;
+    var clone = bearcat.getBean('com.base.utils').clone;
     global[globalName] = clone(this);
 }
 

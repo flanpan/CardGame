@@ -1,0 +1,1 @@
+{"name":"chr","beans":[{"func":"chrMgr","lazy":true,"args":[{"type":"Object","name":"app"},{"type":"Object","name":"opts"}],"props":[],"id":"com.chr"},{"func":"chrModel","abstract":true,"id":"com.chr.chrModel"},{"func":"chr","scope":"prototype","args":[{"type":"Object","name":"model"}],"id":"com.chr.chr"}]}

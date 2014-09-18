@@ -6,6 +6,7 @@ global.bearcat = require('bearcat');
  */
 var app = pomelo.createApp();
 global.app = app;
+
 var Configure = function() {
     app.set('name', 'CardGame');
     app.enable('systemMonitor');
@@ -13,8 +14,8 @@ var Configure = function() {
     global.mongoose = require("mongoose");
     //'mongodb://admin:admin@localhost/game';
     global.mongoose.connect('mongodb://localhost/game');
-    app.use(bearcat.getBean('base.index'),{});
-    app.use(bearcat.getBean('chr.index'),{});
+    app.load(require('./app/com/base'),{});
+    app.load(require('./app/com/chr'),{});
     app.configure('production|development', 'connector', function() {
         app.set('connectorConfig', {
             connector: pomelo.connectors.hybridconnector,
@@ -37,10 +38,8 @@ var Configure = function() {
         app.route('chat', routeUtil.chat.bind(routeUtil));
         app.filter(pomelo.timeout());
     });
-
-    console.log(11111111111, g.requires.code.ok.code);
     var chrMgr = app.get('com.chr');
-    chrMgr.add(111,null,function(){});
+    chrMgr.add(111,{uid:111},function(){});
 };
 
 var contextPath = require.resolve('./context.json');

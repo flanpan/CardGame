@@ -1,7 +1,1 @@
-{
-    "name": "CardGame",
-    "imports": [
-        "app/plugins/base/context.json",
-        "app/plugins/chr/context.json"
-    ]
-}
+{"name":"CardGame","imports":["app/com/base/context.json","app/com/chr/context.json"]}
