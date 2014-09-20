@@ -39,7 +39,11 @@ var Configure = function() {
         app.filter(pomelo.timeout());
     });
     var chrMgr = app.get('com.chr');
-    chrMgr.add(111,{uid:111},function(){});
+    chrMgr.add(111,{uid:111},function(){
+        var chr = chrMgr.get(111);
+        chr.can();
+    });
+
 };
 
 var contextPath = require.resolve('./context.json');
