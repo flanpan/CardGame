@@ -20,15 +20,15 @@ var Configure = function() {
         app.set('connectorConfig', {
             connector: pomelo.connectors.hybridconnector,
             heartbeat: 3,
-            useDict: true//,
-            // useProtobuf: true
+            useDict: true,
+            useProtobuf: true
         });
     });
 
     app.configure('production|development', 'gate', function() {
         app.set('connectorConfig', {
-            connector: pomelo.connectors.hybridconnector//,
-            // useProtobuf: true
+            connector: pomelo.connectors.hybridconnector,
+            useProtobuf: true
         });
     });
 
@@ -41,7 +41,7 @@ var Configure = function() {
     var chrMgr = app.get('com.chr');
     chrMgr.add(111,{uid:111},function(){
         var chr = chrMgr.get(111);
-        chr.can();
+        chr.check();
     });
 
 };

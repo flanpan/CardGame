@@ -1,1 +1,1 @@
-{"错误码":{}}
+{"trigger1":{"event":["SceneOnEnter","SceneOnExit"],"condition":{"timeElagsedTo":{"time":"1000"}},"operation":{"playMusic":{"file":"path.mp3"}}},"trigger2":{"event":["SceneOnEnter","SceneOnExit"],"condition":{"timeElagsedTo":{"time":"1000"}},"operation":{"playMusic":{"file":"path.mp3"}}},"SceneOnEnter":{"干啥":{"condition":{"条件1":{"key":"v"},"条件2":{"key":"v"}},"operation":{"操作1":{"key":"v"},"操作2":{"key":"v"}}}}}
