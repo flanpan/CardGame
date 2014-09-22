@@ -1,78 +1,87 @@
 
-var HelloWorldLayer = cc.Layer.extend({
-    sprite:null,
-    ctor:function () {
-        //////////////////////////////
-        // 1. super init first
+
+var LayerTemplate = cc.Layer.extend({
+    _events:{},
+    onEnter: function () {
         this._super();
+        window.EventEmitter.call(this);
+        var node = ccs.sceneReader.createNodeWithSceneFile("res/scenetest/TriggerTest/TriggerTest.json");
+        this.addChild(node);
+        //ccs.actionManager.playActionByName("startMenu_1.json", "Animation1");
 
-        /////////////////////////////
-        // 2. add a menu item with "X" image, which is clicked to quit the program
-        //    you may modify it.
-        // ask the window size
-        var size = cc.winSize;
+        var data = c.scene[name];
+        for(var event in data) {
+            this.on()
+        }
 
-        // add a "close" icon to exit the progress. it's an autorelease object
-        var closeItem = new cc.MenuItemImage(
-            res.CloseNormal_png,
-            res.CloseSelected_png,
-            function () {
-                cc.log("Menu is clicked!");
-            }, this);
-        closeItem.attr({
-            x: size.width - 20,
-            y: 20,
-            anchorX: 0.5,
-            anchorY: 0.5
+
+
+        this.schedule(this.gameLogic);
+        //ccs.sendEvent(TRIGGER_EVENT_ENTERSCENE);
+        this.emit('v.scene.enter');
+        var listener1 = cc.EventListener.create({
+            event: cc.EventListener.TOUCH_ONE_BY_ONE,
+            swallowTouches: true,
+            onTouchBegan: this.onTouchBegan.bind(this),
+            onTouchMoved: this.onTouchMoved.bind(this),
+            onTouchEnded: this.onTouchEnded.bind(this)
         });
+        cc.eventManager.addListener(listener1, this);
+        //this.initSize(node);
+    },
+    onExit: function () {
+        ccs.actionManager.releaseActions();
+        //ccs.sendEvent(TRIGGER_EVENT_LEAVESCENE);
+        this.emit('v.scene.exit');
+        this.unschedule(this.gameLogic, this);
+        this._super();
+    },
 
-        var menu = new cc.Menu(closeItem);
-        menu.x = 0;
-        menu.y = 0;
-        this.addChild(menu, 1);
-
-        /////////////////////////////
-        // 3. add your codes below...
-        // add a label shows "Hello World"
-        // create and initialize a label
-        var helloLabel = new cc.LabelTTF("Hello World", "Arial", 38);
-        // position the label on the center of the screen
-        helloLabel.x = size.width / 2;
-        helloLabel.y = 0;
-        // add the label as a child to this layer
-        this.addChild(helloLabel, 5);
-
-        // add "HelloWorld" splash screen"
-        this.sprite = new cc.Sprite(res.HelloWorld_png);
-        this.sprite.attr({
-            x: size.width / 2,
-            y: size.height / 2,
-            scale: 0.5,
-            rotation: 180
-        });
-        this.addChild(this.sprite, 0);
-
-        this.sprite.runAction(
-            cc.sequence(
-                cc.rotateTo(2, 0),
-                cc.scaleTo(2, 1, 1)
-            )
-        );
-        helloLabel.runAction(
-            cc.spawn(
-                cc.moveBy(2.5, cc.p(0, size.height - 40)),
-                cc.tintTo(2.5,255,125,0)
-            )
-        );
+    onTouchBegan: function (touch, event) {
+        //ccs.sendEvent(TRIGGER_EVENT_TOUCHBEGAN);
+        this.emit('v.scene.touch.beban',{touch:touch,event:event});
         return true;
+    },
+
+    onTouchMoved: function (touch, event) {
+        //ccs.sendEvent(TRIGGER_EVENT_TOUCHMOVED);
+        this.emit('v.scene.touch.moved',{touch:touch,event:event});
+    },
+
+    onTouchEnded: function (touch, event) {
+        //ccs.sendEvent(TRIGGER_EVENT_TOUCHENDED);
+        this.emit('v.scene.touch.ended',{touch:touch,event:event});
+    },
+
+    onTouchCancelled: function (touch, event) {
+        //ccs.sendEvent(TRIGGER_EVENT_TOUCHCANCELLED);
+        this.emit('v.scene.touch.cancelled',{touch:touch,event:event});
+    },
+
+    gameLogic: function () {
+        //ccs.sendEvent(TRIGGER_EVENT_UPDATESCENE);
+        this.emit('v.scene.update');
     }
 });
 
-var HelloWorldScene = cc.Scene.extend({
+var SceneTemplate = cc.Scene.extend({
     onEnter:function () {
         this._super();
-        var layer = new HelloWorldLayer();
+        var layer = new LayerTemplate();
         this.addChild(layer);
     }
 });
 
+
+var kv = {};
+
+var m = {};
+var c = {};
+
+c.scene = {
+    'c.scene.logo':'src/config/logo.json'
+};
+
+c.run = function(cb) {
+    cc.director.runScene(new SceneTemplate());
+};

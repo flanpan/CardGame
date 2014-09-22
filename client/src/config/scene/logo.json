@@ -1,1 +1,1 @@
-{}
+{"isFirstScene":true,"v.scene.enter":{"事件1":{"can":{"v.can.aaa":{"param":"aaa"}},"do":{"m.do.aaa":{"aaa":"bbb"}}},"事件3":{"can":"can1","do":"do1"},"事件2":"event1"}}
