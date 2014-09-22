@@ -48,7 +48,54 @@
  */
 if (cc.sys.isNative === true) {
     require('pomelo-cocos2d-jsb/index.js');
+    require('src/lib/async.js');
+    require('src/lib/underscore.js');
+    require('src/lib/underscore.string.js');
 }
+
+var kv = {};
+
+var pushKV = function(k,v) {
+    var arr = _.str.words(k,'.');
+    var p = kv;
+    for(var i = 0; i<arr.length-1;i++) {
+        var name = arr[i];
+        if(typeof p[name] === 'undefined') {
+            p[name] = {};
+        }
+        if (typeof p[name] !== 'object'){
+            console.error('插入KV冲突',k);
+            return;
+        }
+        p = p[name];
+    }
+    p[arr[arr.length-1]] = v;
+};
+
+var loadCfg = function(cb) {
+    cc.loader.load('src/config/index.json', function(err, results) {
+        if (err) {
+            cc.log("Failed to load ", results);
+            return;
+        }
+        var files = results[0];
+        cc.loader.load(files,function(err,res){
+            if(err) {
+                console.log(err)
+            }
+            for(var i = 0; i<files.length;i++) {
+                var path = files[i];
+                path = _.str.strLeftBack(path,'.');
+                path = path.substr('src/config/'.length);
+                path = path.replace(/\//g,'.');
+                //kv['c.'+path] = res[i];
+                pushKV('c.'+path,res[i]);
+            }
+            console.log(kv)
+        });
+
+    });
+};
 
 cc.game.onStart = function(){
     cc.view.adjustViewPort(true);
@@ -56,7 +103,12 @@ cc.game.onStart = function(){
     cc.view.resizeWithBrowserSize(true);
     //load resources
     cc.LoaderScene.preload(g_resources, function () {
-        cc.director.runScene(new HelloWorldScene());
+        loadCfg();
+    /*
+        loadCfg('src/config/index.json',function() {
+
+        });*/
+        //cc.director.runScene(new HelloWorldScene());
     }, this);
 };
 cc.game.run();
