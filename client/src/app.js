@@ -9,6 +9,13 @@ var LayerTemplate = cc.Layer.extend({
         this.addChild(node);
         //ccs.actionManager.playActionByName("startMenu_1.json", "Animation1");
 
+        cc.loader.load(['src/config/scene/logo.json'], function(err, results) {
+            if (err) {
+                cc.log("Failed to load ", results);
+                return;
+            }
+        });
+
         var data = c.scene[name];
         for(var event in data) {
             this.on()
@@ -83,5 +90,6 @@ c.scene = {
 };
 
 c.run = function(cb) {
+
     cc.director.runScene(new SceneTemplate());
 };
