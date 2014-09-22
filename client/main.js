@@ -47,7 +47,7 @@
  *
  */
 if (cc.sys.isNative === true) {
-    require('pomelo-cocos2d-js/index.js');
+    require('pomelo-cocos2d-jsb/index.js');
 }
 
 cc.game.onStart = function(){
