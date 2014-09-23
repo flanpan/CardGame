@@ -55,9 +55,6 @@ if (cc.sys.isNative === true) {
 
 var fcc = {};
 
-
-
-
 var loadCfg = function(cb) {
     cc.loader.load('src/config/index.json', function(err, results) {
         if (err) {
@@ -88,8 +85,6 @@ cc.game.onStart = function(){
 
     var searchPaths = jsb.fileUtils.getSearchPaths();
     console.log(searchPaths);
-    searchPaths.push('script');
-    searchPaths.push('src');
     var paths = [
         'script',
         'src',
