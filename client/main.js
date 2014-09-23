@@ -47,30 +47,16 @@
  *
  */
 if (cc.sys.isNative === true) {
-    require('pomelo-cocos2d-jsb/index.js');
+    require('src/lib/pomelo-cocos2d-jsb/index.js');
     require('src/lib/async.js');
     require('src/lib/underscore.js');
     require('src/lib/underscore.string.js');
 }
 
-var kv = {};
+var fcc = {};
 
-var pushKV = function(k,v) {
-    var arr = _.str.words(k,'.');
-    var p = kv;
-    for(var i = 0; i<arr.length-1;i++) {
-        var name = arr[i];
-        if(typeof p[name] === 'undefined') {
-            p[name] = {};
-        }
-        if (typeof p[name] !== 'object'){
-            console.error('插入KV冲突',k);
-            return;
-        }
-        p = p[name];
-    }
-    p[arr[arr.length-1]] = v;
-};
+
+
 
 var loadCfg = function(cb) {
     cc.loader.load('src/config/index.json', function(err, results) {
@@ -88,12 +74,10 @@ var loadCfg = function(cb) {
                 path = _.str.strLeftBack(path,'.');
                 path = path.substr('src/config/'.length);
                 path = path.replace(/\//g,'.');
-                //kv['c.'+path] = res[i];
-                pushKV('c.'+path,res[i]);
+                kv.add('c.'+path,res[i]);
             }
-            console.log(kv)
+            cb();
         });
-
     });
 };
 
@@ -101,14 +85,35 @@ cc.game.onStart = function(){
     cc.view.adjustViewPort(true);
     cc.view.setDesignResolutionSize(800, 450, cc.ResolutionPolicy.SHOW_ALL);
     cc.view.resizeWithBrowserSize(true);
+
+    var searchPaths = jsb.fileUtils.getSearchPaths();
+    console.log(searchPaths);
+    searchPaths.push('script');
+    searchPaths.push('src');
+    var paths = [
+        'script',
+        'src',
+        'Resources'
+    ];
+    for (var i = 0; i < paths.length; i++) {
+        searchPaths.push(paths[i]);
+    }
+    jsb.fileUtils.setSearchPaths(searchPaths);
     //load resources
     cc.LoaderScene.preload(g_resources, function () {
-        loadCfg();
-    /*
-        loadCfg('src/config/index.json',function() {
-
-        });*/
-        //cc.director.runScene(new HelloWorldScene());
+        loadCfg(function() {
+            for(var key in kv.c.scene) {
+                var scene = kv.c.scene[key];
+                if(scene.isFirst) {
+                    kv.add('v.curSceneCfg',scene);
+                    break;
+                }
+            }
+            if(!kv.v.curSceneCfg) {
+                return console.err('没有设定第一个场景.')
+            }
+            cc.director.runScene(new SceneTemplate());
+        });
     }, this);
 };
 cc.game.run();

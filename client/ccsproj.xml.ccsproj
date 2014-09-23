@@ -1,18 +1,18 @@
 <?xml version="1.0"?>
 <GameProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <ProjectDir>E:\mysrc\CardGame\client</ProjectDir>
+  <ProjectDir>E:\mysrc\game\client</ProjectDir>
   <Version>1.6.0.0</Version>
-  <Resources>E:\mysrc\CardGame\client</Resources>
+  <Resources>E:\mysrc\game\client</Resources>
   <Name>client</Name>
   <JsonFileName>client.json</JsonFileName>
   <CanvasSize>
     <Width>480</Width>
     <Height>320</Height>
   </CanvasSize>
-  <filePath>E:\mysrc\CardGame\client\ccsproj.xml.ccsproj</filePath>
+  <filePath>E:\mysrc\game\client\ccsproj.xml.ccsproj</filePath>
   <ProjectType>GameProject</ProjectType>
   <ResRelativePath />
-  <ResProjFolder>E:\mysrc\CardGame\client\CocosStudio\ccsprojs</ResProjFolder>
-  <AssetsDir>E:\mysrc\CardGame\client\CocosStudio\assets</AssetsDir>
+  <ResProjFolder>E:\mysrc\game\client\CocosStudio\ccsprojs</ResProjFolder>
+  <AssetsDir>E:\mysrc\game\client\CocosStudio\assets</AssetsDir>
   <LanaguageType>js</LanaguageType>
 </GameProject>

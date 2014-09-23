@@ -1,20 +1,20 @@
 <?xml version="1.0"?>
 <SceneProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <ProjectDir>E:\mysrc\CardGame\client\CocosStudio\ccsprojs\logo</ProjectDir>
+  <ProjectDir>E:\mysrc\game\client\CocosStudio\ccsprojs\logo</ProjectDir>
   <Version>1.6.0.0</Version>
-  <Resources>E:\mysrc\CardGame\client</Resources>
+  <Resources>E:\mysrc\game\client</Resources>
   <Name>logo</Name>
   <JsonFileName>logo.json</JsonFileName>
-  <JsonFolder>E:\mysrc\CardGame\client\CocosStudio\assets\publish</JsonFolder>
+  <JsonFolder>E:\mysrc\game\client\CocosStudio\assets\publish</JsonFolder>
   <JsonList />
   <CanvasSize>
     <Width>480</Width>
     <Height>320</Height>
   </CanvasSize>
-  <filePath>E:\mysrc\CardGame\client\CocosStudio\ccsprojs\logo\logo.xml.scene</filePath>
+  <filePath>E:\mysrc\game\client\CocosStudio\ccsprojs\logo\logo.xml.scene</filePath>
   <ProjectType>SceneProject</ProjectType>
   <ResRelativePath>\\..\\..\\assets</ResRelativePath>
   <JSFileList />
   <DefaultUI_JSList />
-  <Res>E:\mysrc\CardGame\client\CocosStudio\assets</Res>
+  <Res>E:\mysrc\game\client\CocosStudio\assets</Res>
 </SceneProject>
