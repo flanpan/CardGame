@@ -13,6 +13,6 @@
     }
 
     for(var key in bag) {
-        kv.add(def+'.'+key ,bag);
+        kv.set(def+'.'+key ,bag);
     }
 }());

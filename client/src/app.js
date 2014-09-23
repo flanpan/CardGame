@@ -9,7 +9,7 @@ var LayerTemplate = cc.Layer.extend({
         this.cfg = kv.v.curSceneCfg;
         var node = ccs.sceneReader.createNodeWithSceneFile(this.cfg.file);
         this.addChild(node);
-
+        var self = this;
         var checkCan = function(can) {
             if(!can) return true;
             if(typeof can !== 'object') {
@@ -44,7 +44,37 @@ var LayerTemplate = cc.Layer.extend({
                     console.error(name,'还没有实现.');
                     return
                 }else if(typeof d == 'object') {
-                    return kv.get(name)(d);
+                    if(d.node) {
+                        return kv.get(name)(d);
+                    }
+                    if(d.name) {
+                        if(d.scene) {
+                            if(d.multi) {
+                                var nodes = d.scene.find(d.name);
+                                nodes.forEach(function(node){
+                                    d.node = node;
+                                    kv.get(name)(d);
+                                });
+                            } else {
+                                d.node = d.scene.findOne(d.name);
+                                if(d.node)
+                                    kv.get(name)(d);
+                            }
+
+                        } else {
+                            if(d.multi) {
+                                var nodes = self.find(d.name);
+                                nodes.forEach(function(node){
+                                    d.node = node;
+                                    kv.get(name)(d);
+                                });
+                            } else {
+                                d.node = self.findOne(d.name);
+                                if(d.node)
+                                    kv.get(name)(d);
+                            }
+                        }
+                    }
                 } else {
                     console.error(name,'配置错误.');
                     return;
@@ -109,6 +139,14 @@ var LayerTemplate = cc.Layer.extend({
     gameLogic: function () {
         //ccs.sendEvent(TRIGGER_EVENT_UPDATESCENE);
         this.event.emit('v.scene.update');
+    },
+
+    find:function(key) {
+        return [];
+    },
+
+    findOne:function(key) {
+        return null;
     }
 });
 

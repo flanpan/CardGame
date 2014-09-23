@@ -1,10 +1,10 @@
 /**
  * Created by feng.pan on 14-9-23.
  */
-(function (global) {
+(function () {
     var def = 'm';
     var m = {};
-    //m.event = new EventEmitter;
+    m.event = new EventEmitter;
     m.testCan = function() {
         return true;
     };
@@ -14,6 +14,6 @@
     }
 
     for(var key in m) {
-        kv.add(def+'.'+key ,m[key]);
+        kv.set(def+'.'+key ,m[key]);
     }
-}(this));
+}());

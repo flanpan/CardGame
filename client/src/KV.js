@@ -16,7 +16,7 @@
  */
 (function (root) {
     var kv = {}
-    kv.add = function(k,v) {
+    kv.set = function(k,v) {
         if(!k) {
             return console.error('add kv failed.');
         }

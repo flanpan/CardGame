@@ -71,7 +71,7 @@ var loadCfg = function(cb) {
                 path = _.str.strLeftBack(path,'.');
                 path = path.substr('src/config/'.length);
                 path = path.replace(/\//g,'.');
-                kv.add('c.'+path,res[i]);
+                kv.set('c.'+path,res[i]);
             }
             cb();
         });
@@ -100,7 +100,7 @@ cc.game.onStart = function(){
             for(var key in kv.c.scene) {
                 var scene = kv.c.scene[key];
                 if(scene.isFirst) {
-                    kv.add('v.curSceneCfg',scene);
+                    kv.set('v.curSceneCfg',scene);
                     break;
                 }
             }
