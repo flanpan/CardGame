@@ -1,4 +1,7 @@
 {
-    "has_native": true, 
-    "project_type": "js"
+  "has_native": true,
+  "project_type": "js",
+  "assets": {
+    "ignores": []
+  }
 }

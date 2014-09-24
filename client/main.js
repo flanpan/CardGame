@@ -87,8 +87,8 @@ cc.game.onStart = function(){
         var searchPaths = jsb.fileUtils.getSearchPaths();
         console.log(searchPaths);
         var paths = [
-            'script',
-            'src',
+            //'script',
+            //'src',
             'Resources'
         ];
         for (var i = 0; i < paths.length; i++) {

@@ -97,7 +97,7 @@ var LayerTemplate = cc.Layer.extend({
             });
         }
         */
-        kv.v.runEvents(this.cfg.events);
+        kv.v.runEvents(this.cfg);
         this.schedule(this.gameLogic);
         //ccs.sendEvent(TRIGGER_EVENT_ENTERSCENE);
         this.event.emit('v.scene.enter');

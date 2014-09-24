@@ -16,13 +16,13 @@
       "classname": "CCNode",
       "name": null,
       "canedit": true,
-      "objecttag": 10011,
+      "objecttag": 10014,
       "rotation": 0,
       "scalex": 1,
       "scaley": 1,
       "visible": 1,
-      "x": 228.22224426269531,
-      "y": 166.22222900390625,
+      "x": 218.18180847167969,
+      "y": 163.18182373046875,
       "zorder": 1,
       "gameobjects": [],
       "components": [
@@ -32,7 +32,35 @@
           "name": "CCSprite",
           "file": null,
           "fileData": {
-            "path": "publish/CloseNormal.png",
+            "path": "publish/img/CloseNormal.png",
+            "plistFile": "",
+            "resourceType": 0
+          }
+        }
+      ]
+    },
+    {
+      "__type": "ComGameObjectSurrogate:#EditorCommon.JsonModel",
+      "classname": "CCNode",
+      "name": null,
+      "canedit": true,
+      "objecttag": 10016,
+      "rotation": 0,
+      "scalex": 1,
+      "scaley": 1,
+      "visible": 1,
+      "x": 126.36362457275391,
+      "y": 235.90908813476563,
+      "zorder": 1,
+      "gameobjects": [],
+      "components": [
+        {
+          "__type": "ComGUIAdapterSurrogate:#EditorCommon.JsonModel.Component",
+          "classname": "GUIComponent",
+          "name": "GUIComponent",
+          "file": null,
+          "fileData": {
+            "path": "",
             "plistFile": "",
             "resourceType": 0
           }

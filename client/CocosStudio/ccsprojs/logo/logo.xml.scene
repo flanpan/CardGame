@@ -16,5 +16,7 @@
   <ResRelativePath>\\..\\..\\assets</ResRelativePath>
   <JSFileList />
   <DefaultUI_JSList />
+  <ExternalSimulatorPath>E:\mysrc\game\client\client.exe</ExternalSimulatorPath>
+  <ExternalCommand />
   <Res>E:\mysrc\game\client\CocosStudio\assets</Res>
 </SceneProject>
