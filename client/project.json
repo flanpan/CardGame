@@ -12,8 +12,10 @@
 
     "jsList" : [
         "src/kv.js",
+        "src/fun.js",
         "src/model/model.js",
         "src/model/bag.js",
+        "src/view/view.js",
         "src/resource.js",
         "src/app.js"
     ]

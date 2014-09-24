@@ -2,8 +2,7 @@ var res = {
     HelloWorld_png : "res/HelloWorld.png",
     CloseNormal_png : "res/CloseNormal.png",
     CloseSelected_png : "res/CloseSelected.png",
-    aaa:"Resources/publish/logo.json",
-    bbb:"CloseNormal.png"
+    aaa:"Resources/publish/logo.json"
 };
 
 var g_resources = [];

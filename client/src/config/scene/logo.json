@@ -1,1 +1,1 @@
-{"isFirst":true,"file":"Resources/publish/logo.json","events":{"v.scene.enter":{"事件1":{"can":{"m.testCan":{"param":"方法可以是调用can的,参数可以是复杂结构,目测可以实现嵌套等..所有东西."}},"do":{"m.testDo":{"aaa":"bbb","return":"bbb"}}}}}}
+{"isFirst":true,"file":"Resources/publish/logo.json","events":{"v.scene.enter":{"事件1":{"can":{"m.testCan":{"param":"方法可以是调用can的,参数可以是复杂结构,目测可以实现嵌套等..所有东西."}},"do":{"m.testDo":{"aaa":"bbb","return":"bbb"}}},"事件2":{"can":"c.can.can1","do":"c.do.do1"}}}}

@@ -83,17 +83,20 @@ cc.game.onStart = function(){
     cc.view.setDesignResolutionSize(800, 450, cc.ResolutionPolicy.SHOW_ALL);
     cc.view.resizeWithBrowserSize(true);
 
-    var searchPaths = jsb.fileUtils.getSearchPaths();
-    console.log(searchPaths);
-    var paths = [
-        'script',
-        'src',
-        'Resources'
-    ];
-    for (var i = 0; i < paths.length; i++) {
-        searchPaths.push(paths[i]);
+    if (cc.sys.isNative === true) {
+        var searchPaths = jsb.fileUtils.getSearchPaths();
+        console.log(searchPaths);
+        var paths = [
+            'script',
+            'src',
+            'Resources'
+        ];
+        for (var i = 0; i < paths.length; i++) {
+            searchPaths.push(paths[i]);
+        }
+        jsb.fileUtils.setSearchPaths(searchPaths);
     }
-    jsb.fileUtils.setSearchPaths(searchPaths);
+
     //load resources
     cc.LoaderScene.preload(g_resources, function () {
         loadCfg(function() {

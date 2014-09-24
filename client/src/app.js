@@ -5,11 +5,14 @@ var LayerTemplate = cc.Layer.extend({
     cfg:null,
     onEnter: function () {
         this._super();
-        this.event = new EventEmitter;
+        kv.v.curScene = this;
         this.cfg = kv.v.curSceneCfg;
         var node = ccs.sceneReader.createNodeWithSceneFile(this.cfg.file);
+        this.event = new EventEmitter;
+        this.sceneNode = node;
         this.addChild(node);
         var self = this;
+        /*
         var checkCan = function(can) {
             if(!can) return true;
             if(typeof can !== 'object') {
@@ -93,7 +96,8 @@ var LayerTemplate = cc.Layer.extend({
                 }
             });
         }
-
+        */
+        kv.v.runEvents(this.cfg.events);
         this.schedule(this.gameLogic);
         //ccs.sendEvent(TRIGGER_EVENT_ENTERSCENE);
         this.event.emit('v.scene.enter');
@@ -139,14 +143,6 @@ var LayerTemplate = cc.Layer.extend({
     gameLogic: function () {
         //ccs.sendEvent(TRIGGER_EVENT_UPDATESCENE);
         this.event.emit('v.scene.update');
-    },
-
-    find:function(key) {
-        return [];
-    },
-
-    findOne:function(key) {
-        return null;
     }
 });
 
