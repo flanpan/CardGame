@@ -3,8 +3,7 @@ var res = {
     CloseNormal_png : "res/CloseNormal.png",
     CloseSelected_png : "res/CloseSelected.png",
     aaa:"Resources/logo.json",
-    //bbb:"Resources/CloseNormal.png",
-    ccc:"Resources/img/CloseNormal.png"
+    ccc:"Resources/CloseNormal.png"
 };
 
 var g_resources = [];

@@ -11,6 +11,7 @@
     "modules" : ["cocos2d","extensions"],
 
     "jsList" : [
+        "src/unzip4base64.js",
         "src/kv.js",
         "src/fun.js",
         "src/model/model.js",
