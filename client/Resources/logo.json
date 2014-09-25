@@ -32,7 +32,7 @@
           "name": "CCSprite",
           "file": null,
           "fileData": {
-            "path": "publish/img/CloseNormal.png",
+            "path": "CloseNormal.png",
             "plistFile": "",
             "resourceType": 0
           }
