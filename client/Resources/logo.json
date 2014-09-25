@@ -16,13 +16,13 @@
       "classname": "CCNode",
       "name": null,
       "canedit": true,
-      "objecttag": 10014,
+      "objecttag": 10016,
       "rotation": 0,
       "scalex": 1,
       "scaley": 1,
       "visible": 1,
-      "x": 218.18180847167969,
-      "y": 163.18182373046875,
+      "x": 266.49972534179688,
+      "y": 173.50006103515625,
       "zorder": 1,
       "gameobjects": [],
       "components": [
@@ -33,34 +33,6 @@
           "file": null,
           "fileData": {
             "path": "CloseNormal.png",
-            "plistFile": "",
-            "resourceType": 0
-          }
-        }
-      ]
-    },
-    {
-      "__type": "ComGameObjectSurrogate:#EditorCommon.JsonModel",
-      "classname": "CCNode",
-      "name": null,
-      "canedit": true,
-      "objecttag": 10016,
-      "rotation": 0,
-      "scalex": 1,
-      "scaley": 1,
-      "visible": 1,
-      "x": 126.36362457275391,
-      "y": 235.90908813476563,
-      "zorder": 1,
-      "gameobjects": [],
-      "components": [
-        {
-          "__type": "ComGUIAdapterSurrogate:#EditorCommon.JsonModel.Component",
-          "classname": "GUIComponent",
-          "name": "GUIComponent",
-          "file": null,
-          "fileData": {
-            "path": "",
             "plistFile": "",
             "resourceType": 0
           }
