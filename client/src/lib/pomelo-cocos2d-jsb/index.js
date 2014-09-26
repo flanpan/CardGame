@@ -4,7 +4,7 @@ module.exports = {};
 
 var console = cc;
 console.error = cc.log;
-
+/*
 var setTimeout = function(fn, interval) {
 	var instance = cc.Director.getInstance();
 	var scene = instance.getRunningScene();
@@ -21,7 +21,7 @@ var clearTimeout = function(target) {
 
 window.setTimeout = setTimeout;
 window.clearTimeout = clearTimeout;
-
+*/
 require('src/lib/pomelo-cocos2d-jsb/lib/emitter/index.js');
 
 window.EventEmitter = Emitter;
