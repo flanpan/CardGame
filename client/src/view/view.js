@@ -35,13 +35,13 @@
     };
 
     v.can = function(args) {
-        console.log('can',args)
         if(!args) return true;
         if(_.isString(args)) {
             return v.can(kv.get(args))
         } else if (_.isObject(args)) {
             for (var name in args) {
                 var c = args[name];
+                console.log('can:',name,args[name])
                 if (typeof c == 'object') {
                     if (!kv.get(name)(c))
                         return false;
@@ -72,6 +72,7 @@
         } else if(typeof args == 'object') {
             for (var name in args) {
                 var d = args[name];
+                console.log('do:',name,args[name])
                 if (typeof d == 'object') {
                     if (d.node) {
                         return kv.get(name)(d);
@@ -132,6 +133,7 @@
     };
 
     v.runEvents = function(args) {
+        /*
         var scene = null;
         if(args.scene)
             scene = args.scene;
@@ -139,20 +141,23 @@
             scene = kv.v.curScene;
         var events = args.events;
         for(var eventName in events) {
-            console.log('on event',eventName);
-            scene.event.on(eventName,function() {
+            ev.on(eventName,function() {
+                var eventName = ev.curEvent;
+                console.log('on event',eventName);
+
                 for(var name in events[eventName]) {
                     var e = events[eventName][name];
                     v.runEvent({can: e.can, do:e.do});
                 }
             });
-        }
+        }*/
+        ev.addEvents(args.events);
     };
 
     v.addListener = function() {
 
     };
-
+    /*
     v.sceneEvents = {};
 
     v.addModelListener = function(args) {
@@ -163,7 +168,7 @@
         };
         kv.m.event.on(args.key,v.sceneEvents[scene]);
     };
-
+*/
     v._nodeByTag = function (parent, tag) {
         if (parent == null)
             return null;
