@@ -1,5 +1,3 @@
-var exp = module.exports;
-
 var DateEx = function() {
 	var date = new Date();
 	this.set(date);

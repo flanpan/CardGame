@@ -1,9 +1,7 @@
-var RouteUtil = function() {
-	this.$id = "routeUtil";
-	this.$dispatcher = null;
-}
+var dispatcher = require('./dispatcher')
+var exp = module.exports;
 
-RouteUtil.prototype.chat = function(session, msg, app, cb) {
+exp.chat = function(session, msg, app, cb) {
 	var chatServers = app.getServersByType('chat');
 
 	if (!chatServers || chatServers.length === 0) {
@@ -11,9 +9,8 @@ RouteUtil.prototype.chat = function(session, msg, app, cb) {
 		return;
 	}
 
-	var res = this.$dispatcher.dispatch(session.get('rid'), chatServers);
+	var res = dispatcher.dispatch(session.get('rid'), chatServers);
 
 	cb(null, res.id);
 };
 
-module.exports = RouteUtil;

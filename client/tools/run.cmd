@@ -1,1 +1,1 @@
-browserify main.js -o ../src/lib/bundle.js
+browserify export.js -o ../src/lib/bundle.js

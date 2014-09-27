@@ -1,8 +1,10 @@
-var bearcat = require('bearcat');
 var pomelo = require('pomelo');
 
+module.exports = function() {
+    return new ChatRemote;
+};
+
 var ChatRemote = function() {
-	this.$id = "chatRemote";
 	this.app = pomelo.app;
 	this.channelService = this.app.get('channelService');
 };
@@ -76,6 +78,3 @@ ChatRemote.prototype.kick = function(uid, sid, name, cb) {
 	cb();
 };
 
-module.exports = function() {
-	return bearcat.getBean(ChatRemote);
-};

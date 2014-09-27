@@ -48,9 +48,6 @@
  */
 if (cc.sys.isNative === true) {
     require('src/lib/pomelo-cocos2d-jsb/index.js');
-    //require('src/lib/async.js');
-    //require('src/lib/underscore.js');
-    //require('src/lib/underscore.string.js');
 }
 
 
@@ -103,7 +100,7 @@ cc.game.onStart = function(){
     cc.log(flan);
 
     //load resources
-    /*
+
     cc.LoaderScene.preload(g_resources, function () {
         loadCfg(function() {
             for(var key in kv.c.scene) {
@@ -121,6 +118,6 @@ cc.game.onStart = function(){
         });
 
 
-    }, this);*/
+    }, this);
 };
 cc.game.run();

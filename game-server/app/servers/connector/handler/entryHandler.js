@@ -1,8 +1,8 @@
-var bearcat = require('bearcat');
 var pomelo = require('pomelo');
-
+module.exports = function() {
+    return new EntryHandler;
+};
 var EntryHandler = function() {
-	this.$id = "entryHandler";
 	this.app = pomelo.app;
 };
 
@@ -60,6 +60,3 @@ var onUserLeave = function(app, session) {
 	app.rpc.chat.chatRemote.kick(session, session.uid, app.get('serverId'), session.get('rid'), null);
 };
 
-module.exports = function() {
-	return bearcat.getBean(EntryHandler);
-};

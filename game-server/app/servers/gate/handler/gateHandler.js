@@ -1,10 +1,11 @@
-var bearcat = require('bearcat');
 var pomelo = require('pomelo');
+var dispatcher = require('../../../util/dispatcher')
+module.exports = function() {
+    return new GateHandler();
+};
 
 var GateHandler = function() {
-	this.$id = "gateHandler";
 	this.app = pomelo.app;
-	this.$dispatcher = null;
 };
 
 /**
@@ -32,7 +33,7 @@ GateHandler.prototype.queryEntry = function(msg, session, next) {
 		return;
 	}
 	// select connector
-	var res = this.$dispatcher.dispatch(uid, connectors);
+	var res = dispatcher.dispatch(uid, connectors);
 	next(null, {
 		code: 200,
 		host: res.host,
@@ -40,6 +41,3 @@ GateHandler.prototype.queryEntry = function(msg, session, next) {
 	});
 };
 
-module.exports = function() {
-	return bearcat.getBean(GateHandler);
-};

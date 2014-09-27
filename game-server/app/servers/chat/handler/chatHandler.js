@@ -1,8 +1,8 @@
-var bearcat = require('bearcat');
 var pomelo = require('pomelo');
-
+module.exports = function() {
+    return new (ChatHandler);
+};
 var ChatHandler = function() {
-	this.$id = "chatHandler";
 	this.app = pomelo.app;
 };
 
@@ -43,6 +43,3 @@ ChatHandler.prototype.send = function(msg, session, next) {
 	});
 };
 
-module.exports = function() {
-	return bearcat.getBean(ChatHandler);
-};

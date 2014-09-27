@@ -11,6 +11,7 @@
         "async":"",
         "pomelo-status-plugin":"",
         "pomelo-globalchannel-plugin":"",
-        "underscore":""
+        "underscore":"",
+        "underscore.string":""
     }
 }
