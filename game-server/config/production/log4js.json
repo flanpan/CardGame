@@ -1,0 +1,32 @@
+{
+    "appenders": [
+        {
+            "type": "console"
+        },
+        {
+            "type": "dateFile",
+            "filename": "${opts:base}/logs/all",
+            "pattern": "-yyyy-MM-dd.log",
+            "alwaysIncludePattern": true,
+            "maxLogSize": 1048576000,
+            "layout": {
+                "type": "basic"
+            }
+            ,"backups": 5,
+            "category":"[all]"
+        }
+    ],
+
+    "levels": {
+        "[all]": "TRACE",
+        "rpc-log" : "TRACE",
+        "forward-log": "TRACE",
+        "transcript":"TRACE",
+        "pomelo":"TRACE",
+        "rpc-debug":"TRACE"
+    },
+
+    "replaceConsole": false,
+    "reloadSecs": 3,
+    "lineDebug": false
+}

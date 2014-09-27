@@ -1,0 +1,9 @@
+node_modules
+.idea
+/client/.settings
+/client/frameworks
+/client/runtime
+/client/.project
+/game-server/logs
+/client/tools/bindings-generator
+/client/tools/tojs

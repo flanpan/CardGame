@@ -1,0 +1,19 @@
+{
+    "gate": [{
+        "id": "gate-server-1",
+        "host": "127.0.0.1",
+        "port": 11901
+    }],
+    "connector": [{
+        "host": "127.0.0.1",
+        "port": "11911++",
+        "clientPort": "11921++",
+        "frontend": true,
+        "clusterCount": 2
+    }],
+    "chat": [{
+        "host": "127.0.0.1",
+        "port": "11931++",
+        "clusterCount": 2
+    }]
+}
