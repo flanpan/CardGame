@@ -1,59 +1,64 @@
 /**
- * Created by feng.pan on 14-9-18.
- */
-/**
  * Created by feng.pan on 14-9-4.
  */
 
 var logger = require('pomelo-logger').getLogger(__filename);
-//var ChrModel = require('../schema/chrModel');
-var bearcat = require('bearcat');
+var mongoose = require('mongoose');
+var async = require('async');
+var ChrSchema = require('../../../shared/schema/chr');
+var ChrModel = mongoose.model('chr', ChrSchema);
+var Chr = require('./chr/chr');
+
+module.exports = function(app, opts) {
+    return new ChrMgr(app, opts);
+};
 
 var ChrMgr = function(app,opts) {
-    this.name = 'com.chr';
+    this.name = 'chrMgr';
     app.set(this.name,this);
     this.chrs = {};
-    this.ChrModel = bearcat.getFunction('com.chr.chrModel');
     //this.Chr = bearcat.getBean('chr.service.chr');
     //this.model = null;
     this.updateInterval = null;
 };
 
-module.exports = ChrMgr;
 var pro = ChrMgr.prototype;
 
 pro.get = function(uid) {
     return this.chrs[uid];
 };
 
-pro.add = function(uid,opts,cb) {
-    if(this.get(uid)) return cb({code:500});
+pro.getFromDb = function(uid,cb) {
     var self = this;
-    var ChrModel = this.ChrModel;
     ChrModel.findOne({uid:uid},function(err,data) {
         if(err) {
             logger.warn('chrMgr find chr err:',err);
             return;
         }
         if(data) {
-            var chr = bearcat.getBean('com.chr.chr',data);
+            var chr = new Chr(data);//bearcat.getBean('com.chr.chr',data);
             self.chrs[uid] = chr;
             chr.setUpdateInterval(self.updateInterval);
             logger.info('chrMgr load chr',uid);
             return cb({code:200});
         } else {
-            ChrModel.create(opts,function(err,data) {
-                if(err) {
-                    logger.warn('chrMgr create chr err:',err);
-                    return;
-                }
-                var chr = bearcat.getBean('com.chr.chr',data);
-                self.chrs[uid] = chr;
-                chr.setUpdateInterval(self.updateInterval);
-                logger.info('chrMgr create chr',uid);
-                cb({code:200});
-            });
+
         }
+    });
+};
+
+pro.create = function(opts,cb) {
+    var self = this;
+    ChrModel.create(opts,function(err,data) {
+        if(err) {
+            logger.warn('chrMgr create chr err:',err);
+            return;
+        }
+        var chr = new Chr(data);//bearcat.getBean('com.chr.chr',data);
+        self.chrs[data._id] = chr;
+        chr.setUpdateInterval(self.updateInterval);
+        logger.info('chrMgr create chr',uid);
+        cb({code:200});
     });
 };
 
@@ -72,12 +77,18 @@ pro.remove = function(uid,cb) {
 };
 
 pro.removeAll = function(cb) {
-
+    var self = this;
+    async.eachSeries(Object.keys(this.chrs), function (chrId, callback) {
+        self.remove(chrId,callback)
+    }, function () {
+        //utils.invokeCallback(cb);
+        cb();
+    });
 };
 
 pro.stop = function(cb) {
     this.removeAll(function() {
-        logger.info('remove all chrs..');
+        logger.info('All chrs have bean removed.');
         process.nextTick(cb);
     });
 };

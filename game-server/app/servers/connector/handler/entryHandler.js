@@ -6,14 +6,6 @@ var EntryHandler = function() {
 	this.app = pomelo.app;
 };
 
-/**
- * New client entry chat server.
- *
- * @param  {Object}   msg     request message
- * @param  {Object}   session current session object
- * @param  {Function} next    next stemp callback
- * @return {Void}
- */
 EntryHandler.prototype.enter = function(msg, session, next) {
 	var self = this;
 	var rid = msg.rid;
@@ -39,24 +31,17 @@ EntryHandler.prototype.enter = function(msg, session, next) {
 	session.on('closed', onUserLeave.bind(null, self.app));
 
 	//put user into channel
-	self.app.rpc.chat.chatRemote.add(session, uid, self.app.get('serverId'), rid, true, function(users) {
+	self.app.rpc.game.chrRemote.add(session, uid, self.app.get('serverId'), rid, true, function(users) {
 		next(null, {
 			users: users
 		});
 	});
 };
 
-/**
- * User log out handler
- *
- * @param {Object} app current application
- * @param {Object} session current session object
- *
- */
 var onUserLeave = function(app, session) {
 	if (!session || !session.uid) {
 		return;
 	}
-	app.rpc.chat.chatRemote.kick(session, session.uid, app.get('serverId'), session.get('rid'), null);
+	app.rpc.game.chrRemote.leave(session, session.uid, app.get('serverId'), session.get('rid'), null);
 };
 

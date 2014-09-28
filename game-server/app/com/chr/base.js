@@ -4,19 +4,20 @@
 
 
 var Base = function(model) {
+    this.model = model;
     this.updateFlags = {};
 };
 
 var pro = Base.prototype;
 
 pro.checkNumber = function(key,value) {
-    if(this.db[key] < value) {
+    if(this.model[key] < value) {
         return false;
     }
 };
 
 pro.checkObject = function(key,value) {
-    if(!this.db[key] || !this.db[key].check(value)) {
+    if(!this.model[key] || !this.model[key].check(value)) {
         return false;
     }
 };
@@ -45,16 +46,16 @@ pro.updateNumber = function(key,value) {
     }
 
     if(value > 0) {
-        this.db[key] += value;
+        this.model[key] += value;
     } else {
-        this.db[key] -= value;
+        this.model[key] -= value;
     }
 
     if(!this.updateFlags[key]) {
         this.updateFlags = true;
     }
 
-    this.emit(key+'.update',this.db[key]);
+    this.emit(key+'.update',this.model[key]);
 };
 
 pro.updateObject = function(key,value) {

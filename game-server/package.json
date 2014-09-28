@@ -1,17 +1,14 @@
 {
-    "name": "CardGame",
-    "version": "0.0.1",
-    "private": false,
-    "dependencies": {
-        "pomelo": "",
-        "pomelo-logger": "",
-        "crc": "0.2.0",
-        "mongoose": "3.8.x",
-        "bearcat":"",
-        "async":"",
-        "pomelo-status-plugin":"",
-        "pomelo-globalchannel-plugin":"",
-        "underscore":"",
-        "underscore.string":""
-    }
+  "name": "CardGame",
+  "version": "0.0.1",
+  "private": false,
+  "dependencies": {
+    "pomelo": "",
+    "pomelo-logger": "",
+    "crc": "0.2.0",
+    "async": "",
+    "underscore": "",
+    "underscore.string": "",
+    "mongoose": "^3.8.16"
+  }
 }

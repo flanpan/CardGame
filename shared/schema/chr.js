@@ -5,11 +5,11 @@
  * Created by feng.pan on 14-9-4.
  */
 var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
+//var Schema = mongoose.Schema;
 //var Pet = require('./pet');
 //var Task = require('./task');
 
-var Chr = new Schema({
+var Chr = {
     uid:Number,
     name:String,
     level:Number,
@@ -19,16 +19,6 @@ var Chr = new Schema({
     loginDate:Date
     //pet:Pet,
     //task:Task
-});
-var model = mongoose.model('chr', Chr);
-module.exports = model;
-
-
-Chr.methods.test = function() {
-
 };
 
-Chr.static.test1 = function() {
-
-};
-
+module.exports = Chr;

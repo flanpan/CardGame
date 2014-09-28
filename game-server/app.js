@@ -1,22 +1,22 @@
 var pomelo = require('pomelo');
 var routeUtil = require('./app/util/routeUtil');
-
-/**
- * Init app for client.
- */
 var app = pomelo.createApp();
+var logger = require('pomelo-logger');
 global.app = app;
 
 
 app.set('name', 'CardGame');
 app.enable('systemMonitor');
+//app.registerAdmin(require('./app/module/script'), {app: app});
 //app.enable('rpcDebugLog');
 global.mongoose = require("mongoose");
-//'mongodb://admin:admin@localhost/game';
+//'mongodb://flan:flan@localhost/game';
 global.mongoose.connect('mongodb://localhost/game');
 //app.load(require('./app/com/base'),{});
 //app.load(require('./app/com/chr'),{});
+app.configureLogger(logger);
 app.configure('production|development', 'connector', function() {
+    app.load(require('./app/com/chrMgr'));
     app.set('connectorConfig', {
         connector: pomelo.connectors.hybridconnector,
         heartbeat: 3,
@@ -30,6 +30,13 @@ app.configure('production|development', 'gate', function() {
         connector: pomelo.connectors.hybridconnector,
         useProtobuf: true
     });
+});
+
+app.configure('production|development', 'game', function() {
+    app.load(require('./app/com/chrMgr'));
+    app.filter(pomelo.filters.serial());
+    var filter = require('./app/servers/game/filter/filter');
+    app.before(filter());
 });
 
 app.configure('production|development', function() {

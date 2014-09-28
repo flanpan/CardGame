@@ -2,12 +2,15 @@
  * Created by feng.pan on 14-9-4.
  */
 
-
+var util = require('util');
+var Base = require('./base');
 
 var Chr = function(model) {
-    this.db = model;
+    Base.call(this,model);
     this.updateTimmer = null;
 };
+
+util.inherits(Chr,Base);
 
 module.exports = Chr;
 var pro = Chr.prototype;
@@ -28,5 +31,5 @@ pro.clearUpdateInterval = function() {
 };
 
 pro.save = function(cb) {
-    return this.db.save(cb);
+    return this.model.save(cb);
 };

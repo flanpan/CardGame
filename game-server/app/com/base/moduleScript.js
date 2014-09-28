@@ -1,7 +1,7 @@
 /**
  * Created by feng.pan on 14-9-17.
  */
-var bearcat = require('bearcat');
+//var bearcat = require('bearcat');
 var logger = require('pomelo-logger').getLogger('pomelo-admin', __filename);
 var vm = require('vm');
 var fs = require('fs');

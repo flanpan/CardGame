@@ -3,7 +3,7 @@ var Schema = mongoose.Schema;
 
 var ObjectId = Schema.Types.ObjectId;
 
-var User = Schema({
+var User = {
     id: Number,
     username: String,
     password: String,
@@ -13,6 +13,6 @@ var User = Schema({
         id: Number,
         chrId: Schema.Types.ObjectId
     }]
-});
+};
 
 module.exports = User;
