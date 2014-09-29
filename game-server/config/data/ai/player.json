@@ -1,5 +1,1 @@
-<<<<<<< HEAD
-{}
-=======
 {"blackboard":"bb","select":[{"if":{"cond":"haveTarget","loop":{"loopCond":"checkTarget","select":["tryAttack",{"sequence":["moveToTarget","tryAttack"]}]}}},{"if":{"cond":"haveItemTarget","loop":{"loopCond":"checkItemTarget","select":["tryPick",{"sequence":["moveToItemTarget","tryPick"]}]}}},{"if":{"cond":"haveNpcTarget","loop":{"loopCond":"checkNpcTarget","select":["tryTalk",{"sequence":["moveToNpcTarget","tryTalk"]}]}}}]}
->>>>>>> 410d318c21472b9a7313b67e1d6e7f82771bd58f

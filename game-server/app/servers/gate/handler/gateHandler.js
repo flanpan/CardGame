@@ -1,22 +1,14 @@
 var pomelo = require('pomelo');
 var dispatcher = require('../../../util/dispatcher')
 module.exports = function() {
-    return new GateHandler();
+    return new Handler();
 };
 
-var GateHandler = function() {
+var Handler = function() {
 	this.app = pomelo.app;
 };
 
-/**
- * Gate handler that dispatch user to connectors.
- *
- * @param {Object} msg message from client
- * @param {Object} session
- * @param {Function} next next stemp callback
- *
- */
-GateHandler.prototype.queryEntry = function(msg, session, next) {
+Handler.prototype.queryEntry = function(msg, session, next) {
 	var uid = msg.uid;
 	if (!uid) {
 		next(null, {

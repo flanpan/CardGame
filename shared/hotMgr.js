@@ -4,6 +4,7 @@
 
 var fs = require('fs');
 var path = require('path');
+var getFiles = require('./getFiles');
 
 var HotMgr = function() {
     this.files = {};
@@ -12,29 +13,17 @@ var HotMgr = function() {
 
 var pro = HotMgr.prototype;
 
-pro.addDir = function(dir) {
-    var self = this;
-    fs.readdirSync(dir).forEach(function(filename) {
-        var filePath = path.join(dir, filename);
-        self.addFile(filePath);
-    });
-};
-
-pro.addFile = function(file) {
-    var filePath = path.resolve(file);
-    var ext = path.extname(filePath);
-    if(ext !== '.js' || ext !== '.json')
-        return;
-    var self = this;
-    if(!this.files[filePath] && fs.existsSync(filePath)) {
-        fs.watchFile(filePath, { persistent: true, interval: self.interval }, function(){
-            if(require.cache[filePath]) {
-                delete require.cache[filePath];
-                require(filePath);
-                console.warn('Reload file '+filePath+'.');
+pro.addFiles = function(paths,exts) {
+    var files = getFiles(paths,exts);
+    files.forEach(function(p) {
+        fs.watchFile(p, { persistent: true, interval: self.interval }, function(){
+            if(require.cache[p]) {
+                delete require.cache[p];
+                require(p);
+                console.warn('Reload file '+p+'.');
             }
         });
-    }
+    });
 };
 
 module.exports = HotMgr;

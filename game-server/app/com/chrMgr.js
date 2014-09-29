@@ -17,72 +17,63 @@ var ChrMgr = function(app,opts) {
     this.name = 'chrMgr';
     app.set(this.name,this);
     this.chrs = {};
-    //this.Chr = bearcat.getBean('chr.service.chr');
-    //this.model = null;
     this.updateInterval = null;
 };
 
 var pro = ChrMgr.prototype;
 
-pro.get = function(uid) {
-    return this.chrs[uid];
+pro.get = function(name) {
+    return this.chrs[name];
 };
 
-pro.getFromDb = function(uid,cb) {
-    var self = this;
-    ChrModel.findOne({uid:uid},function(err,data) {
+pro.add = function(name,model) {
+    var chr = new Chr(model);
+    chr.setUpdateInterval(self.updateInterval);
+    logger.info('chrMgr load chr',name);
+    this.chrs[name] = chr;
+};
+
+pro.getModel = function(name,cb) {
+    ChrModel.findOne({name:name},function(err,model) {
         if(err) {
             logger.warn('chrMgr find chr err:',err);
             return;
         }
-        if(data) {
-            var chr = new Chr(data);//bearcat.getBean('com.chr.chr',data);
-            self.chrs[uid] = chr;
-            chr.setUpdateInterval(self.updateInterval);
-            logger.info('chrMgr load chr',uid);
-            return cb({code:200});
+        if(model) {
+            return cb({code:code.ok,model:model});
         } else {
-
+            return cb({code:code.entry.chrNotExist});
         }
     });
 };
 
-pro.create = function(opts,cb) {
-    var self = this;
-    ChrModel.create(opts,function(err,data) {
+pro.createModel = function(opts,cb) {
+    ChrModel.create(opts,function(err,model) {
         if(err) {
             logger.warn('chrMgr create chr err:',err);
             return;
         }
-        var chr = new Chr(data);//bearcat.getBean('com.chr.chr',data);
-        self.chrs[data._id] = chr;
-        chr.setUpdateInterval(self.updateInterval);
-        logger.info('chrMgr create chr',uid);
+        cb({code:200,model:model});
+    });
+};
+
+pro.remove = function(name,cb) {
+    var chr = this.get(name);
+    if(!chr) return cb({code:500});
+    var self = this;
+    chr.destroy(function(res) {
+        delete self.chrs[name];
         cb({code:200});
     });
 };
 
-pro.remove = function(uid,cb) {
-    var chr = this.get(uid);
-    if(!chr) return cb({code:500});
-    chr.save(function(err) {
-        if(err) {
-            //
-            return cb({code:500});
-        }
-        chr.clearUpdateInterval();
-        delete this.chrs[uid];
-        cb({code:200});
-    })
-};
-
 pro.removeAll = function(cb) {
     var self = this;
-    async.eachSeries(Object.keys(this.chrs), function (chrId, callback) {
-        self.remove(chrId,callback)
+    async.eachSeries(Object.keys(this.chrs), function (name, callback) {
+        self.remove(name,callback)
     }, function () {
         //utils.invokeCallback(cb);
-        cb();
+        cb({code:200});
     });
 };
 

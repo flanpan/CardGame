@@ -1,0 +1,1 @@
+{"ok":{"code":200,"desc":"成功"},"fail":{"code":500,"desc":"失败"},"noServerAvailable":{"code":1001,"desc":"没有可用的服务器."},"entry":{"tokenError":{"code":2001,"desc":"密钥错误."},"tokenExpire":{"code":2002,"desc":"密钥过期."},"userNotExist":{"code":2003,"desc":"用户不存在."},"chrNotExist":{"code":2004,"desc":"角色不存在."}},"chr":{"ok":{"code":500,"desc":"失败"}},"chat":{"ok":{"code":200,"desc":200}}}

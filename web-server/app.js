@@ -128,7 +128,7 @@ app.post('/login', function(req, res) {
         if (user.password !== msg.password) {
             return res.send({err: '密码不正确,请重新输入!'});
         }
-        res.send({token: Token.create(user.id, Date.now(), secret),id: user.id});
+        res.send({token: Token.create(user._id, Date.now(), secret),id: user._id});
     });
 });
 

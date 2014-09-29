@@ -2,13 +2,15 @@ var pomelo = require('pomelo');
 var routeUtil = require('./app/util/routeUtil');
 var app = pomelo.createApp();
 var logger = require('pomelo-logger');
-global.app = app;
+require('./app/init');
 
+global.app = app;
 
 app.set('name', 'CardGame');
 app.enable('systemMonitor');
 //app.registerAdmin(require('./app/module/script'), {app: app});
 //app.enable('rpcDebugLog');
+
 global.mongoose = require("mongoose");
 //'mongodb://flan:flan@localhost/game';
 global.mongoose.connect('mongodb://localhost/game');
