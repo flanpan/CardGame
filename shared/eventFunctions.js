@@ -36,11 +36,11 @@ pro.createEmitFun = function(args) {
 };
 
 pro.nativeFun = function(args) {
-    var fun = this.kv.get(args.fun);
+    var fun = this.kv.get(args.name);
     var res = fun.apply(args.obj,args.args)
     args.res = res;
 };
 
 pro.log = function(args) {
-    console.log.call(null,args.args);
+    console.log(args);
 };

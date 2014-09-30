@@ -3,9 +3,19 @@
  */
 var _str = require('underscore.string');
 
-var KV = function(opts) {
-    this.prototype = Object.create(opts||{});
+
+
+
+var KV = function(obj) {
+   if (obj) return mixin(obj);
 };
+
+function mixin(obj) {
+    for (var key in KV.prototype) {
+        obj[key] = KV.prototype[key];
+    }
+    return obj;
+}
 
 var pro = KV.prototype;
 

@@ -37,7 +37,7 @@ events = {
         }
     }
 }
- */
+
 
 pro.can = function(args) {
     if(!args)
@@ -83,9 +83,38 @@ pro.do = function(args) {
         return console.log(args,'do 参数不正确.')
     }
 };
+*/
+
+/*
+占位参数名fun,bifn
+*/
+pro.doFun = function(args) {
+    if(!args) return;
+    if(typeof args == 'string') {
+        this.doFun(this.kv.get(args));
+    } else if(_.isObject(args)) {
+        for (var name in args) {
+            var d = args[name];
+            console.log('doFun:', d)
+            if (typeof d == 'object') {
+                var res ;
+                if(d.fun)
+                    res = this.kv.get(d.fun)(d);
+                if(d.bifn && !res)
+                    return;
+            } else {
+                console.error(name, '配置错误.');
+                return;
+            }
+        }
+    } else {
+        return console.log(args,'do 参数不正确.')
+    }
+};
+
 
 pro.parseArgs = function(args,context) {
-    if(_.isString(args) && args.length>1) {
+    if(_.isString(args) && args.length>0) {
         if(args[0] === '$') {
             args = this.kv.get(args.substr(1));
         } else if(args[0] === '@') {
@@ -93,11 +122,11 @@ pro.parseArgs = function(args,context) {
         }
     } else if(_.isObject(args)) {
         for(var key in args) {
-            args[key] = this.parseArgs(args[key]);
+            args[key] = this.parseArgs(args[key],context);
         }
     } else if(_.isArray(args)) {
         for(var i = 0; i<args.length;i++) {
-            args[i] = this.parseArgs(args[i]);
+            args[i] = this.parseArgs(args[i],context);
         }
     }
     return args;
@@ -105,6 +134,8 @@ pro.parseArgs = function(args,context) {
 
 pro.runEvent = function(args,context) {
     args = this.parseArgs(args,context);
+    this.doFun(args);
+    /*
     if(typeof args === 'object') {
         if(this.can(args.can)) {
             this.do(args.do);
@@ -114,7 +145,7 @@ pro.runEvent = function(args,context) {
     }else {
         console.error('runEvent配置错误.',args)
     }
-    /*
+
     if(typeof args === 'string') {
         return this.runEvent(this.parseArgs(args));
     } else if(typeof args === 'object') {
@@ -141,8 +172,8 @@ pro.createOnFun = function(eventName) {
                     context = arguments[0];
                 else if(arguments.length > 1)
                     context = arguments;
-                context = new KV(context);
-                self.runEvent({can: e.can, do:e.do},context);
+                context = KV(context);
+                self.runEvent(e,context);
             }
         });
     };
