@@ -50,9 +50,16 @@ if (cc.sys.isNative === true) {
     require('src/lib/pomelo-cocos2d-jsb/index.js');
 }
 
+var test = function() {
+    //console.log(11111111111,test.caller.arguments)
+}
+
 
 
 var loadCfg = function(cb) {
+    test();
+    //console.log(arguments.callee);
+    kv.pomelo = pomelo;
     cc.loader.load('src/config/index.json', function(err, results) {
         if (err) {
             cc.log("Failed to load ", results);

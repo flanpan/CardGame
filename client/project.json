@@ -12,7 +12,6 @@
 
     "jsList" : [
         "src/lib/bundle.js",
-        "src/fun.js",
         "src/model/model.js",
         "src/model/bag.js",
         "src/view/view.js",

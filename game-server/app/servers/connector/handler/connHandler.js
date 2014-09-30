@@ -17,10 +17,11 @@ var Handler = function(app) {
 
 var pro = Handler.prototype;
 
+// 一个user可以在多个取建角色，一个区只能建一个角色，角色名在世界是唯一的。
 // msg: token,areaId,name
 pro.createChr = function(msg,session,next) {
     var self = this;
-    this.chrMgr.getModel(msg.name,function(res){
+    this.chrMgr.getModel({name:msg.name},function(res){
         if(res.code === code.ok) // 改日再完善
             return next(null,{code:res.code}); // 角色已经存在
         auth(session,msg.token,function(res) {
@@ -28,10 +29,14 @@ pro.createChr = function(msg,session,next) {
                 return next(null, {code: res.code});
             }
             var uid = res.user._id;
-            self.chrMgr.createModel({name:msg.name,areaId:msg.areaId,uid:uid},function(res){
-                if(res.code != code.ok)
-                    return next(null,{code:res.code});
-                self.entry(msg,session,next);
+            self.chrMgr.getModel({areaId:msg.areaId,uid:res.user._id},function(res){
+                if(res.code === code.ok) // 改日再完善
+                    return next(null,{code:res.code}); // 角色已经存在
+                self.chrMgr.createModel({name:msg.name,areaId:msg.areaId,uid:uid},function(res){
+                    if(res.code != code.ok)
+                        return next(null,{code:res.code});
+                    self.entry(msg,session,next);
+                });
             });
         });
     })
@@ -67,7 +72,7 @@ pro.entry = function(msg, session, next) {
             self.chrMgr.getModel({areaId:msg.areaId,uid:uid},function(res) {
                 if(res.code != code.ok)
                     return next(null,{code:res.code});
-                cb({code:code.ok,chr:res.chr});
+                cb({code:code.ok,chr:res.model});
             });
         }, function(res, cb) {
             chr = res.chr;

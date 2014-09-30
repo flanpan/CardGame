@@ -5,7 +5,7 @@ global.http = require('http');
 global.zlib = require('zlib');
 global.Buffer = Buffer;
 
-var KV = require('../../shared/kv');
+//var KV = require('../../shared/kv');
 var EventMgr = require('../../shared/eventMgr');
 
 var event = new EventMgr;

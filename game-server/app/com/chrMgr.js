@@ -15,7 +15,7 @@ module.exports = function(app, opts) {
 
 var ChrMgr = function(app,opts) {
     this.name = 'chrMgr';
-    app.set(this.name,this);
+    app.set(this.name,this,true);
     this.chrs = {};
     this.updateInterval = null;
 };
@@ -33,11 +33,11 @@ pro.add = function(name,model) {
     this.chrs[name] = chr;
 };
 
-pro.getModel = function(name,cb) {
-    ChrModel.findOne({name:name},function(err,model) {
+pro.getModel = function(opts,cb) {
+    ChrModel.findOne(opts,function(err,model) {
         if(err) {
             logger.warn('chrMgr find chr err:',err);
-            return;
+            return cb({code:code.fail});
         }
         if(model) {
             return cb({code:code.ok,model:model});

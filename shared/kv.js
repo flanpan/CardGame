@@ -3,7 +3,8 @@
  */
 var _str = require('underscore.string');
 
-var KV = function() {
+var KV = function(opts) {
+    this.prototype = Object.create(opts||{});
 };
 
 var pro = KV.prototype;
@@ -29,6 +30,8 @@ pro.set = function(k,v) {
 };
 
 pro.get = function(k) {
+    if(!k)
+        return this;
     var arr = _str.words(k,'.');
     var p = this;
     for(var i = 0; i<arr.length-1;i++) {

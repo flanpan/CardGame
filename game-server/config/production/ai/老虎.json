@@ -1,1 +1,0 @@
-{"blackboard":"bb","select":[{"if":{"cond":"haveTarget","loop":{"loopCond":"checkTarget","select":["tryAttack",{"sequence":["moveToTarget","tryAttack"]}]}}},"patrol"]}

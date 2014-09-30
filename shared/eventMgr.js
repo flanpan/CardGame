@@ -1,22 +1,25 @@
 var KV = require('./kv');
 var Event = require('events').EventEmitter;
 var util = require('util');
+var EventFunctions = require('./eventFunctions');
 
 var EventMgr = function() {
     Event.call(this);
     this.events = {};
     this.kv = new KV;
+    this.kv.f = new EventFunctions(this);
 };
 
 util.inherits(EventMgr,Event);
 
 var pro = EventMgr.prototype;
 module.exports = EventMgr;
-
+/*
 pro.emit = function(event) {
-    this.curEvent = event;
+    //this.curEvent = event;
     return Event.prototype.emit.call(this,event);
 };
+*/
 /*
 events = {
     listenerId:{
@@ -37,18 +40,20 @@ events = {
  */
 
 pro.can = function(args) {
-    if(!args) return true;
+    if(!args)
+        return true;
     if(typeof args === 'string') {
-        return this.can(this.kv.get(args))
-    } else if (typeof args === 'object') {
-        for (var name in args) {
-            var c = args[name];
-            console.log('can:',name,args[name])
+        if(!this.can(this.kv.get(args)))
+            return false;
+    } else if (_.isArray(args)) {
+        for (var i = 0; i<args.length;i++) {
+            var c = args[i];
+            console.log('can:', c.fun, c.args)
             if (typeof c == 'object') {
-                if (!this.kv.get(name)(c))
+                if (!this.kv.get(c.fun)(c.args))
                     return false;
             } else {
-                console.error(name, '配置错误.');
+                console.error(c.desc, '配置错误.');
                 return false;
             }
         }
@@ -62,26 +67,56 @@ pro.can = function(args) {
 pro.do = function(args) {
     if(!args) return;
     if(typeof args == 'string') {
-        return v.do(this.kv.get(args));
-    } else if(typeof args == 'object') {
-        for (var name in args) {
-            var d = args[name];
-            console.log('do:',name,args[name])
+        this.do(this.kv.get(args));
+    } else if(_.isArray(args)) {
+        for (var i = 0; i<args.length;i++) {
+            var d = args[i];
+            console.log('do:', d.fun, d.args)
             if (typeof d == 'object') {
-                return this.kv.get(name)(d);
+                this.kv.get(d.fun)(d.args);
             } else {
-                console.error(name, '配置错误.');
+                console.error(d.desc, '配置错误.');
                 return;
             }
         }
     } else {
-        console.log(args,'do 参数不正确.')
+        return console.log(args,'do 参数不正确.')
     }
 };
 
-pro.runEvent = function(args) {
+pro.parseArgs = function(args,context) {
+    if(_.isString(args) && args.length>1) {
+        if(args[0] === '$') {
+            args = this.kv.get(args.substr(1));
+        } else if(args[0] === '@') {
+            args = context.get(args.substr(1));
+        }
+    } else if(_.isObject(args)) {
+        for(var key in args) {
+            args[key] = this.parseArgs(args[key]);
+        }
+    } else if(_.isArray(args)) {
+        for(var i = 0; i<args.length;i++) {
+            args[i] = this.parseArgs(args[i]);
+        }
+    }
+    return args;
+};
+
+pro.runEvent = function(args,context) {
+    args = this.parseArgs(args,context);
+    if(typeof args === 'object') {
+        if(this.can(args.can)) {
+            this.do(args.do);
+        } else {
+            console.log('can return false.')
+        }
+    }else {
+        console.error('runEvent配置错误.',args)
+    }
+    /*
     if(typeof args === 'string') {
-        return this.runEvent(this.kv.get(args));
+        return this.runEvent(this.parseArgs(args));
     } else if(typeof args === 'object') {
         if(this.can(args.can)) {
             this.do(args.do);
@@ -91,20 +126,43 @@ pro.runEvent = function(args) {
     }else {
         console.error('v.runEvent配置错误.')
     }
+    */
+};
 
+pro.createOnFun = function(eventName) {
+    var self = this;
+    var fun = function() {
+        self.on(eventName,function(){
+            console.log('on event',eventName,arguments);
+            for(var name in self.events[eventName]) {
+                var e = self.events[eventName][name];
+                var context = null;
+                if(arguments.length === 1)
+                    context = arguments[0];
+                else if(arguments.length > 1)
+                    context = arguments;
+                context = new KV(context);
+                self.runEvent({can: e.can, do:e.do},context);
+            }
+        });
+    };
+    return fun();
 };
 
 pro.listenEvents = function(events) {
     for(var eventName in events) {
         this.events[eventName] = events[eventName];
+        this.createOnFun(eventName)
+        /*
         var self = this;
         this.on(eventName,function() {
             var eventName = self.curEvent;
             console.log('on event',eventName);
             for(var name in self.events[eventName]) {
                 var e = self.events[eventName][name];
-                this.kv.v.runEvent({can: e.can, do:e.do});
+                self.runEvent({can: e.can, do:e.do});
             }
         });
+        */
     }
 };

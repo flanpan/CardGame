@@ -9,49 +9,25 @@ module.exports = function() {
 
 var Remote = function() {
     this.app = pomelo.app;
-    this.channelService = this.app.get('channelService');
+    this.chrMgr = this.app.chrMgr;
 };
 
-Remote.prototype.add = function(uid, sid, name, flag, cb) {
-    var channel = this.channelService.getChannel(name, flag);
-    var username = uid.split('*')[0];
-    var param = {
-        route: 'onAdd',
-        user: username
-    };
-    channel.pushMessage(param);
+var pro = Remote.prototype;
 
-    if (!!channel) {
-        channel.add(uid, sid);
-    }
 
-    cb(this.get(name, flag));
+pro.add = function(args,cb) {
+    if(this.chrMgr.get(args.name))
+        return cb({code:code.fail});
+    var self = this;
+    this.chrMgr.getModel({areaId:args.areaId,name:args.name},function(res) {
+        if(res.code !== 200)
+            return cb({code:code.fail});
+        var model = res.model;
+        self.chrMgr.add(model.name,model);
+        cb({code:code.ok});
+    });
 };
 
-Remote.prototype.get = function(name, flag) {
-    var users = [];
-    var channel = this.channelService.getChannel(name, flag);
-    if (!!channel) {
-        users = channel.getMembers();
-    }
-    for (var i = 0; i < users.length; i++) {
-        users[i] = users[i].split('*')[0];
-    }
-    return users;
+pro.remove = function(args, cb) {
+    this.chrMgr.remove(args.name,cb);
 };
-
-Remote.prototype.kick = function(uid, sid, name, cb) {
-    var channel = this.channelService.getChannel(name, false);
-    // leave channel
-    if (!!channel) {
-        channel.leave(uid, sid);
-    }
-    var username = uid.split('*')[0];
-    var param = {
-        route: 'onLeave',
-        user: username
-    };
-    channel.pushMessage(param);
-    cb();
-};
-
