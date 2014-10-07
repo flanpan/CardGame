@@ -16,7 +16,7 @@ var EventFunctions = function(eventMgr) {
 
 module.exports = EventFunctions;
 var pro = EventFunctions.prototype;
-
+/*
 pro.createOn = function(args) {
     this.createdOnNum++;
     var self = this;
@@ -24,23 +24,30 @@ pro.createOn = function(args) {
         self.ev.emit(args.event,param);
     };
 };
-
+*/
 pro.createEmitFun = function(args) {
     this.createdEmitFunNum++;
     var self = this;
-    var fun = function(param) {
-        console.log('emit '+args.event,param);
-        self.ev.emit(args.event,param);
+    var fun = function() {
+        var a = [args.event];
+        /*
+        if(arguments.length === 1)
+            a = arguments[0];
+        else a = arguments;*/
+        a = a.concat(arguments);
+        console.log('emit '+args.event,a);
+        self.ev.emit.apply(self.ev,a);
     };
     this.kv.set(args.event,fun);
 };
-
+/*
 pro.nativeFun = function(args) {
     var fun = this.kv.get(args.name);
     var res = fun.apply(args.obj,args.args)
     args.res = res;
+    return res;
 };
-
+*/
 pro.log = function(args) {
-    console.log(args);
+    console.log.apply(console,args.args);
 };

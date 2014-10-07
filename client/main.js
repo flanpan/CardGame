@@ -54,12 +54,16 @@ var test = function() {
     //console.log(11111111111,test.caller.arguments)
 }
 
-
+var init = function() {
+    kv.pomelo = pomelo;
+    kv.cc = cc;
+    //kv.action = action;
+};
 
 var loadCfg = function(cb) {
     test();
     //console.log(arguments.callee);
-    kv.pomelo = pomelo;
+
     cc.loader.load('src/config/index.json', function(err, results) {
         if (err) {
             cc.log("Failed to load ", results);
@@ -88,6 +92,8 @@ cc.game.onStart = function(){
     cc.view.resizeWithBrowserSize(true);
     //var str = cc.unzipBase64('eJzT0yMAAGTvBe8=');
     //console.log(str);
+
+    init();
     if (cc.sys.isNative === true) {
         var searchPaths = jsb.fileUtils.getSearchPaths();
         console.log(searchPaths);
@@ -120,7 +126,7 @@ cc.game.onStart = function(){
             if(!kv.v.curSceneCfg) {
                 return console.error('没有设定第一个场景.')
             }
-
+            kv.v.f = new ViewFunctions(ev);
             cc.director.runScene(new SceneTemplate());
         });
 

@@ -14980,7 +14980,7 @@ var EventFunctions = function(eventMgr) {
 
 module.exports = EventFunctions;
 var pro = EventFunctions.prototype;
-
+/*
 pro.createOn = function(args) {
     this.createdOnNum++;
     var self = this;
@@ -14988,25 +14988,32 @@ pro.createOn = function(args) {
         self.ev.emit(args.event,param);
     };
 };
-
+*/
 pro.createEmitFun = function(args) {
     this.createdEmitFunNum++;
     var self = this;
-    var fun = function(param) {
-        console.log('emit '+args.event,param);
-        self.ev.emit(args.event,param);
+    var fun = function() {
+        var a = [args.event];
+        /*
+        if(arguments.length === 1)
+            a = arguments[0];
+        else a = arguments;*/
+        a = a.concat(arguments);
+        console.log('emit '+args.event,a);
+        self.ev.emit.apply(self.ev,a);
     };
     this.kv.set(args.event,fun);
 };
-
+/*
 pro.nativeFun = function(args) {
     var fun = this.kv.get(args.name);
     var res = fun.apply(args.obj,args.args)
     args.res = res;
+    return res;
 };
-
+*/
 pro.log = function(args) {
-    console.log(args);
+    console.log.apply(console,args.args);
 };
 },{}],46:[function(require,module,exports){
 var KV = require('./kv');
@@ -15025,150 +15032,127 @@ util.inherits(EventMgr,Event);
 
 var pro = EventMgr.prototype;
 module.exports = EventMgr;
+
 /*
-pro.emit = function(event) {
-    //this.curEvent = event;
-    return Event.prototype.emit.call(this,event);
-};
+占位参数名fun,bifn,trace,res,deprecated
 */
-/*
-events = {
-    listenerId:{
-        'event1':{
-            can:{
-                canId:{
-                    param:param
-                }
-            },
-            do:{
-                doId:{
-                    param:param
-                }
-            }
-        }
-    }
-}
-
-
-pro.can = function(args) {
-    if(!args)
-        return true;
-    if(typeof args === 'string') {
-        if(!this.can(this.kv.get(args)))
-            return false;
-    } else if (_.isArray(args)) {
-        for (var i = 0; i<args.length;i++) {
-            var c = args[i];
-            console.log('can:', c.fun, c.args)
-            if (typeof c == 'object') {
-                if (!this.kv.get(c.fun)(c.args))
-                    return false;
-            } else {
-                console.error(c.desc, '配置错误.');
-                return false;
-            }
-        }
-    } else {
-        console.error(args, '配置错误.');
-        return false;
-    }
-    return true; // 默认返回true
-};
-
-pro.do = function(args) {
+pro.doFun = function(opts,trace,context) {
+    var args = opts;
+    trace = trace || "";
     if(!args) return;
     if(typeof args == 'string') {
-        this.do(this.kv.get(args));
-    } else if(_.isArray(args)) {
-        for (var i = 0; i<args.length;i++) {
-            var d = args[i];
-            console.log('do:', d.fun, d.args)
-            if (typeof d == 'object') {
-                this.kv.get(d.fun)(d.args);
-            } else {
-                console.error(d.desc, '配置错误.');
-                return;
-            }
-        }
-    } else {
-        return console.log(args,'do 参数不正确.')
-    }
-};
-*/
-
-/*
-占位参数名fun,bifn
-*/
-pro.doFun = function(args) {
-    if(!args) return;
-    if(typeof args == 'string') {
-        this.doFun(this.kv.get(args));
+         args = this.parseArgs(opts,context);
+        var trace =  trace + ' -> ' +args;
+        this.doFun(this.kv.get(args),trace,context);
     } else if(_.isObject(args)) {
-        for (var name in args) {
-            var d = args[name];
-            console.log('doFun:', d)
-            if (typeof d == 'object') {
-                var res ;
-                if(d.fun)
-                    res = this.kv.get(d.fun)(d);
-                if(d.bifn && !res)
-                    return;
+        if(args.deprecated) {
+            return;
+        }
+        if(args.fun) {
+            if(!_.isString(args.fun)) {
+                return console.warn('doFun函数配置错误,fun不是字符串.');
+            }
+            if(args.fun[0] !== '$' && args.fun[0] !== '@') {
+                args.fun = '$'+args.fun;
+            }
+            var argsNew = this.parseArgs(args,context,true);
+            console.log(trace,'|',argsNew);
+            var fun,obj,r;
+            /*
+            if(typeof argsNew.fun === 'function') {
+                fun = argsNew.fun;
+                var newKey = _.str.strLeftBack(args.fun,'.');
+                obj = this.parseArgs(newKey,context);
+            }
+            else if(typeof argsNew.fun === 'string') {
+                fun = this.kv.get(argsNew.fun);
+
+            }*/
+            fun = argsNew.fun;
+            if(typeof fun !== 'function') {
+                return console.warn('doFun函数配置错误.');
+            }
+            if(argsNew.obj) {
+                obj = argsNew.obj;
             } else {
-                console.error(name, '配置错误.');
+                var newKey = _.str.strLeftBack(args.fun,'.');
+                obj = this.parseArgs(newKey,context);
+                //obj = argsNew.obj;
+            }
+
+
+            var a = [];
+            if(typeof argsNew['0'] !== 'undefined') {
+                var i = 0;
+                while(true) {
+                    if(typeof argsNew[i] !== 'undefined') {
+                        a.push(argsNew[i]);
+                        i++;
+                    } else break;
+                }
+            } else {
+                a.push(argsNew);
+                //r = fun(argsNew,trace);
+            }
+
+
+            r = fun.apply(obj,a);
+
+            if(argsNew.res)
+                this.kv.set(argsNew.res,r);
+
+            if(argsNew.bifn && !r)
                 return;
+
+        } else {
+            for (var name in args) {
+                if(name === 'bifn')
+                    continue;
+                var newTrace = trace + ' -> '+name;
+                var d = args[name];
+                var r = this.doFun(d, newTrace,context);
+                if (args.bifn && !r)
+                    return;
             }
         }
     } else {
-        return console.log(args,'do 参数不正确.')
+        return console.log(trace,'参数不正确.')
     }
 };
 
 
-pro.parseArgs = function(args,context) {
+pro.parseArgs = function(args,context,isRecursive) {
+    var argsBak;
     if(_.isString(args) && args.length>0) {
         if(args[0] === '$') {
-            args = this.kv.get(args.substr(1));
+            argsBak = this.kv.get(args.substr(1));
         } else if(args[0] === '@') {
-            args = context.get(args.substr(1));
-        }
-    } else if(_.isObject(args)) {
-        for(var key in args) {
-            args[key] = this.parseArgs(args[key],context);
+            argsBak = context.get(args.substr(1));
+        } else {
+            argsBak = args;
         }
     } else if(_.isArray(args)) {
+        argsBak = [];
         for(var i = 0; i<args.length;i++) {
-            args[i] = this.parseArgs(args[i],context);
+            if(isRecursive) {
+                argsBak[i] = this.parseArgs(args[i],context,isRecursive);
+            } else {
+                argsBak[i] = this.parseArgs(args[i],context);
+            }
         }
-    }
-    return args;
-};
-
-pro.runEvent = function(args,context) {
-    args = this.parseArgs(args,context);
-    this.doFun(args);
-    /*
-    if(typeof args === 'object') {
-        if(this.can(args.can)) {
-            this.do(args.do);
-        } else {
-            console.log('can return false.')
+    } else if(_.isObject(args)) {
+        argsBak = {};
+        for(var key in args) {
+            if(isRecursive) {
+                argsBak[key] = this.parseArgs(args[key],context,isRecursive);
+            } else {
+                argsBak[key] = this.parseArgs(args[key],context);
+            }
         }
-    }else {
-        console.error('runEvent配置错误.',args)
+    } else {
+        argsBak = args;
     }
-
-    if(typeof args === 'string') {
-        return this.runEvent(this.parseArgs(args));
-    } else if(typeof args === 'object') {
-        if(this.can(args.can)) {
-            this.do(args.do);
-        } else {
-            console.log('can return false.')
-        }
-    }else {
-        console.error('v.runEvent配置错误.')
-    }
-    */
+    return argsBak;
 };
 
 pro.createOnFun = function(eventName) {
@@ -15176,16 +15160,16 @@ pro.createOnFun = function(eventName) {
     var fun = function() {
         self.on(eventName,function(){
             console.log('on event',eventName,arguments);
-            for(var name in self.events[eventName]) {
-                var e = self.events[eventName][name];
-                var context = null;
-                if(arguments.length === 1)
-                    context = arguments[0];
-                else if(arguments.length > 1)
-                    context = arguments;
-                context = KV(context);
-                self.runEvent(e,context);
-            }
+            var e = self.events[eventName];
+            var context = null;
+            if(arguments.length === 1)
+                context = arguments[0];
+            else if(arguments.length > 1)
+                context = arguments;
+            context = KV(context);
+            //e = self.parseArgs(e,context);
+            var trace = '| '+eventName;
+            self.doFun(e,trace,context);
         });
     };
     return fun();
@@ -15195,17 +15179,6 @@ pro.listenEvents = function(events) {
     for(var eventName in events) {
         this.events[eventName] = events[eventName];
         this.createOnFun(eventName)
-        /*
-        var self = this;
-        this.on(eventName,function() {
-            var eventName = self.curEvent;
-            console.log('on event',eventName);
-            for(var name in self.events[eventName]) {
-                var e = self.events[eventName][name];
-                self.runEvent({can: e.can, do:e.do});
-            }
-        });
-        */
     }
 };
 
@@ -15263,10 +15236,11 @@ pro.get = function(k) {
             //p[name] = {};
             return;
         }
+        /*
         if (typeof p[name] !== 'object'){
             console.error(name,'非叶子键不是object类型',k);
             return;
-        }
+        }*/
         p = p[name];
     }
     return p[arr[arr.length-1]];

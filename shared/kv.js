@@ -51,10 +51,11 @@ pro.get = function(k) {
             //p[name] = {};
             return;
         }
+        /*
         if (typeof p[name] !== 'object'){
             console.error(name,'非叶子键不是object类型',k);
             return;
-        }
+        }*/
         p = p[name];
     }
     return p[arr[arr.length-1]];
