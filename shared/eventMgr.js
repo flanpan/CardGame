@@ -19,6 +19,9 @@ module.exports = EventMgr;
 占位参数名fun,bifn,trace,res,deprecated
 */
 pro.doFun = function(opts,trace,context) {
+    if(!(context instanceof KV))
+        context = KV(context);
+
     var args = opts;
     trace = trace || "";
     if(!args) return;
@@ -26,6 +29,8 @@ pro.doFun = function(opts,trace,context) {
          args = this.parseArgs(opts,context);
         var trace =  trace + ' -> ' +args;
         this.doFun(this.kv.get(args),trace,context);
+    } else if (_.isArray(args)) {
+
     } else if(_.isObject(args)) {
         if(args.deprecated) {
             return;
@@ -148,7 +153,7 @@ pro.createOnFun = function(eventName) {
                 context = arguments[0];
             else if(arguments.length > 1)
                 context = arguments;
-            context = KV(context);
+            //context = KV(context);
             //e = self.parseArgs(e,context);
             var trace = '| '+eventName;
             self.doFun(e,trace,context);

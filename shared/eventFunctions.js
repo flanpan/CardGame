@@ -51,3 +51,7 @@ pro.nativeFun = function(args) {
 pro.log = function(args) {
     console.log.apply(console,args.args);
 };
+
+pro.set = function(src,value) {
+    return src=value;
+};
