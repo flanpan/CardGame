@@ -1,12 +1,13 @@
 {
-	"name": "pomelo-admin-web",
-	"version": "0.2.0",
-	"private": false,
-	"dependencies": {
-		"express": ">=0.0.1",
-		"ejs": ">=0.0.1",
-        "body-parser":"",
-        "method-override":"",
-        "errorhandler":""
-	}
+  "name": "pomelo-admin-web",
+  "version": "0.2.0",
+  "private": false,
+  "dependencies": {
+    "body-parser": "",
+    "ejs": ">=0.0.1",
+    "errorhandler": "",
+    "express": ">=0.0.1",
+    "method-override": "",
+    "ws": "^0.4.32"
+  }
 }

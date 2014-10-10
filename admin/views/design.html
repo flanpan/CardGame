@@ -61,12 +61,40 @@
                 app.load(JSON.parse(data));
                 app.resize();
             });
+
+            var jsonClient  = new WebSocket('ws://'+location.hostname+':'+(Number(location.port)+1));
+            //socket.binaryType = 'arraybuffer';
+            //jsonClient.onopen = onopen;
+            jsonClient.onmessage = function(event){
+                alert(event.data);
+            };
+
+            var jsonPath = location.search.substr(1);
+
+            function save() {
+                var data = treeEditor.get();
+                var tmp = {
+                    type:'saveJson',
+                    jsonPath:jsonPath,
+                    json:JSON.stringify(data)
+                }
+                jsonClient.send(JSON.stringify(tmp));
+            }
+            jsonClient.onerror = function(event) {
+                console.error(event);
+                alert('jsonClient断开连接.');
+            };
+            jsonClient.onclose = function(event){
+                console.error(event);
+                alert('jsonClient断开连接.');
+            };
+            /*
             function save() {
                 var data = treeEditor.get();
                 httpPost(url+'/saveJson','jsonPath=./design/main.json&json='+JSON.stringify(data),function(data){
                     alert(data);
                 });
-            }
+            }*/
         </script>
     </div>
 </div>

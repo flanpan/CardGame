@@ -147,7 +147,7 @@ pro.createOnFun = function(eventName) {
     var self = this;
     var fun = function() {
         self.on(eventName,function(){
-            console.log('触发|',eventName,'|上下文:',arguments);
+
             var e = self.events[eventName];
             var context = null;
             if(arguments.length === 1)
@@ -156,6 +156,7 @@ pro.createOnFun = function(eventName) {
                 context = arguments;
             //context = KV(context);
             //e = self.parseArgs(e,context);
+            console.log('触发|',eventName,'|上下文:',context);
             var trace = '执行| '+eventName;
             self.doFun(e,trace,context);
         });

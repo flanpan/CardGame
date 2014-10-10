@@ -49,6 +49,18 @@ app.use(errorhandler(function() {
 }));
 
 
+var WebSocketServer = require('ws').Server
+    , wss = new WebSocketServer({port: 7002});
+wss.on('connection', function(ws) {
+    ws.on('message', function(message) {
+        console.log('received: %s', message);
+        var body = JSON.parse(message);
+        fs.writeFileSync(body.jsonPath, body.json);
+        ws.send('保存成功!');
+    });
+    //ws.send('something');
+});
+
 app.on('error', function(err) {
     return console.error("app on error:" + err.stack);
 });

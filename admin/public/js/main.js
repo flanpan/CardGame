@@ -36,7 +36,7 @@ httpPost("http://" + location.host + '/getJson', 'jsonPath=./design/main.json', 
                     }
                     var jsonPath = re.raw.jsonPath;
                     if(jsonPath) {
-                        var url = '/module/jsoneditor.html?jsonPath='+jsonPath;
+                        var url = '/module/jsoneditor.html?'+jsonPath;
                         if(re.raw.isBearcat) {
                             url += '&isBearcat=true';
                         }

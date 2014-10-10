@@ -16,6 +16,8 @@
 			var port = Number('<%= port %>');
 			var username = '<%= username %>';
 			var password = '<%= password %>';
+            window.myhost = host;
+            window.myport = port;
 			var client = window.client = new ConsoleClient({
 				username: username,
 				password: password,
