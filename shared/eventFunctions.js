@@ -16,30 +16,36 @@ var EventFunctions = function(eventMgr) {
 
 module.exports = EventFunctions;
 var pro = EventFunctions.prototype;
-/*
-pro.createOn = function(args) {
-    this.createdOnNum++;
-    var self = this;
-    return function(param) {
-        self.ev.emit(args.event,param);
-    };
+
+pro.set = function(args) {
+    if(!_.isObject(args)) {
+        return console.error('set函数参数配置错误.');
+    }
+    for(var key in args) {
+        this.kv.set(key,args[key]);
+    }
 };
-*/
-pro.createEmitFun = function(args) {
+
+pro.createEmitFun = function(eventName) {
+    var self = this;
     this.createdEmitFunNum++;
-    var self = this;
     var fun = function() {
-        var a = [args.event];
-        /*
-        if(arguments.length === 1)
-            a = arguments[0];
-        else a = arguments;*/
-        a = a.concat(arguments);
-        console.log('emit '+args.event,a);
+        var a = [eventName];
+        for(var i = 0; i<arguments.length;i++) {
+            a.push(arguments[i]);
+        }
         self.ev.emit.apply(self.ev,a);
-    };
-    this.kv.set(args.event,fun);
+    }
+    this.kv.set(eventName,fun);
 };
+
+pro.createEmitFuns = function() {
+    for(var i = 0;i<arguments.length;i++) {
+        var eventName = arguments[i];
+        this.createEmitFun(eventName);
+    }
+};
+
 /*
 pro.nativeFun = function(args) {
     var fun = this.kv.get(args.name);
@@ -50,8 +56,4 @@ pro.nativeFun = function(args) {
 */
 pro.log = function(args) {
     console.log.apply(console,args.args);
-};
-
-pro.set = function(src,value) {
-    return src=value;
 };

@@ -15177,30 +15177,36 @@ var EventFunctions = function(eventMgr) {
 
 module.exports = EventFunctions;
 var pro = EventFunctions.prototype;
-/*
-pro.createOn = function(args) {
-    this.createdOnNum++;
-    var self = this;
-    return function(param) {
-        self.ev.emit(args.event,param);
-    };
+
+pro.set = function(args) {
+    if(!_.isObject(args)) {
+        return console.error('set函数参数配置错误.');
+    }
+    for(var key in args) {
+        this.kv.set(key,args[key]);
+    }
 };
-*/
-pro.createEmitFun = function(args) {
+
+pro.createEmitFun = function(eventName) {
+    var self = this;
     this.createdEmitFunNum++;
-    var self = this;
     var fun = function() {
-        var a = [args.event];
-        /*
-        if(arguments.length === 1)
-            a = arguments[0];
-        else a = arguments;*/
-        a = a.concat(arguments);
-        console.log('emit '+args.event,a);
+        var a = [eventName];
+        for(var i = 0; i<arguments.length;i++) {
+            a.push(arguments[i]);
+        }
         self.ev.emit.apply(self.ev,a);
-    };
-    this.kv.set(args.event,fun);
+    }
+    this.kv.set(eventName,fun);
 };
+
+pro.createEmitFuns = function() {
+    for(var i = 0;i<arguments.length;i++) {
+        var eventName = arguments[i];
+        this.createEmitFun(eventName);
+    }
+};
+
 /*
 pro.nativeFun = function(args) {
     var fun = this.kv.get(args.name);
@@ -15212,6 +15218,7 @@ pro.nativeFun = function(args) {
 pro.log = function(args) {
     console.log.apply(console,args.args);
 };
+
 },{}],51:[function(require,module,exports){
 var KV = require('./kv');
 var Event = require('events').EventEmitter;
@@ -15241,9 +15248,11 @@ pro.doFun = function(opts,trace,context) {
     trace = trace || "";
     if(!args) return;
     if(typeof args == 'string') {
-         args = this.parseArgs(opts,context);
-        var trace =  trace + ' -> ' +args;
+        //args = this.parseArgs(opts,context);
+        //var trace =  trace + ' -> ' +args;
         this.doFun(this.kv.get(args),trace,context);
+    } else if (_.isArray(args)) {
+
     } else if(_.isObject(args)) {
         if(args.deprecated) {
             return;
@@ -15256,7 +15265,7 @@ pro.doFun = function(opts,trace,context) {
                 args.fun = '$'+args.fun;
             }
             var argsNew = this.parseArgs(args,context,true);
-            console.log(trace,'|',argsNew);
+            console.log(trace,'|参数:',argsNew);
             var fun,obj,r;
             /*
             if(typeof argsNew.fun === 'function') {
@@ -15282,8 +15291,8 @@ pro.doFun = function(opts,trace,context) {
 
 
             var a = [];
-            if(typeof argsNew['0'] !== 'undefined') {
-                var i = 0;
+            if(typeof argsNew['1'] !== 'undefined') {
+                var i = 1;
                 while(true) {
                     if(typeof argsNew[i] !== 'undefined') {
                         a.push(argsNew[i]);
@@ -15291,6 +15300,7 @@ pro.doFun = function(opts,trace,context) {
                     } else break;
                 }
             } else {
+                delete argsNew.fun;
                 a.push(argsNew);
                 //r = fun(argsNew,trace);
             }
@@ -15359,7 +15369,7 @@ pro.createOnFun = function(eventName) {
     var self = this;
     var fun = function() {
         self.on(eventName,function(){
-            console.log('on event',eventName,arguments);
+            console.log('触发|',eventName,'|上下文:',arguments);
             var e = self.events[eventName];
             var context = null;
             if(arguments.length === 1)
@@ -15368,7 +15378,7 @@ pro.createOnFun = function(eventName) {
                 context = arguments;
             //context = KV(context);
             //e = self.parseArgs(e,context);
-            var trace = '| '+eventName;
+            var trace = '执行| '+eventName;
             self.doFun(e,trace,context);
         });
     };

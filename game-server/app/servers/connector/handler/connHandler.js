@@ -91,7 +91,9 @@ pro.entry = function(msg, session, next) {
         }*/
     ], function(err) {
         if(err) return next(err, {code: code.fail});
-        next(null, {code: code.ok, chr:chr});
+        app.rpc.game.chrRemote.add(session,{name:chr.name,areaId:chr.areaId},function(res){
+            next(null, res);
+        });
     });
 };
 

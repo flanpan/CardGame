@@ -91,20 +91,20 @@ app.post('/register', function(req, res) {
     var msg;
     msg = req.body;
     if (!msg.username || !msg.password) {
-        return res.send({err: '用户名或密码不能为空!'});
+        return res.send({code:2005});
     }
     User.findOne({username: msg.username}, function(err, user) {
         if (err) {
-            return res.send({err: '连接服务器失败!'});
+            return res.send({code:1002});
         }
         if (user) {
-            return res.send({err: '用户名已存在!'});
+            return res.send({code: 2006});
         }
         User.create({id: new Date().getTime(),username: msg.username,password: msg.password}, function(err) {
             if (err) {
-                return res.send({err: '注册失败,网络错误!'});
+                return res.send({code: 2007});
             }
-            res.send({msg: '注册成功!'});
+            res.send({code:200});
         });
     });
 });
@@ -116,17 +116,17 @@ app.post('/login', function(req, res) {
     username = msg.username;
     password = msg.password;
     if (!username || !password) {
-        return res.send({err: '用户名或密码不能为空!'});
+        return res.send({code:2005});
     }
     User.findOne({username: msg.username}, function(err, user) {
         if (err) {
-            return res.send({err: '连接服务器失败!'});
+            return res.send({code: 1002});
         }
         if (!user) {
-            return res.send({err: '用户名不存在!'});
+            return res.send({code:2003});
         }
         if (user.password !== msg.password) {
-            return res.send({err: '密码不正确,请重新输入!'});
+            return res.send({code:2008});
         }
         res.send({token: Token.create(user._id, Date.now(), secret),id: user._id});
     });

@@ -89,19 +89,15 @@
         }
         return nodes;
     };
-/*
-    pro.attr = function(args) {
-        var node;
-        if(_.isObject(args.node))
-            node = args.node;
-        else if(_.isString(args.name))
-            node = pro.findOne(args);
 
-        if(node)
-            node.attr(args.attr);
-        return node;
+    pro.mapNodes = function(args) {
+        for(var name in args) {
+            if(name === 'node')
+                continue;
+            var node = this.findOne({node:args.node,name:name});
+            this.kv.set(args[name],node);
+        }
     };
- */
 
     pro.addListener = function(args) {
         var node = args.node;

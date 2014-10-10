@@ -26,8 +26,8 @@ pro.doFun = function(opts,trace,context) {
     trace = trace || "";
     if(!args) return;
     if(typeof args == 'string') {
-         args = this.parseArgs(opts,context);
-        var trace =  trace + ' -> ' +args;
+        //args = this.parseArgs(opts,context);
+        //var trace =  trace + ' -> ' +args;
         this.doFun(this.kv.get(args),trace,context);
     } else if (_.isArray(args)) {
 
@@ -43,7 +43,7 @@ pro.doFun = function(opts,trace,context) {
                 args.fun = '$'+args.fun;
             }
             var argsNew = this.parseArgs(args,context,true);
-            console.log(trace,'|',argsNew);
+            console.log(trace,'|参数:',argsNew);
             var fun,obj,r;
             /*
             if(typeof argsNew.fun === 'function') {
@@ -69,8 +69,8 @@ pro.doFun = function(opts,trace,context) {
 
 
             var a = [];
-            if(typeof argsNew['0'] !== 'undefined') {
-                var i = 0;
+            if(typeof argsNew['1'] !== 'undefined') {
+                var i = 1;
                 while(true) {
                     if(typeof argsNew[i] !== 'undefined') {
                         a.push(argsNew[i]);
@@ -78,6 +78,7 @@ pro.doFun = function(opts,trace,context) {
                     } else break;
                 }
             } else {
+                delete argsNew.fun;
                 a.push(argsNew);
                 //r = fun(argsNew,trace);
             }
@@ -146,7 +147,7 @@ pro.createOnFun = function(eventName) {
     var self = this;
     var fun = function() {
         self.on(eventName,function(){
-            console.log('on event',eventName,arguments);
+            console.log('触发|',eventName,'|上下文:',arguments);
             var e = self.events[eventName];
             var context = null;
             if(arguments.length === 1)
@@ -155,7 +156,7 @@ pro.createOnFun = function(eventName) {
                 context = arguments;
             //context = KV(context);
             //e = self.parseArgs(e,context);
-            var trace = '| '+eventName;
+            var trace = '执行| '+eventName;
             self.doFun(e,trace,context);
         });
     };
