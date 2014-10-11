@@ -5,8 +5,7 @@
 var logger = require('pomelo-logger').getLogger(__filename);
 var mongoose = require('mongoose');
 var async = require('async');
-var ChrSchema = require('../../../shared/schema/chr');
-var ChrModel = mongoose.model('chr', ChrSchema);
+var ChrModel = app.modelMgr.chr;
 var Chr = require('./chr/chr');
 
 module.exports = function(app, opts) {
@@ -28,7 +27,7 @@ pro.get = function(name) {
 
 pro.add = function(name,model) {
     var chr = new Chr(model);
-    chr.setUpdateInterval(self.updateInterval);
+    chr.setUpdateInterval(this.updateInterval);
     logger.info('chrMgr load chr',name);
     this.chrs[name] = chr;
 };
@@ -37,12 +36,12 @@ pro.getModel = function(opts,cb) {
     ChrModel.findOne(opts,function(err,model) {
         if(err) {
             logger.warn('chrMgr find chr err:',err);
-            return cb({code:code.fail});
+            return cb({code:500});
         }
         if(model) {
-            return cb({code:code.ok,model:model});
+            return cb({code:200,model:model});
         } else {
-            return cb({code:code.entry.chrNotExist});
+            return cb({code:2004});
         }
     });
 };
@@ -59,11 +58,13 @@ pro.createModel = function(opts,cb) {
 
 pro.remove = function(name,cb) {
     var chr = this.get(name);
-    if(!chr) return cb({code:500});
+    if(!chr)
+        return cb({code:500});
     var self = this;
     chr.destroy(function(res) {
         delete self.chrs[name];
         cb({code:200});
+        logger.info('角色',name,'移除内存.');
     });
 };
 
@@ -79,7 +80,7 @@ pro.removeAll = function(cb) {
 
 pro.stop = function(cb) {
     this.removeAll(function() {
-        logger.info('All chrs have bean removed.');
+        logger.info('所有角色已移除内存.');
         process.nextTick(cb);
     });
 };

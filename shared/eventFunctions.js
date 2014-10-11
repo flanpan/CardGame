@@ -54,6 +54,6 @@ pro.nativeFun = function(args) {
     return res;
 };
 */
-pro.log = function(args) {
-    console.log.apply(console,args.args);
+pro.log = function() {
+    console.log.apply(console,arguments);
 };

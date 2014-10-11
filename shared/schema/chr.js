@@ -10,7 +10,7 @@ var mongoose = require('mongoose');
 //var Task = require('./task');
 
 var Chr = {
-    uid:mongoose.Schema.Types.ObjectId,
+    uid:String,//mongoose.Schema.Types.ObjectId,
     name:String,
     areaId:Number,
     level:{type:Number,default:1},
@@ -20,7 +20,14 @@ var Chr = {
     loginDate:{type:Date,default:new Date},
     offlineDate:{type:Date,default:new Date},
     power:{type:Number,default:30},
-    vip:{type:Number,default:0}
+    vip:{type:Number,default:0},
+    icon:{type:Number,default:1},
+    heroes:[{
+
+    }],
+    items:[{
+
+    }]
     //pet:Pet,
     //task:Task
 };

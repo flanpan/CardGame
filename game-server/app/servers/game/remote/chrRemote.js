@@ -24,7 +24,7 @@ pro.add = function(args,cb) {
             return cb({code:code.fail});
         var model = res.model;
         self.chrMgr.add(model.name,model);
-        cb({code:code.ok});
+        cb({code:code.ok,chr:model});
     });
 };
 

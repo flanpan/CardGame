@@ -114,6 +114,12 @@
         },node);
     };
 
-
+    pro.addListeners = function(args) {
+        for(var eventName in args) {
+            if(eventName === 'eventType')
+                continue;
+            this.addListener({node:args[eventName],eventType:args.eventType,eventName:eventName});
+        }
+    };
 
 })(this);

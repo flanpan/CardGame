@@ -14,6 +14,11 @@ app.enable('systemMonitor');
 global.mongoose = require("mongoose");
 //'mongodb://flan:flan@localhost/game';
 global.mongoose.connect('mongodb://localhost/game');
+
+app.modelMgr = {
+    user:mongoose.model('user', require('../shared/schema/user')),
+    chr:mongoose.model('chr', require('../shared/schema/chr'))
+}
 //app.load(require('./app/com/base'),{});
 //app.load(require('./app/com/chr'),{});
 app.configureLogger(logger);

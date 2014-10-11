@@ -4,7 +4,7 @@
 var tokenService = require('../../../../../shared/token');
 var DEFAULT_SECRET = 'pomelo_session_secret';
 var DEFAULT_EXPIRE = 6 * 60 * 60 * 1000;
-var User = mongoose.model('User', require('../../../../../shared/schema/user'));
+var User = app.modelMgr.user;
 
 module.exports = function(app) {
     return new Remote(app);
@@ -21,13 +21,15 @@ var pro = Remote.prototype;
 
 pro.auth = function(token, cb) {
     var res = tokenService.parse(token, this.secret);
-    if(!res) return cb({code:code.entry.tokenError});
+    if(!res) return cb({code:2001});
     if(!checkExpire(res, this.expire)) {
-        return cb({code:code.entry.tokenExpire});
+        return cb({code:2002});
     }
-    User.findOne({_id:res.id},function(err,user) {
-        if(err) return cb({code:code.fail});
-        if(!user) return cb({code:code.entry.userNotExist});
+    User.findOne({_id:res.uid},function(err,user) {
+        if(err)
+            return cb({code:500});
+        if(!user)
+            return cb({code:2003});
         return cb({code:200,user:user});
     });
 };

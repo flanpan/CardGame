@@ -43,6 +43,7 @@ pro.doFun = function(opts,trace,context) {
                 args.fun = '$'+args.fun;
             }
             var argsNew = this.parseArgs(args,context,true);
+            trace += ' -> '+args.fun.substr(1);
             console.log(trace,'|参数:',argsNew);
             var fun,obj,r;
             /*
