@@ -47,7 +47,7 @@ pro.get = function(k) {
     for(var i = 0; i<arr.length-1;i++) {
         var name = arr[i];
         if(typeof p[name] === 'undefined') {
-            console.error(name,'键没有定义');
+            //console.error(name,'键没有定义');
             //p[name] = {};
             return;
         }

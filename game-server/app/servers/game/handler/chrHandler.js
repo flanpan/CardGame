@@ -18,6 +18,8 @@ pro.handler = function(msg,session,next) {
     msg.next = next;
     console.log('触发|',msg.req,'|上下文:',msg);
     var trace = '执行| '+msg.req;
+    if(!c.handler(msg.req))
+        return next(null,{code:1004});
     chr.ev.doFun(c.handler[msg.req],trace,msg);
 };
 

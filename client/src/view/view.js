@@ -102,23 +102,28 @@
     pro.addListener = function(args) {
         var node = args.node;
         var eventType = args.eventType;
-        var eventName = args.eventName;
-        var self = this;
+        var cb = args.cb;
         node.addTouchEventListener(function(sender, type) {
             if (eventType === 'began' && type === ccui.Widget.TOUCH_BEGAN
                 || eventType === 'moved' && ccui.Widget.TOUCH_MOVED
                 || eventType === 'ended' && ccui.Widget.TOUCH_ENDED
                 || eventType === 'canceled' && ccui.Widget.TOUCH_CANCELED) {
-                self.ev.emit(eventName,sender);
+                cb(sender);
             }
         },node);
     };
 
     pro.addListeners = function(args) {
-        for(var eventName in args) {
-            if(eventName === 'eventType')
+        for(var nodeName in args) {
+            if(nodeName === 'eventType')
                 continue;
-            this.addListener({node:args[eventName],eventType:args.eventType,eventName:eventName});
+            this.addListener({node:kv.get(nodeName),eventType:args.eventType,cb:kv.get(args[nodeName])});
+        }
+    };
+
+    pro.create = function(args) {
+        if(args.type === 'scene') {
+            return new SceneTemplate(args);
         }
     };
 

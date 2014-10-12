@@ -50,9 +50,6 @@ if (cc.sys.isNative === true) {
     require('src/lib/pomelo-cocos2d-jsb/index.js');
 }
 
-var test = function() {
-    //console.log(11111111111,test.caller.arguments)
-}
 
 var init = function() {
     kv.pomelo = pomelo;
@@ -61,9 +58,6 @@ var init = function() {
 };
 
 var loadCfg = function(cb) {
-    test();
-    //console.log(arguments.callee);
-
     cc.loader.load('src/config/index.json', function(err, results) {
         if (err) {
             cc.log("Failed to load ", results);
@@ -108,14 +102,9 @@ cc.game.onStart = function(){
         jsb.fileUtils.setSearchPaths(searchPaths);
     }
 
-
-    cc.log('---------------')
-    cc.log(flan);
-
-    //load resources
-
     cc.LoaderScene.preload(g_resources, function () {
         loadCfg(function() {
+            /*
             for(var key in kv.c.scene) {
                 var scene = kv.c.scene[key];
                 if(scene.isFirst) {
@@ -125,9 +114,13 @@ cc.game.onStart = function(){
             }
             if(!kv.v.curSceneCfg) {
                 return console.error('没有设定第一个场景.')
-            }
-            kv.v.f = new ViewFunctions(ev);
-            cc.director.runScene(new SceneTemplate());
+            }*/
+            kv.set('v.f',new ViewFunctions(ev));
+            var context = {};
+            context['.cb'] = kv.c.app;
+            ev.doFun(context);
+            kv['开始']();
+            //cc.director.runScene(new SceneTemplate());
         });
 
 

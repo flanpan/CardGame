@@ -5,13 +5,11 @@
 var EventFunctions = function(eventMgr) {
     this.ev = eventMgr;
     this.kv = this.ev.kv;
-
-    this.can = this.ev.can;
-    this.do = this.ev.do;
-    this.console = console;
-    this.runEvent = this.ev.runEvent;
-    this.createdOnNum = 0;
-    this.createdEmitFunNum = 0;
+    //this.can = this.ev.can;
+    //this.do = this.ev.do;
+    //this.console = console;
+    //this.runEvent = this.ev.runEvent;
+    //this.createdEmitFunNum = 0;
 };
 
 module.exports = EventFunctions;
@@ -25,7 +23,7 @@ pro.set = function(args) {
         this.kv.set(key,args[key]);
     }
 };
-
+/*
 pro.createEmitFun = function(eventName) {
     var self = this;
     this.createdEmitFunNum++;
@@ -45,15 +43,9 @@ pro.createEmitFuns = function() {
         this.createEmitFun(eventName);
     }
 };
-
-/*
-pro.nativeFun = function(args) {
-    var fun = this.kv.get(args.name);
-    var res = fun.apply(args.obj,args.args)
-    args.res = res;
-    return res;
-};
 */
+pro.setTimeout = setTimeout;
+
 pro.log = function() {
     console.log.apply(console,arguments);
 };
