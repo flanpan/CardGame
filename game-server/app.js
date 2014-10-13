@@ -39,7 +39,7 @@ app.configure('production|development', 'gate', function() {
     });
 });
 
-app.configure('production|development', 'game', function() {
+app.configure('production|development', 'chr', function() {
     app.load(require('./app/com/chrMgr'));
     /*
     app.use(require('pomelo-status-plugin'),{status:{
@@ -57,7 +57,7 @@ app.configure('production|development', 'game', function() {
     }});
     */
     app.filter(pomelo.filters.serial());
-    var filter = require('./app/servers/game/filter/filter');
+    var filter = require('./app/servers/chr/filter/filter');
     app.before(filter());
 });
 

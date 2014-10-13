@@ -61,5 +61,36 @@ pro.get = function(k) {
     return p[arr[arr.length-1]];
 };
 
+pro['=='] = function(a) {
+    for(var k in a) {
+        if(this.get(k) != a[k])
+            return false;
+    }
+    return true;
+}
+
+pro['==='] = function(a) {
+    for(var k in a) {
+        if(this.get(k) !== a[k])
+            return false;
+    }
+    return true;
+}
+
+pro['typeof'] = function(a) {
+    for(var k in a) {
+        if(typeof this.get(k) !== a[k])
+            return false;
+    }
+    return true;
+}
+
+pro['='] = function(a) {
+    for(var k in a) {
+        this.set(k,a[k]);
+    }
+}
+
+
 
 module.exports = KV;

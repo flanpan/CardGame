@@ -100,7 +100,7 @@ pro.entry = function(msg, session, next) {
     ], function(err,res) {
         if(err)
             return next(null, err);
-        app.rpc.game.chrRemote.add(session,{name:chr.name,areaId:chr.areaId},function(res){
+        app.rpc.chr.remote.add(session,{name:chr.name,areaId:chr.areaId},function(res){
             next(null, res);
         });
     });
@@ -111,7 +111,7 @@ var onUserLeave = function (app, session, reason) {
         return;
     }
     var name = session.get('name');
-    app.rpc.game.chrRemote.remove(session,{name:name},function(res) {
+    app.rpc.chr.remote.remove(session,{name:name},function(res) {
         //console.log(res);
     });
 };

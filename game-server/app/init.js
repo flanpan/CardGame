@@ -7,13 +7,13 @@ var getCfgs = require('../../shared/getCfgs');
 global.kv = new KV;
 
 
-var p = path.resolve('config');
-kv.set('cfg',getCfgs(p));
+var p = path.resolve('config/data');
+kv.set('c',getCfgs(p));
 
 p = path.resolve('../shared/config');
-kv.set('scfg',getCfgs(p));
+kv.set('sc',getCfgs(p));
 
-global.code = kv.scfg.data.code;
+global.code = kv.sc.data.code;
 global.async = require('async');
 global.mongoose = require('mongoose');
 global._ = require('underscore');

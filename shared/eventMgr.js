@@ -7,13 +7,60 @@ var EventMgr = function() {
     //Event.call(this);
     //this.events = {};
     this.kv = new KV;
+    //this._setKVFun(this.kv);
+    //this._setBaseFun();
     this.kv.f = new EventFunctions(this);
 };
 
-util.inherits(EventMgr,Event);
+//util.inherits(EventMgr,Event);
 
 var pro = EventMgr.prototype;
 module.exports = EventMgr;
+/*
+pro._parseStr = function(str,kv,$kv) {
+    if(!str) return;
+    if(typeof str !== 'string') {
+        console.error('_parseStr参数类型不是string',str);
+        return str;
+    }
+    if(str[0] === '$') {
+        return $kv.get(str.substr(1));
+    } else if(str[0] === '@') {
+        return kv.get(str.substr(1));
+    } else return str;
+};
+
+pro._setKVFun = function(kv) {
+    kv['=='] = function(a) {
+        for(var k in a) {
+            if(kv.get(k) != a[k])
+                return false;
+        }
+        return true;
+    }
+
+    kv['==='] = function(a) {
+        for(var k in a) {
+            if(kv.get(k) !== a[k])
+                return false;
+        }
+        return true;
+    }
+
+    kv['typeof'] = function(a) {
+        for(var k in a) {
+            if(typeof kv.get(k) !== a[k])
+                return false;
+        }
+        return true;
+    }
+
+    kv['='] = function(a) {
+        for(var k in a) {
+            kv.set(k,a[k]);
+        }
+    }
+};*/
 
 pro._createCb = function(aFunName,args) {
     var self = this;
@@ -50,19 +97,24 @@ pro._cb = function(args) {
 占位参数名.f,.b,.r,.cb,.d
 */
 pro.doFun = function(opts,trace,context) {
+    if(!opts)
+        return;
     if(!(context instanceof KV))
         context = KV(context);
+    /*if(!context['=']) {
+        this._setKVFun(context);
+    }*/
 
     var args = opts;
     trace = trace || "";
     if(!args) return;
     if(typeof args == 'string') {
-        this.doFun(this.kv.get(args),trace,context);
+        return this.doFun(this.kv.get(args),trace,context);
     } else if (_.isArray(args)) {
-
+        return true;
     } else if(_.isObject(args)) {
         if(args['.d']) {
-            return;
+            return true;
         }
         if(args['.cb']) {
             if(args['.f']) {
@@ -125,8 +177,13 @@ pro.doFun = function(opts,trace,context) {
                     } else break;
                 }
             } else {
-                delete argsNew['.f'];
-                a.push(argsNew);
+                var args_tmp = JSON.parse(JSON.stringify(argsNew));
+                delete args_tmp['.f'];
+                delete args_tmp['.b'];
+                delete args_tmp['.r'];
+                delete args_tmp['.cb'];
+                delete args_tmp['.d'];
+                a.push(args_tmp);
             }
 
             r = fun.apply(obj,a);
@@ -134,32 +191,54 @@ pro.doFun = function(opts,trace,context) {
             if(argsNew['.r'])
                 this.kv.set(argsNew['.r'],r);
 
-            if(argsNew['.b'] && !r) {
-                var newTrace = trace +' -> ' + '.b';
-                this.doFun(argsNew['.b'], newTrace, context);
-                return false;
+            if(typeof argsNew['.b'] != 'undefined') {
+                if(argsNew['.b'] === true) { // 强制返回真
+                    return true;
+                }
+                if(argsNew['.b'] === false) { // 强制返回假
+                    return false;
+                }
+                if(!r) { // 如果.f的结果是假,执行.b，返回假
+                    var newTrace = trace +' -> ' + '.b';
+                    this.doFun(argsNew['.b'], newTrace, context);
+                    return false;
+                }
             }
-
+            return r;
         } else {
+            var flag = true;
             for (var name in args) {
                 if(name === '.b')
                     continue;
                 var newTrace = trace + ' -> '+name;
                 var d = args[name];
                 var r = this.doFun(d, newTrace,context);
-                if (args['.b'] && !r) {
-                    var nnTrace = newTrace +' -> ' + '.b';
-                    this.doFun(args['.b'], nnTrace, context);
-                    return;
+                if (typeof args['.b'] != 'undefined') {
+                    if(args['.b'] === true)
+                        continue;
+                    if(!r) {
+                        var nnTrace = newTrace +' -> ' + '.b';
+                        this.doFun(args['.b'], nnTrace, context);
+                        flag = false;
+                        break;
+                    }
                 }
             }
+
+            if(flag || typeof args['.b'] === false) {
+                var trace = trace + ' -> ' + '.b';
+                this.doFun(args['.b'], trace, context);
+                flag = false;
+            }
+            return flag;
         }
     } else {
-        return console.log(trace,'参数不正确.')
+        console.error(trace,'参数不正确.');
+        return false;
     }
 };
 
-pro.parseArgs = function(args,context,trace) {
+pro.parseArgs = function(args,context,trace,noDoFun) {
     var argsBak;
     if(_.isString(args) && args.length>0) {
         if(args[0] === '$') {
@@ -175,13 +254,18 @@ pro.parseArgs = function(args,context,trace) {
             argsBak[i] = this.parseArgs(args[i],context,trace);
         }
     } else if(args && typeof args === 'object') {
-        if((args['.f'] && typeof args['.f'] === 'string') || args['.cb']) {
-            return this.doFun(args,trace,context);
+        if(!noDoFun) {
+            if((args['.f'] && typeof args['.f'] === 'string') || args['.cb']) {
+                return this.doFun(args,trace,context);
+            }
         }
         else {
             argsBak = {};
             for(var key in args) {
-                argsBak[key] = this.parseArgs(args[key],context,trace);
+                if(key == '.b') {
+                    argsBak[key] = this.parseArgs(args[key],context,trace,true);
+                } else
+                    argsBak[key] = this.parseArgs(args[key],context,trace);
             }
         }
     } else {

@@ -5,37 +5,53 @@ var pomelo = require('pomelo');
 module.exports = function() {
     return new Handler;
 };
-var Handler = function() {
-    this.app = pomelo.app;
+
+var createHandler = function(name) {
+    return function(msg,session,next) {
+        var chr = app.chrMgr.get(session.get('name'));
+        if(!chr) return next(null,{code:1004});
+        var context = {msg:msg,session:session,next:next};
+        console.log('触发|',name,'|上下文:',context);
+        var trace = '执行| '+name;
+        if(!kv.c.handler.chr[name])
+            return next(null,{code:1004});
+        chr.ev.doFun(kv.c.handler.chr[name],trace,context);
+    }
 };
 
+var Handler = function() {
+    for(var handlerName in kv.c.handler.chr) {
+        this[handlerName] = createHandler(handlerName);
+        console.log(handlerName)
+    }
+};
+/*
 var pro = Handler.prototype;
 
+
+
 pro.handler = function(msg,session,next) {
-    var chr = app.chrMgr.get(session.get('name'));
-    if(!chr) return next(null,{code:1004});
-    msg.session = session;
-    msg.next = next;
-    console.log('触发|',msg.req,'|上下文:',msg);
-    var trace = '执行| '+msg.req;
-    if(!c.handler(msg.req))
-        return next(null,{code:1004});
-    chr.ev.doFun(c.handler[msg.req],trace,msg);
+
 };
 
 pro.buyItem = function(msg,session,next) {
+    return proxy('buyItem',msg,session,next);
 };
 
 pro.sellItem = function(msg,session,next) {
+    return proxy('buyItem',msg,session,next);
 };
 
 pro.sellHero = function(msg,session,next) {
+    return proxy('buyItem',msg,session,next);
 };
 
 pro.useItem = function(msg,session,next) {
+    return proxy('buyItem',msg,session,next);
 };
 
 pro.setName = function(msg,session,next) {
+    return proxy('buyItem',msg,session,next);
 };
 
 pro.setIcon = function(msg,session,next) {
@@ -83,3 +99,4 @@ pro.fight = function(msg,session,next) {
 
 pro.getProp = function(msg,session,next) {
 };
+*/

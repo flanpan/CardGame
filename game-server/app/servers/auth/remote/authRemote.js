@@ -12,7 +12,7 @@ module.exports = function(app) {
 
 var Remote = function(app) {
     this.app = app;
-    var session = kv.scfg.session;
+    var session = kv.sc.session;
     this.secret = session.secret || DEFAULT_SECRET;
     this.expire = session.expire || DEFAULT_EXPIRE;
 };

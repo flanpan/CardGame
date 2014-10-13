@@ -4,12 +4,15 @@
 
 var util = require('util');
 var Base = require('./base');
+var EventMgr = require('../../../../shared/EventMgr');
 
 var Chr = function(model) {
     Base.call(this,model);
     this.updateTimmer = null;
     this._powerRecoverTimmer = null;
     this._powerInitTimmer = null;
+    this.ev = new EventMgr;
+    this.ev.kv.set('i',this);
 };
 
 util.inherits(Chr,Base);
@@ -60,7 +63,7 @@ pro.save = function(cb) {
 };
 
 pro.getMaxPower = function() {
-    return kv.scfg.data.vip.maxPower[this.m.vip];
+    return kv.sc.data.vip.maxPower[this.m.vip];
 };
 
 pro.powerRecover = function() {
