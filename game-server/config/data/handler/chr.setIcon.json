@@ -1,1 +1,1 @@
-{".b":{"1":null,"2":"@.res",".f":"@.next"},"校验类型":{".b":{"@res.code":500,".f":"="},"@.iconId":"number",".f":"typeof"},"设置头像":{".b":false,"$i.m.iconId":"@.iconId",".f":"="}}
+{".b":{"1":null,"2":"@.res",".f":"@.next"},"校验类型":{".b":{"res.code":500,".f":"@.="},"msg.iconId":"number",".f":"@.typeof"},"设置头像":{".b":true,"i.m.iconId":"@.msg.iconId",".f":"$.="},"成功":{".b":false,"res.code":200,".f":"@.="}}

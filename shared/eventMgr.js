@@ -92,7 +92,20 @@ pro._cb = function(args) {
     else return arr;
 };
 
+pro._isSpecialParam = function(p) {
+    if(p === '.f' || p === '.b' || p ==='.r' || p === '.cb' || p === '.d')
+        return true;
+    else return false;
+};
 
+pro._getOptsWithoutSpecial = function(opts) {
+    var res = {};
+    for(var k in opts) {
+        if(!this._isSpecialParam(k))
+            res[k] = opts[k];
+    }
+    return res;
+}
 /*
 占位参数名.f,.b,.r,.cb,.d
 */
@@ -138,7 +151,8 @@ pro.doFun = function(opts,trace,context) {
                 args['.f'] = '$'+args['.f'];
             }
             var strFun = args['.f'];
-            trace += ' -> '+args['.f'].substr(1);
+            var ntrace = trace + ' -> '+args['.f'];
+            /*
             if(args['.f'][0] === '$') {
                 args['.f'] = this.kv.get(args['.f'].substr(1));
             } else if(args['.f'][0] === '@') {
@@ -149,15 +163,17 @@ pro.doFun = function(opts,trace,context) {
             if(typeof args['.f'] !== 'function') {
                 return console.warn('doFun函数配置错误,不可能发生的.');
             }
+            */
 
+            // 参数解析
             var argsNew = this.parseArgs(args,context);
-
-            console.log(trace,'|参数:',argsNew);
             var fun,obj,r;
             fun = argsNew['.f'];
             if(typeof fun !== 'function') {
                 return console.warn('doFun函数配置错误.');
             }
+
+            // 得出该方法的所属对象
             if(typeof argsNew.obj !== 'undefined') {
                 obj = argsNew.obj;
             } else {
@@ -166,7 +182,7 @@ pro.doFun = function(opts,trace,context) {
                 //obj = argsNew.obj;
             }
 
-
+            // 得出参数数组
             var a = [];
             if(typeof argsNew['1'] !== 'undefined') {
                 var i = 1;
@@ -177,68 +193,72 @@ pro.doFun = function(opts,trace,context) {
                     } else break;
                 }
             } else {
-                var args_tmp = JSON.parse(JSON.stringify(argsNew));
-                delete args_tmp['.f'];
-                delete args_tmp['.b'];
-                delete args_tmp['.r'];
-                delete args_tmp['.cb'];
-                delete args_tmp['.d'];
-                a.push(args_tmp);
+                var tmp = this._getOptsWithoutSpecial(argsNew);
+                a.push(tmp);
             }
 
+
+            // 执行函数
+            console.log(ntrace,'|参数:',argsNew);
             r = fun.apply(obj,a);
 
+            // 引用赋值
             if(argsNew['.r'])
                 this.kv.set(argsNew['.r'],r);
 
+            // 中断控制
             if(typeof argsNew['.b'] != 'undefined') {
-                if(argsNew['.b'] === true) { // 强制返回真
+                if(argsNew['.b'] === true) { // 强制返回真,不中断
                     return true;
                 }
-                if(argsNew['.b'] === false) { // 强制返回假
+                if(argsNew['.b'] === false) { // 强制返回假,中断
                     return false;
                 }
                 if(!r) { // 如果.f的结果是假,执行.b，返回假
-                    var newTrace = trace +' -> ' + '.b';
-                    this.doFun(argsNew['.b'], newTrace, context);
+                    var nnTrace = ntrace +' -> ' + '.b';
+                    this.doFun(argsNew['.b'], nnTrace, context);
                     return false;
                 }
             }
             return r;
         } else {
+            // 没有.f时处理
             var flag = true;
             for (var name in args) {
                 if(name === '.b')
                     continue;
-                var newTrace = trace + ' -> '+name;
+                var nTrace = trace + ' -> '+name;
                 var d = args[name];
-                var r = this.doFun(d, newTrace,context);
+                var r = this.doFun(d, nTrace,context);
                 if (typeof args['.b'] != 'undefined') {
                     if(args['.b'] === true)
                         continue;
+                    // 只要一个返回假,就中断往下执行,执行上一级.b里的内容,如果有的话.
                     if(!r) {
-                        var nnTrace = newTrace +' -> ' + '.b';
-                        this.doFun(args['.b'], nnTrace, context);
+                        var ntrace = trace +' -> ' + '.b';
+                        this.doFun(args['.b'], ntrace, context);
                         flag = false;
                         break;
                     }
                 }
             }
 
+            // 都返回true时,判断是否强制false
             if(flag || typeof args['.b'] === false) {
-                var trace = trace + ' -> ' + '.b';
-                this.doFun(args['.b'], trace, context);
+                var ntrace = trace + ' -> ' + '.b';
+                this.doFun(args['.b'], ntrace, context);
                 flag = false;
             }
             return flag;
         }
     } else {
+        //其他类型处理
         console.error(trace,'参数不正确.');
         return false;
     }
 };
 
-pro.parseArgs = function(args,context,trace,noDoFun) {
+pro.parseArgs = function(args,context,trace) {
     var argsBak;
     if(_.isString(args) && args.length>0) {
         if(args[0] === '$') {
@@ -254,19 +274,13 @@ pro.parseArgs = function(args,context,trace,noDoFun) {
             argsBak[i] = this.parseArgs(args[i],context,trace);
         }
     } else if(args && typeof args === 'object') {
-        if(!noDoFun) {
-            if((args['.f'] && typeof args['.f'] === 'string') || args['.cb']) {
-                return this.doFun(args,trace,context);
-            }
-        }
-        else {
-            argsBak = {};
-            for(var key in args) {
-                if(key == '.b') {
-                    argsBak[key] = this.parseArgs(args[key],context,trace,true);
-                } else
-                    argsBak[key] = this.parseArgs(args[key],context,trace);
-            }
+        argsBak = {};
+        for(var key in args) {
+            if(key == '.b') {
+                //argsBak[key] = this.parseArgs(args[key],context,trace,true);
+                argsBak[key] = args[key];
+            } else
+                argsBak[key] = this.parseArgs(args[key],context,trace);
         }
     } else {
         argsBak = args;

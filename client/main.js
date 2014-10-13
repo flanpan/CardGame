@@ -116,14 +116,17 @@ cc.game.onStart = function(){
                 return console.error('没有设定第一个场景.')
             }*/
             kv.set('v.f',new ViewFunctions(ev));
-            /*
+
             var context = {};
             context['.cb'] = kv.c.app;
-            ev.doFun(context);
-            kv['开始']();*/
-            kv.set('i.m.iconId',1);
             try{
-                ev.doFun(kv.c.app,null,{msg:{iconId:1},next:function(){console.log(arguments)},session:null});
+            ev.doFun(context);
+            kv['开始']();
+
+
+            //kv.set('i.m.iconId',1);
+
+                //ev.doFun(kv.c.app,null,{msg:{iconId:1},next:function(){console.log(arguments)},session:null});
             } catch(e) {
                 console.error(e);
             }

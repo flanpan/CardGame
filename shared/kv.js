@@ -67,7 +67,15 @@ pro['=='] = function(a) {
             return false;
     }
     return true;
-}
+};
+
+pro['!='] = function(a) {
+    for(var k in a) {
+        if(this.get(k) == a[k])
+            return false;
+    }
+    return true;
+};
 
 pro['==='] = function(a) {
     for(var k in a) {
@@ -75,7 +83,15 @@ pro['==='] = function(a) {
             return false;
     }
     return true;
-}
+};
+
+pro['!=='] = function(a) {
+    for(var k in a) {
+        if(this.get(k) === a[k])
+            return false;
+    }
+    return true;
+};
 
 pro['typeof'] = function(a) {
     for(var k in a) {
@@ -89,8 +105,86 @@ pro['='] = function(a) {
     for(var k in a) {
         this.set(k,a[k]);
     }
-}
+};
 
+pro['>'] = function(a) {
+    for(var k in a) {
+        if(this.get(k) <= a[k])
+            return false;
+    }
+    return true;
+};
 
+pro['>='] = function(a) {
+    for(var k in a) {
+        if(this.get(k) < a[k])
+            return false;
+    }
+    return true;
+};
+
+pro['<'] = function(a) {
+    for(var k in a) {
+        if(this.get(k) >= a[k])
+            return false;
+    }
+    return true;
+};
+
+pro['<='] = function(a) {
+    for(var k in a) {
+        if(this.get(k) > a[k])
+            return false;
+    }
+    return true;
+};
+
+pro['+'] = function(a) {
+    for(var k in a) {
+        this.set(k,this.get(k)+a[k]);
+    }
+};
+
+pro['-'] = function(a) {
+    for(var k in a) {
+        this.set(k,this.get(k)-a[k]);
+    }
+};
+
+pro['*'] = function(a) {
+    for(var k in a) {
+        this.set(k,this.get(k)*a[k]);
+    }
+};
+
+pro['/'] = function(a) {
+    for(var k in a) {
+        this.set(k,this.get(k)/a[k]);
+    }
+};
+
+pro['|'] = function(a) {
+    for(var k in a) {
+        this.set(k,this.get(k)|a[k]);
+    }
+};
+
+pro['&'] = function(a) {
+    for(var k in a) {
+        this.set(k,this.get(k)&a[k]);
+    }
+};
+
+pro['^'] = function(a) {
+    for(var k in a) {
+        this.set(k,this.get(k)^a[k]);
+    }
+};
+
+pro['%'] = function(a) {
+    for(var k in a) {
+        this.set(k,this.get(k)%a[k]);
+    }
+};
 
 module.exports = KV;
