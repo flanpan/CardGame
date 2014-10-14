@@ -11,6 +11,8 @@
     "pomelo-logger": "",
     "pomelo-status-plugin": "0.0.4",
     "underscore": "^1.7.0",
-    "underscore.string": "^2.3.3"
+    "underscore.string": "^2.3.3",
+    "mongodb": "^1.4.19",
+    "deepmerge": "^0.2.7"
   }
 }

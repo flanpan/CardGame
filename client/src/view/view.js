@@ -121,10 +121,83 @@
         }
     };
 
-    pro.create = function(args) {
-        if(args.type === 'scene') {
-            return new SceneTemplate(args);
+    var createAssertMgr = function(args) {
+        var cb = args.cb;
+        if(!cc.sys.isNative) {
+            console.log('非native环境资源管理创建将被忽略.');
+            return cb({code:200});
         }
+        var _am = new jsb.AssetsManager(args.manifestPath, args.storagePath);
+        _am.retain();
+        if (!_am.getLocalManifest().isLoaded()) {
+            cc.log("更新资源失败，跳过资源更新.");
+            return cb({code:500});
+        } else
+        {
+            var __failCount = 0;
+            var listener = new jsb.EventListenerAssetsManager(_am, function(event) {
+                switch (event.getEventCode())
+                {
+                    case jsb.EventAssetsManager.ERROR_NO_LOCAL_MANIFEST:
+                        cc.log("No local manifest file found, skip assets update.");
+                        cb({code:500});
+                        break;
+                    case jsb.EventAssetsManager.UPDATE_PROGRESSION:
+                        var info = {percent:event.getPercent(),percentByFile:event.getPercentByFile()}
+                        var msg = event.getMessage();
+                        if (msg)
+                            cc.log(msg);
+                        cc.log(_am._percent + "%");
+                        cb({code:200,info:info});
+                        break;
+                    case jsb.EventAssetsManager.ERROR_DOWNLOAD_MANIFEST:
+                    case jsb.EventAssetsManager.ERROR_PARSE_MANIFEST:
+                        cc.log("Fail to download manifest file, update skipped.");
+                        cb({code:500});
+                        break;
+                    case jsb.EventAssetsManager.ALREADY_UP_TO_DATE:
+                        cb({code:200});
+                        break;
+                    case jsb.EventAssetsManager.UPDATE_FINISHED:
+                        cc.log("Update finished. " + event.getMessage());
+                        cb({code:200});
+                        break;
+                    case jsb.EventAssetsManager.UPDATE_FAILED:
+                        cc.log("Update failed. " + event.getMessage());
+                        __failCount ++;
+                        if (__failCount < 5)
+                            _am.downloadFailedAssets();
+                        else {
+                            cc.log("Reach maximum fail count, exit update process");
+                            __failCount = 0;
+                            cb({code:500});
+                        }
+                        break;
+                    case jsb.EventAssetsManager.ERROR_UPDATING:
+                        cc.log("Asset update error: " + event.getAssetId() + ", " + event.getMessage());
+                        cb({code:500})
+                        break;
+                    case jsb.EventAssetsManager.ERROR_DECOMPRESS:
+                        cc.log(event.getMessage());
+                        cb({code:500});
+                        break;
+                    default:
+                        break;
+                }
+            });
+            cc.eventManager.addListener(listener, 1);
+            _am.update();
+        }
+        return _am;
     };
 
+    pro.create = function(args) {
+        if(args.type === 'scene') {
+            // args.file
+            return new SceneTemplate(args);
+        } else if(args.type == 'am') {
+            // manifestPath storagePath cb
+            return createAssertMgr(args);
+        }
+    };
 })(this);

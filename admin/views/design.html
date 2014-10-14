@@ -69,13 +69,11 @@
                 alert(event.data);
             };
 
-            var jsonPath = location.search.substr(1);
-
             function save() {
                 var data = treeEditor.get();
                 var tmp = {
                     type:'saveJson',
-                    jsonPath:jsonPath,
+                    jsonPath:'./design/main.json',
                     json:JSON.stringify(data)
                 }
                 jsonClient.send(JSON.stringify(tmp));

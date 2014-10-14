@@ -16,6 +16,6 @@
         "src/model/bag.js",
         "src/view/view.js",
         "src/resource.js",
-        "src/app.js"
+        "src/view/sceneTemplate.js"
     ]
 }

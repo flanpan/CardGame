@@ -92,6 +92,7 @@ pro._cb = function(args) {
     else return arr;
 };
 
+/*
 pro._isSpecialParam = function(p) {
     if(p === '.f' || p === '.b' || p ==='.r' || p === '.cb' || p === '.d')
         return true;
@@ -105,7 +106,9 @@ pro._getOptsWithoutSpecial = function(opts) {
             res[k] = opts[k];
     }
     return res;
-}
+}*/
+
+
 /*
 占位参数名.f,.b,.r,.cb,.d
 */
@@ -193,8 +196,8 @@ pro.doFun = function(opts,trace,context) {
                     } else break;
                 }
             } else {
-                var tmp = this._getOptsWithoutSpecial(argsNew);
-                a.push(tmp);
+                //var tmp = this._getOptsWithoutSpecial(argsNew);
+                a.push(_.omit(a,function(v,k){return k[0]=='.'}));
             }
 
 

@@ -133,7 +133,7 @@ app.post('/login', function(req, res) {
 });
 
 app.use('/', express["static"](__dirname + '/../client/'));
-
+app.use('/assetsManager', express["static"](__dirname + '/../client/tools/assetsManager/'));
 //app.use('/shared', express["static"](__dirname + '/../client/script/shared'));
 //app.use('/res', express["static"](__dirname + '/../client/res'));
 

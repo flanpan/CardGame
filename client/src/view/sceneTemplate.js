@@ -37,31 +37,9 @@ var LayerTemplate = cc.Layer.extend({
         ccs.actionManager.releaseActions();
         //ccs.sendEvent(TRIGGER_EVENT_LEAVESCENE);
         //ev.emit('v.scene.exit');
-        //this.unschedule(this.gameLogic, this);
+        this.unschedule(this.gameLogic, this);
         this._super();
     },
-/*
-    onTouchBegan: function (touch, event) {
-        //ccs.sendEvent(TRIGGER_EVENT_TOUCHBEGAN);
-        ev.emit('v.scene.touch.beban',{touch:touch,event:event});
-        return true;
-    },
-
-    onTouchMoved: function (touch, event) {
-        //ccs.sendEvent(TRIGGER_EVENT_TOUCHMOVED);
-        ev.emit('v.scene.touch.moved',{touch:touch,event:event});
-    },
-
-    onTouchEnded: function (touch, event) {
-        //ccs.sendEvent(TRIGGER_EVENT_TOUCHENDED);
-        ev.emit('v.scene.touch.ended',{touch:touch,event:event});
-    },
-
-    onTouchCancelled: function (touch, event) {
-        //ccs.sendEvent(TRIGGER_EVENT_TOUCHCANCELLED);
-        ev.emit('v.scene.touch.cancelled',{touch:touch,event:event});
-    },
-*/
     gameLogic: function () {
         //ccs.sendEvent(TRIGGER_EVENT_UPDATESCENE);
         //ev.emit('v.scene.update');

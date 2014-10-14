@@ -48,14 +48,14 @@ app.configure('production|development', 'chr', function() {
         cleanOnStartUp:true,
         statusManager:require('./app/util/statusMgr')
     }});*/
-    /*
+
     app.use(require('pomelo-globalchannel-plugin'),{globalChannel:{
         host:'127.0.0.1',
         port:27017,
-        cleanOnStartUp:true,
+        cleanOnStartUp:false,
         channelManager:require('./app/util/globalChannelMgr')
     }});
-    */
+
     app.filter(pomelo.filters.serial());
     var filter = require('./app/servers/chr/filter/filter');
     app.before(filter());
