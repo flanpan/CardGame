@@ -17,14 +17,14 @@ var pro = Remote.prototype;
 
 pro.add = function(args,cb) {
     if(this.chrMgr.get(args.name))
-        return cb({code:code.fail});
+        return cb({code:500});
     var self = this;
     this.chrMgr.getModel({areaId:args.areaId,name:args.name},function(res) {
         if(res.code !== 200)
-            return cb({code:code.fail});
+            return cb({code:500});
         var model = res.model;
         self.chrMgr.add(model.name,model);
-        cb({code:code.ok,chr:model});
+        cb({code:200,chr:model});
     });
 };
 
