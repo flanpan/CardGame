@@ -1,0 +1,1 @@
+{"初始化体力恢复":{".f":"i.setRecover","prop":"power","offlineDate":"$i.m.offlineDate","interval":"1200","num":"1"},"初始化法力恢复":{".f":"i.setRecover","prop":"magic","offlineDate":"$i.m.offlineDate","interval":"1200","num":"1"}}

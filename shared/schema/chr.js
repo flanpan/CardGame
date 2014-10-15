@@ -20,6 +20,7 @@ var Chr = {
     loginDate:{type:Date,default:new Date},
     offlineDate:{type:Date,default:new Date},
     power:{type:Number,default:30},
+    magic:{type:Number,default:10},
     vip:{type:Number,default:0},
     icon:{type:Number,default:1},
     heroes:[{

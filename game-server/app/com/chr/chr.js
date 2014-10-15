@@ -108,45 +108,45 @@ pro.powerRecover = function() {
 
 /* 恢复方法，如恢复体力，法力..
 opts.prop 要恢复的属性,如'power'
-opts.offlineDate 上次离线时间
-opts.num 每次恢复多少
-opts.interval 多少时间恢复一次
+opts.offlineDate 上次离线时间 默认当前时间
+opts.num 每次恢复多少,默认为1
+opts.interval 多少时间恢复一次,默认20分钟,单位为秒
 */
 pro.setRecover = function(opts) {
+    if(typeof opts.prop !== 'string') {
+        logger.warn('setRecover参数错误.');
+        return;
+    }
+
+    if(!(opts.offlineDate instanceof Date))
+        opts.offlineDate = new Date;
+    if(typeof opts.num !== 'number')
+        opts.num = 1;
+    if(typeof opts.interval !== 'number')
+        opts.interval = 20*60;
+
     if(this._recover[opts.prop]) {
         logger.warn(opts.prop+'重复设置恢复.');
         return;
     }
     var recover = this._recover[opts.prop] = {};
-    var max = this.getMaxValueOfModel(opts.prop);
-    //var powerRecoverInterval = kv.data.chr.powerRecoverInterval;
     var interval = opts.interval;
-    if(!recover.timer) {
-        var duration = new Date - opts.offlineDate;//this.m.offlineDate;
-        var recoverNum = Math.floor(duration/interval);
-        var prop = this.kv.get(opts.prop);
-        if(prop+recoverNum >= max) {
-            if(prop < max) {
-                //this.update({power:maxPower-this.m.power});
-
-                this.op({offset:{power:max-prop}});
-            }
-        } else {
-            //this.update({power:recoverNum});
-            this.op({offset:{power:recoverNum}});
-        }
-        var self = this;
-        recover.initTimer = setTimeout(function() {
-            if(self.m.power < max) {
-                self.update({power:1});
-            }
-            recover.timer = setInterval(function() {
-                if(self.m.power < max) {
-                    self.update({power:1});
-                }
-            },interval);
-        },interval - duration%interval);
-    }
+    var duration = new Date - opts.offlineDate;
+    var recoverNum = Math.floor(duration/interval)*opts.num;
+    var prop = this.kv.get(opts.prop);
+    var offset = {};
+    offset[prop] = recoverNum;
+    this.op({offset:offset});
+    var self = this;
+    prop = this.kv.get(opts.prop);
+    recover.initTimer = setTimeout(function() {
+        offset[prop] += opts.num;
+        self.op({offset:offset})
+        recover.timer = setInterval(function() {
+            offset[prop] += opts.num;
+            self.op({offset:offset})
+        },interval);
+    },interval - duration%interval);
 };
 
 pro.setMaxValueOfModel = function(opts) {
