@@ -24,10 +24,27 @@ var Chr = {
     vip:{type:Number,default:0},
     icon:{type:Number,default:1},
     heroes:[{
+        cfgId:{type:Number},
+        level:{type:Number,default:1},
+        equip:{
+            weapon:Number,
+            clothes:Number,
+            shoe:Number,
+            active:{
+                heroCfgId:Number,
+                hp:Number,
 
+            }
+        }
     }],
     items:[{
-
+        cfgId:Number,
+        num:Number
+    }],
+    equip:[{
+        cfgId:Number,
+        level:Number,
+        exp:Number
     }]
     //pet:Pet,
     //task:Task

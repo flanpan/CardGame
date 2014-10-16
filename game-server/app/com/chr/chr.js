@@ -198,37 +198,37 @@ pro.op = function(opts) {
             var max = this.getMaxValueOfModel(key);
             if(typeof max == 'number' && v > max)
                 v = max;
-            needChanges.push({key:k,value:v,op:'update'});
+            needChanges.push({key:k,value:v,op:'u'});
         }
     }
     if(opts.update) {
         for(var key in opts.update) {
             var value = opts.update[key];
-            needChanges.push({key:key,value:value,op:'update'});
+            needChanges.push({key:key,value:value,op:'u'});
         }
     }
     if(opts.insert) {
         for(var key in opts.insert) {
             var value = opts.insert[key];
-            needChanges.push({key:key,value:value,op:'insert'});
+            needChanges.push({key:key,value:value,op:'i'});
         }
     }
     if(opts.delete) {
         // 查找看看有木有
         for(var key in opts.delete) {
             var value = opts.delete[key];
-            needChanges.push({key:key,value:value,op:'delete'});
+            needChanges.push({key:key,value:value,op:'d'});
         }
     }
     // 校验无误后，开始运算
     if(needChanges.length) {
         needChanges.forEach(function(data){
-            if(data.op == 'update') {
+            if(data.op == 'u') {
                 this.kv.set(data.key,data.value);
-            }else if(data.op == 'insert') {
+            }else if(data.op == 'i') {
                 var arr = this.kv.get(data.key);
                 arr.push(data.value);
-            }else if(data.op == 'delete'){
+            }else if(data.op == 'd'){
                 var arr = this.get(data.key);
                 // 以后再做。。。。
             }
