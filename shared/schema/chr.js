@@ -25,15 +25,22 @@ var Chr = {
     icon:{type:Number,default:1},
     heroes:[{
         cfgId:{type:Number},
-        level:{type:Number,default:1},
-        equip:{
+        level:{type:Number,default:1}, // 等级
+        hp:Number, // 血量
+        md:Number, // 魔法防御
+        pd:Number, // 物理防御
+        atk:Number,// 攻击力
+        equip:{ // 装备
             weapon:Number,
             clothes:Number,
             shoe:Number,
             active:{
                 heroCfgId:Number,
-                hp:Number,
-
+                hp:Number,//血量
+                atk:Number,//攻击力
+                def:Number,//物理防御力
+                res:Number,// 魔法防御力
+                spo:Number// 速度
             }
         }
     }],
