@@ -5,13 +5,6 @@
     var ViewFunctions = function(eventMgr) {
         this.ev = eventMgr;
         this.kv = this.ev.kv;
-
-        //this.can = this.ev.can;
-        //this.do = this.ev.do;
-        //this.console = console;
-        //this.runEvent = this.ev.runEvent;
-        //this.createdOnNum = 0;
-        //this.createdEmitFunNum = 0;
     };
     global.ViewFunctions = ViewFunctions;
 
@@ -191,13 +184,37 @@
         return _am;
     };
 
+    var createRichText = function(args) {
+        var elements = args.elements;
+        var richText = ccui.RichText.create();
+        var i = 0;
+        elements.forEach(function(opts){
+            i++;
+            var e;
+            if(opts.type == 'text') {
+                e = ccui.RichElementText.create(i,opts.color,opts.opacity,opts.text,opts.fontName,opts.fontSize);
+            } else if(opts.type == 'image') {
+                ccui.RichElementImage.create(i, opts.color, opts.opacity, opts.path);
+            } else if(opts.type == 'custom') {
+                e = ccui.RichElementCustomNode.create(i, opts.color, opts.opacity, opts.node);
+            } else return;
+            richText.pushBackElement(e);
+        });
+        return richText;
+    }
+
     pro.create = function(args) {
         if(args.type === 'scene') {
             // args.file
             return new SceneTemplate(args);
         } else if(args.type == 'am') {
-            // manifestPath storagePath cb
+            // manifestPath storagePath cb(code,info:{percent,percentByFile})
             return createAssertMgr(args);
+        } else if(args.type == 'richText') {
+            //
+            return createRichText(args);
+        } else if(args.type == 'ui') {
+            return ccs.uiReader.widgetFromJsonFile(args.path);
         }
     };
 })(this);

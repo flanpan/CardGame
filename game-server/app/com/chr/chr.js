@@ -17,6 +17,7 @@ var Chr = function(model) {
     this.ev.kv.set('i',this);
     this.session = null;
     this._maxValuesOfModel = {};
+    this._contact = {};
     this._recover = {};
     console.log('触发|初始化角色','|上下文:',null);
     var trace = '执行| '+'初始化角色';

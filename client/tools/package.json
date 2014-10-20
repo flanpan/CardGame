@@ -1,19 +1,19 @@
 {
-    "name": "tools",
-    "version": "0.0.0",
-    "description": "",
-    "main": "index.js",
-    "scripts": {
+  "name": "tools",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
-    },
-
+  },
   "author": "",
-    "dependencies": {
-        "crc": "0.2.0",
-        "async":"",
-        "underscore":"",
-        "underscore.string":"",
-        "moment":""
-    },
-    "license": "ISC"
+  "dependencies": {
+    "crc": "0.2.0",
+    "async": "",
+    "underscore": "",
+    "underscore.string": "",
+    "moment": "^2.8.3",
+    "easy-zip": "0.0.4"
+  },
+  "license": "ISC"
 }
