@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<SceneProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <ProjectDir>E:\mysrc\game\client\CocoStudio\ccsprojs\scene.fight</ProjectDir>
+  <Version>1.6.0.0</Version>
+  <Resources>E:\mysrc\game\client</Resources>
+  <Name>scene.fight</Name>
+  <JsonFileName>scene.fight.json</JsonFileName>
+  <JsonFolder>E:\mysrc\game\client\CocoStudio\assets\publish</JsonFolder>
+  <JsonList />
+  <CanvasSize>
+    <Width>640</Width>
+    <Height>960</Height>
+  </CanvasSize>
+  <filePath>E:\mysrc\game\client\CocoStudio\ccsprojs\scene.fight\scene.fight.xml.scene</filePath>
+  <ProjectType>SceneProject</ProjectType>
+  <ResRelativePath>\\..\\..\\assets</ResRelativePath>
+  <JSFileList />
+  <DefaultUI_JSList />
+  <Res>E:\mysrc\game\client\CocoStudio\assets</Res>
+</SceneProject>

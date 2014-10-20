@@ -8,8 +8,8 @@
   <JsonFolder>E:\mysrc\game\client\CocoStudio\assets\publish</JsonFolder>
   <JsonList />
   <CanvasSize>
-    <Width>480</Width>
-    <Height>320</Height>
+    <Width>640</Width>
+    <Height>960</Height>
   </CanvasSize>
   <filePath>E:\mysrc\game\client\CocoStudio\ccsprojs\msgTests\msgTests.xml.scene</filePath>
   <ProjectType>SceneProject</ProjectType>

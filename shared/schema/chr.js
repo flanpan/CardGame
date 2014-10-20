@@ -27,9 +27,8 @@ var Chr = {
         cfgId:{type:Number},
         level:{type:Number,default:1}, // 等级
         hp:Number, // 血量
-        md:Number, // 魔法防御
-        pd:Number, // 物理防御
-        atk:Number,// 攻击力
+        def:Number, // 防御
+        atk:Number,// 攻击
         equip:{ // 装备
             weapon:Number,
             clothes:Number,
