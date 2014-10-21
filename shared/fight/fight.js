@@ -2,19 +2,22 @@
  * Created by feng.pan on 14-10-21.
  */
 
-var EventEmitter = require('events').EventEmitter;
+//var EventEmitter = require('events').EventEmitter;
 var util = require('util');
 var Entity = require('./entity');
 var consts = require('./consts');
 
-var Fight = function() {
-    EventEmitter.call(this);
+var Fight = function(ev) {
+    //EventEmitter.call(this);
     this.entities = {};
     //this.leftEntities = {};
     //this.rightEntities = {};
+    //this.ev = new EventMgr;
+    this.ev = ev;
+    this.ev.kv.set('fight',this);
 };
 
-util.inherits(Fight, EventEmitter);
+//util.inherits(Fight, EventEmitter);
 module.exports = Fight;
 
 var pro = Fight.prototype;

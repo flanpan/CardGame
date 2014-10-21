@@ -291,6 +291,13 @@ pro.parseArgs = function(args,context,trace) {
     return argsBak;
 };
 
+pro.invokeCb = function(key) {
+    var cb = this.kv.get(key);
+    if(!!cb && typeof cb === 'function') {
+        cb.apply(null, Array.prototype.slice.call(arguments, 1));
+    }
+};
+
 /*
 
 pro.createOnFun = function(eventName) {

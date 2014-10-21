@@ -104,7 +104,7 @@ pro.moveTo = function(duration,x,cb) {
 };
 
 pro.emit = function(e) {
-    this.ev.emit(e,this);
+    this.ev.invokeCb(e,this);
 };
 
 pro.setState = function(state) {
