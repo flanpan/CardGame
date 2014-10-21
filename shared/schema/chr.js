@@ -13,7 +13,8 @@ var Chr = {
     uid:String,//mongoose.Schema.Types.ObjectId,
     name:String,
     areaId:Number,
-    level:{type:Number,default:1},
+    exp:{type:Number,default:0},
+    lv:{type:Number,default:1},
     gold:{type:Number,default:0},
     cash:{type:Number,default:0},
     createdDate:{type:Date,default:new Date},
@@ -25,7 +26,7 @@ var Chr = {
     icon:{type:Number,default:1},
     heroes:[{
         cfgId:{type:Number},
-        level:{type:Number,default:1}, // 等级
+        lv:{type:Number,default:1}, // 等级
         hp:Number, // 血量
         def:Number, // 防御
         atk:Number,// 攻击
@@ -49,7 +50,7 @@ var Chr = {
     }],
     equip:[{
         cfgId:Number,
-        level:Number,
+        lv:Number,
         exp:Number
     }]
     //pet:Pet,

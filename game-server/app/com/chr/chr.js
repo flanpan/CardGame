@@ -6,6 +6,8 @@ var util = require('util');
 var Base = require('./base');
 var EventMgr = require('../../../../shared/EventMgr');
 var logger = require('pomelo-logger').getLogger(__filename);
+var _ = require('underscore');
+_.str = require('underscore.string');
 
 var Chr = function(model) {
     //Base.call(this,model);
@@ -17,7 +19,7 @@ var Chr = function(model) {
     this.ev.kv.set('i',this);
     this.session = null;
     this._maxValuesOfModel = {};
-    this._contact = {};
+    this._upgrade = {};
     this._recover = {};
     console.log('触发|初始化角色','|上下文:',null);
     var trace = '执行| '+'初始化角色';
@@ -153,12 +155,33 @@ pro.setRecover = function(opts) {
 pro.setMaxValueOfModel = function(opts) {
     for(var key in opts) {
         if(typeof opts[key] != 'number') {
-            logger.warn('setMaxValueOfModel失败,key:%s,value:%d',key,opts[key]);
+            logger.error('setMaxValueOfModel失败,key:%s,value:%d',key,opts[key]);
             return false;
         }
         this._maxValuesOfModel[key] = opts[key];
     }
     return true;
+};
+
+pro.setUpgradeOfModel = function(opts) {
+    for(var key in opts) {
+        if(typeof this._upgrade[key] != 'undefined') {
+            logger.warn('setUpgradeOfModel key:%s重复,被忽略',key);
+            continue;
+        }
+        var opt = opts[key];
+        if(typeof opt.lvKey !== 'string' || !(opt.expList instanceof Array)) {
+            logger.error('setUpgradeOfModel失败');
+            return false;
+        }
+        this._upgrade[key] = opt;
+    }
+    return true;
+};
+
+pro.getUpgradeOfModel = function(key) {
+    key = key.replace(/\.\d+/g,'.$')
+    return this._upgrade[key];
 };
 
 // 有值返回值，无值返回空
@@ -199,7 +222,36 @@ pro.op = function(opts) {
             var max = this.getMaxValueOfModel(key);
             if(typeof max == 'number' && v > max)
                 v = max;
-            needChanges.push({key:k,value:v,op:'u'});
+
+            var upgrade = this.getUpgradeOfModel(key);
+            if(upgrade) {
+                var lv = this.kv.get(k+'.'+upgrade.lvKey);
+                if(lv >= upgrade.expList.length+1) {
+                    continue;
+                }
+                var needExp = upgrade.expList[lv];
+                if(v >= needExp) {
+                    // 等级+1
+                    var keyLv = _.str.strLeftBack(key,'.');
+                    keyLv += '.'+upgrade.keyLv;
+                    var offset = {};
+                    offset[keyLv] = 1;
+                    this.op({offset:offset});
+                    // 经验0+偏移量
+                    this.kv.set(key,0);
+                    var remainExp = v - needExp;
+                    offset = {}
+                    offset[key] = 0;
+                    this.op({update:offset}); // 经验赋值0
+                    offset[key] = remainExp;
+                    this.op({offset:offset}); // 加上剩余经验
+                } else {
+                    needChanges.push({key:k,value:v,op:'u'});
+                }
+            } else {
+                needChanges.push({key:k,value:v,op:'u'});
+            }
+
         }
     }
     if(opts.update) {
@@ -234,6 +286,7 @@ pro.op = function(opts) {
                 // 以后再做。。。。
             }
         });
+
         if(opts.isNotity !== false) {
             this.session.send('chr.op',needChanges);
         }
