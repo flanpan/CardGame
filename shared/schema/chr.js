@@ -52,7 +52,12 @@ var Chr = {
         cfgId:Number,
         lv:Number,
         exp:Number
-    }]
+    }],
+    formations:[[{
+        heroIdx:Number,
+        pos:Number // 站位 1-10
+    }]],// 可存储五个阵形，每个阵形最多五个人
+    curFormationIdx:Number
     //pet:Pet,
     //task:Task
 };

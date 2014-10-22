@@ -17,3 +17,8 @@ exp.entityType = {
 };
 
 exp.speed = 1;
+
+exp.screen = {};
+exp.screen.width = 480;
+
+exp.formation = [[],[]]

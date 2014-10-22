@@ -127,3 +127,40 @@ pro.update = function() {
             break;
     }
 };
+
+pro.useSkill = function(skillId) {
+    // res: targetCount,damageValue
+    var res = {};
+    res.targetCount = 2;
+    res.damageValue = 100;
+    return res;
+};
+
+pro.damage = function(skillId,damageValue,element) {
+    var backRes = {}
+    backRes.sp = 10;
+    return backRes;
+};
+
+pro.offset = function(opts) {
+    if(opts.hp && typeof opts.hp == 'number') {
+        if(opts>0) this.plusHP(opts.hp)
+        else this.minusHP(opts.hp);
+    }
+    if(opts.sp && typeof opts.sp == 'number') {
+        // 怒气值只增加或重置，不减少
+        if(opts.sp>0) this.plusSP(opts.sp);
+    }
+    // 其他就是buf了
+    /*
+    if(opts.x && typeof opts.x == 'number') {
+        if(opts.x>0) this.plusX(opts.x);
+        else this.minusX(opts.x);
+    }
+    if(opts.atk && typeof opts.atk == 'number') {
+
+    }
+    if(opts.def && typeof opts.def == 'number') {
+
+    }*/
+};
