@@ -35,9 +35,10 @@ var isPromotion = function(a, b) { // 是否a生b ?
 }
 
 // a攻击b
-exp.useSkill = function(opts) {
+exp.attack = function(opts) {
     var a = opts.a;
     var b = opts.b;
+    var offset = {};
     var skillId = opts.skillId;
     var inhibition_ab = isInhibition(a.element, b.element);
     var inhibition_ba = isInhibition(b.element, a.element)
@@ -54,6 +55,30 @@ exp.useSkill = function(opts) {
         b.hp = 0;
     if(b.hp < damage)
         damage = damage - b.hp;
-
+    return offset;
 };
 
+
+exp.getPropByPower = function(power,isFront) {
+    var prop = {};
+    if(isFront) {
+        //hp:atk:def 70:20:10
+        prop.hp = Math.ceil(power*0.7);
+        prop.atk = Math.ceil(power*0.2);
+        prop.def = Math.ceil(power*0.1);
+    } else {
+        //hp:atk:def 40:40:20
+        prop.hp = Math.ceil(power*0.4);
+        prop.atk = Math.ceil(power*0.4);
+        prop.def = Math.ceil(power*0.2);
+    }
+    return prop;
+};
+
+exp.getPowerByProp = function(prop,isFront) {
+    if(isFront) {
+
+    } else {
+
+    }
+};

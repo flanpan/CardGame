@@ -11,6 +11,9 @@ var Fight = function(opts) {
     this.ev = opts.ev;
     this.ev.kv.set('fight',this);
     this.cfg = opts.cfg;
+    this.left = {};//opts.left
+    this.right = {};//opts.right
+    this.updateInterval = 1/60 *1000;
     this._init();
 };
 
@@ -22,14 +25,14 @@ pro._init = function() {
 
 };
 
-pro.left = function(opts) {
+pro.moveLeft = function(opts) {
     var entityId = opts.entityId;
     var x = 0;
     var e = this.entities[entityId];
     e.moveTo(Math.abs(this.x-x)/consts.speed,x);
 };
 
-pro.right = function(opts) {
+pro.moveRight = function(opts) {
     var entityId = opts.entityId;
     var x = 0;
     var e = this.entities[entityId];
@@ -55,7 +58,15 @@ pro._getTarget = function(id,count) {
 
 };
 
-pro.update = function() {
+
+pro.start = function() {
+    var self = this;
+    setInterval(function() {
+        self._update();
+    },this.updateInterval);
+}
+
+pro._update = function() {
     for(var id in this.entities) {
         var e = this.entities[id];
         e.update(this.entities);

@@ -4,18 +4,27 @@
 
 var consts = require('./consts');
 var Action = require('./action');
+var formula = require('../formula');
 
 var Entity = function(opts) {
     this.ev = opts.ev;
     this.x = opts.x;
     this.hp = opts.maxHP;
     this.sp = 0;
+    this.maxSp = 100;
     this.def = opts.def;
     this.atk = opts.atk;
     this.maxHP = opts.maxHP;
     this.maxX = opts.maxX;
     this.state = consts.state.stand;
     this.action = new Action();
+    this.isAutoSkill = false;
+    this.attackInterval = 1000;
+    this.lastUseSkillTime = new Date;
+    this.cfg = opts.cfg;
+    this.passiveSkillIds = [2,3];
+    this.activeSkillId  = 1; //必杀技,必杀技只有一个
+    this.type = opts.type;
 };
 
 module.exports = Entity;
@@ -61,16 +70,20 @@ pro.plusX = function(x) {
     if(typeof x !== 'number' || x<0)
         return;
     this.x += x;
-    if(this.x>this.maxX)
+    if(this.x>this.maxX) {
         this.x = this.maxX;
+        this.setState(consts.state.stand);
+    }
 };
 
 pro.minusX = function(x) {
     if(typeof x !== 'number' || x<0)
         return;
     this.x -= x;
-    if(this.x <this.minX)
+    if(this.x <this.minX) {
         this.x = this.minX;
+        this.setState(consts.state.stand);
+    }
 };
 
 pro.setX = function(x) {
@@ -114,20 +127,8 @@ pro.setState = function(state) {
     this.emit('fight.change.state');
 };
 
-pro.update = function() {
-    this.action.update();
-    switch(this.state) {
-        case consts.state.left:
-            this.minusX(this.speed);
-            break;
-        case consts.state.right:
-            this.plusX(this.speed);
-            break;
-        default:
-            break;
-    }
-};
 
+/*
 pro.useSkill = function(skillId) {
     // res: targetCount,damageValue
     var res = {};
@@ -135,11 +136,10 @@ pro.useSkill = function(skillId) {
     res.damageValue = 100;
     return res;
 };
+*/
 
-pro.damage = function(skillId,damageValue,element) {
-    var backRes = {}
-    backRes.sp = 10;
-    return backRes;
+pro.setAutoSkill = function(isAuto) {
+    this.isAutoSkill = isAuto;
 };
 
 pro.offset = function(opts) {
@@ -163,4 +163,77 @@ pro.offset = function(opts) {
     if(opts.def && typeof opts.def == 'number') {
 
     }*/
+};
+
+
+pro.useActiveSkill = function(entities){
+    if(this.sp == this.maxSp) {
+        this.lastUseSkillTime = new Date;
+        this.attack(this.activeSkillId,entities);
+        return true;
+    } else return false;
+};
+
+pro.getTargets = function(entities,number,targetType) {
+    var arr = [];
+    for(var id in entities) {
+        if(targetType) {//
+            if(entities[id].type != this.type && entities[id].state != consts.state.left) {
+                arr.push(entities[id]);
+            }
+        } else { // 自己人
+            if(entities[id].type == this.type) {
+                arr.push(entities[id]);
+            }
+        }
+    }
+    arr.sort(function(me,target){ return Math.abs(this.x - me.x) - Math.abs(this.x- target.x) });
+    var targets = []
+    for(var i = 0; i<arr.length;i++) {
+        if(i == number-1) break;
+        targets.push(arr[i]);
+    }
+    return targets;
+};
+
+pro.attack = function(skillId,entities) {
+    var skill = this.cfg.skill[skillId];
+    var targets = this.getTargets(entities,skill.targetNum,skill.targetType);
+    this.emit('fight.attack');
+    this.lastUseSkillTime = new Date;
+    targets.forEach(function(target) {
+        target.damage(skillId,this);
+    });
+};
+
+pro.damage = function(skillId,attacker) {
+    var offset = formula.attack({skillId:skillId,attacker:attacker,damager:this});
+    this.ev.invokeCb('fight.damage',this,attacker);
+    this.offset(offset);
+};
+
+pro.getPassiveSkillId = function() {
+    return 2;
+};
+
+
+pro.update = function(entities) {
+    if(this.isAutoSkill) {
+        this.useActiveSkill(entities);
+        return ;
+    }
+    if(this.x == this.maxX && (new Date - this.lastUseSkillTime >= this.attackInterval)) {
+        return this.attack(this.getPassiveSkillId(),entities);
+    }
+    this.action.update();
+    switch(this.state) {
+        case consts.state.left:
+            this.minusX(this.speed);
+            break;
+        case consts.state.right:
+            this.plusX(this.speed);
+            break;
+        default:
+            break;
+    }
 };

@@ -24,11 +24,10 @@ var opts = {
     }]],
     cfg:{
         skill:require('../config/data/skill'),
-        entity:require('../config/data/entity')
+        entity:require('../config/data/entity'),
+        fight:require('../config/data/fight').main[1].normal
     }
 };
 
 var fight = kv.createFight(opts);
-setInterval(function() {
-    fight.update();
-},1/60);
+fight.start();

@@ -12,8 +12,8 @@ exp.state = {
 };
 
 exp.entityType = {
-    our:1,
-    enemy:2
+    svrLeft:1,
+    svrRight:2
 };
 
 exp.speed = 1;
