@@ -108,7 +108,7 @@ cc.game.onStart = function(){
             for(var key in kv.c.scene) {
                 var scene = kv.c.scene[key];
                 if(scene.isFirst) {
-                    kv.set('v.curSceneCfg',scene);
+                    kv.set('v.curSceneCfg',scene);+
                     break;
                 }
             }
