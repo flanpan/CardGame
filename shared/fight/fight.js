@@ -5,11 +5,13 @@
 var util = require('util');
 var Entity = require('./entity');
 var consts = require('./consts');
+var EventEmitter = require('events').EventEmitter;
 
 var Fight = function(opts) {
+    EventEmitter.call(this);
     this.entities = {};
-    this.ev = opts.ev;
-    this.ev.kv.set('fight',this);
+    //this.ev = EventEmitter;//opts.ev;
+    //this.ev.kv.set('fight',this);
     this.cfg = opts.cfg;
     this.left = {};//opts.left
     this.right = {};//opts.right
@@ -20,6 +22,7 @@ var Fight = function(opts) {
 module.exports = Fight;
 
 var pro = Fight.prototype;
+util.inherits(Entity, EventEmitter);
 
 pro._init = function() {
 

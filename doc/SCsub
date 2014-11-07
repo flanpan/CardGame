@@ -1,0 +1,103 @@
+Import('env')
+Import('env_modules')
+
+env.Append(CPPPATH=["#modules/pomelo/libpomelo/include"])
+env.Append(CPPPATH=["#modules/pomelo/libpomelo/deps/jansson/src"])
+env.Append(CPPPATH=["#modules/pomelo/libpomelo/deps/uv/include"])
+env.Append(CPPPATH=["#modules/pomelo/libpomelo/deps/uv/include/uv-private"])
+
+env_modules.Append(CPPPATH=["#modules/pomelo/libpomelo/include"])
+env_modules.Append(CPPPATH=["#modules/pomelo/libpomelo/deps/jansson/src"])
+env_modules.Append(CPPPATH=["#modules/pomelo/libpomelo/deps/uv/include"])
+env_modules.Append(CPPPATH=["#modules/pomelo/libpomelo/deps/uv/include/uv-private"])
+#Export('env_modules')
+
+libjansson_src = [
+	"libpomelo/deps/jansson/src/dump.c",
+	"libpomelo/deps/jansson/src/error.c",
+	"libpomelo/deps/jansson/src/hashtable.c",
+	"libpomelo/deps/jansson/src/load.c",
+	"libpomelo/deps/jansson/src/memory.c",
+	"libpomelo/deps/jansson/src/pack_unpack.c",
+	"libpomelo/deps/jansson/src/strbuffer.c",
+	"libpomelo/deps/jansson/src/strconv.c",
+	"libpomelo/deps/jansson/src/utf.c",
+	"libpomelo/deps/jansson/src/value.c",
+]
+
+env_libjansson = env_modules.Clone()
+libjansson = env_libjansson.Library("libjansson",libjansson_src)
+env.Prepend(LIBS=[libjansson])
+
+libuv_src = [
+	"libpomelo/deps/uv/src/win/async.c",
+	"libpomelo/deps/uv/src/win/core.c",
+	"libpomelo/deps/uv/src/win/dl.c",
+	"libpomelo/deps/uv/src/win/error.c",
+	"libpomelo/deps/uv/src/win/fs-event.c",
+	"libpomelo/deps/uv/src/win/fs.c",
+	"libpomelo/deps/uv/src/win/getaddrinfo.c",
+	"libpomelo/deps/uv/src/win/handle.c",
+	"libpomelo/deps/uv/src/win/loop-watcher.c",
+	"libpomelo/deps/uv/src/win/pipe.c",
+	"libpomelo/deps/uv/src/win/poll.c",
+	"libpomelo/deps/uv/src/win/process-stdio.c",
+	"libpomelo/deps/uv/src/win/process.c",
+	"libpomelo/deps/uv/src/win/req.c",
+	"libpomelo/deps/uv/src/win/signal.c",
+	"libpomelo/deps/uv/src/win/stream.c",
+	"libpomelo/deps/uv/src/win/tcp.c",
+	"libpomelo/deps/uv/src/win/thread.c",
+	"libpomelo/deps/uv/src/win/threadpool.c",
+	"libpomelo/deps/uv/src/win/timer.c",
+	"libpomelo/deps/uv/src/win/tty.c",
+	"libpomelo/deps/uv/src/win/udp.c",
+	"libpomelo/deps/uv/src/win/util.c",
+	"libpomelo/deps/uv/src/win/winapi.c",
+	"libpomelo/deps/uv/src/win/winsock.c",
+
+	"libpomelo/deps/uv/src/fs-poll.c",
+	"libpomelo/deps/uv/src/inet.c",
+	"libpomelo/deps/uv/src/uv-common.c",
+	"libpomelo/deps/uv/src/version.c"
+]
+
+env_libuv = env_modules.Clone()
+libuv = env_libuv.Library("libuv",libuv_src)
+env.Prepend(LIBS=[libuv])
+
+libpomelo_src = [
+	"libpomelo/src/client.c",
+	"libpomelo/src/common.c",
+	"libpomelo/src/jansson-memory.c",
+	"libpomelo/src/listener.c",
+	"libpomelo/src/map.c",
+	"libpomelo/src/message.c",
+	"libpomelo/src/msg-json.c",
+	"libpomelo/src/msg-pb.c",
+	"libpomelo/src/network.c",
+	"libpomelo/src/package.c",
+	"libpomelo/src/pb-decode.c",
+	"libpomelo/src/pb-encode.c",
+	"libpomelo/src/pb-util.c",
+	"libpomelo/src/pkg-handshake.c",
+	"libpomelo/src/pkg-heartbeat.c",
+	"libpomelo/src/protocol.c",
+	"libpomelo/src/thread.c",
+	"libpomelo/src/transport.c",
+]
+
+env_libpomelo = env_modules.Clone()
+env_libpomelo.Append(CFLAGS=['/TP'])
+#env_libpomelo.Append(CCFLAGS=['-D_CRT_NONSTDC_NO_DEPRECATE'])
+libpomelo = env_libpomelo.Library("libpomelo",libpomelo_src)
+env.Prepend(LIBS=[libpomelo])
+
+
+env.add_source_files(env.modules_sources,"*.cpp")
+
+env.Append(LINKFLAGS=['iphlpapi.lib','psapi.lib','ws2_32.lib'])
+
+#Export('env_modules')
+#Export('env')
+

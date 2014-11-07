@@ -5,9 +5,12 @@
 var consts = require('./consts');
 var Action = require('./action');
 var formula = require('../formula');
+var EventEmitter = require('events').EventEmitter;
 
-var Entity = function(opts) {
+var Entity = function(opts){
+    EventEmitter.call(this);
     this.ev = opts.ev;
+    //this.ev = EventEmitter;
     this.x = opts.x;
     this.hp = opts.maxHP;
     this.sp = 0;
@@ -30,13 +33,15 @@ var Entity = function(opts) {
 module.exports = Entity;
 
 var pro = Entity.prototype;
+util.inherits(Entity, EventEmitter);
+
 
 pro.plusHP = function(hp) {
     if(typeof hp !== 'number' || hp<0) return;
     this.hp += hp;
     if(this.hp > this.maxHP)
         this.hp = this.maxHP;
-    this.emit('fight.change.hp');
+    this.emit('fight.change.hp',this);
 };
 
 pro.minusHP = function(hp) {
@@ -47,7 +52,7 @@ pro.minusHP = function(hp) {
         //this.isDead = true;
         this.setState(consts.state.dead);
     }
-    this.emit('fight.change.hp');
+    this.emit('fight.change.hp',this);
 };
 
 pro.plusSP = function(sp) {
@@ -58,12 +63,12 @@ pro.plusSP = function(sp) {
     this.sp += sp;
     if(this.sp > 100)
         this.sp = 100;
-    this.emit('fight.change.sp');
+    this.emit('fight.change.sp',this);
 };
 
 pro.resetSP = function() {
     this.sp = 0;
-    this.emit('fight.change.sp');
+    this.emit('fight.change.sp',this);
 };
 
 pro.plusX = function(x) {
@@ -116,15 +121,11 @@ pro.moveTo = function(duration,x,cb) {
     })
 };
 
-pro.emit = function(e) {
-    this.ev.invokeCb(e,this);
-};
-
 pro.setState = function(state) {
     if(this.state == state)
         return;
     this.state = state;
-    this.emit('fight.change.state');
+    this.emit('fight.change.state',this);
 };
 
 
@@ -199,7 +200,7 @@ pro.getTargets = function(entities,number,targetType) {
 pro.attack = function(skillId,entities) {
     var skill = this.cfg.skill[skillId];
     var targets = this.getTargets(entities,skill.targetNum,skill.targetType);
-    this.emit('fight.attack');
+    this.emit('fight.attack',this);
     this.lastUseSkillTime = new Date;
     targets.forEach(function(target) {
         target.damage(skillId,this);
