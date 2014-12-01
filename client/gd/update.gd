@@ -17,14 +17,28 @@ var curFileUpdated = false
 func _ready():
 	# Initalization here
 	global = get_node("/root/global")
-	print(global)
+	print(global,global.userData)
 	curFiles = {}.parse_json(global.userData.get_value('user','res'))
-	set_process(true)
+	#set_process(true)
 	http = get_node("/root/global").httpClient
 	label = get_node('Label')
 	progress = get_node('ProgressBar')
-	http.post(global.host,global.port,'/getResourceInfo',{},{instance=self,f='onGetResourceInfo'})
+	#http.post(global.host,global.port,'/getResourceInfo',{},{instance=self,f='onGetResourceInfo'})
 	label.set_text('check update...')
+	var f1 = File.new()
+	var f2 = File.new()
+	var err = f1.open('res://icon.png',File.READ)
+	print(err)
+	print(f1.get_len())
+	f1.seek_end()
+	print(f1.get_pos())
+	var buf = f1.get_buffer(f1.get_len())
+	print(typeof(buf))
+	err = f2.open('res://icon1.png',File.WRITE)
+	print(err)
+	f2.store_var(buf)
+	f1.close()
+	f2.close()
 	pass
 	
 func _process(d):
@@ -46,8 +60,6 @@ func onGetResourceInfo(err,msg):
 		if curFiles.has(path) and curFiles[path][1] == stat[1]:
 			pass
 		else:
-			if not needUpdate:
-				needUpdate = true
 			var obj = {}
 			obj.path = path
 			obj.stat = stat
@@ -70,6 +82,7 @@ func onGetFileData(err,data):
 		updateDone()
 
 func updateDone():
+	print('hot update done')
 	global.userdata.set_value('user','res',curFiles.to_json())
 	global.saveUserData()
 	isSavedUserdata = true

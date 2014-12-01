@@ -7,7 +7,7 @@ var current_scene = null
 var pomelo  = load("res://gd/pomelo.gd").new()
 var httpClient = load('res://gd/httpClient.gd').new()
 var userData = ConfigFile.new()
-var userDataPath = 'res://data/user.cfg'
+var userDataPath = 'res://data/user'
 
 func goto_scene(scene):
 	#load new scene
