@@ -1,0 +1,370 @@
+{
+  "classname": "CCNode",
+  "name": null,
+  "canedit": false,
+  "objecttag": 10000,
+  "rotation": 0,
+  "scalex": 1,
+  "scaley": 1,
+  "visible": 1,
+  "x": 0,
+  "y": 0,
+  "zorder": 1,
+  "gameobjects": [
+    {
+      "__type": "ComGameObjectSurrogate:#EditorCommon.JsonModel",
+      "classname": "CCNode",
+      "name": null,
+      "canedit": false,
+      "objecttag": 10003,
+      "rotation": 0,
+      "scalex": 1,
+      "scaley": 1,
+      "visible": 1,
+      "x": 0,
+      "y": 0,
+      "zorder": 1,
+      "gameobjects": [
+        {
+          "__type": "ComGameObjectSurrogate:#EditorCommon.JsonModel",
+          "classname": "CCNode",
+          "name": "11",
+          "canedit": false,
+          "objecttag": 10004,
+          "rotation": 0,
+          "scalex": 0.5,
+          "scaley": 0.5,
+          "visible": 1,
+          "x": 181.4285888671875,
+          "y": 725.7142333984375,
+          "zorder": 1,
+          "gameobjects": [],
+          "components": [
+            {
+              "__type": "ComArmatureAdapterSurrogate:#EditorCommon.JsonModel.Component",
+              "classname": "CCArmature",
+              "name": "CCArmature",
+              "file": null,
+              "fileData": {
+                "path": "Hero/Hero.ExportJson",
+                "plistFile": "",
+                "resourceType": 0
+              },
+              "isShowColliderRect": false,
+              "selectedactionname": "loading"
+            }
+          ]
+        },
+        {
+          "__type": "ComGameObjectSurrogate:#EditorCommon.JsonModel",
+          "classname": "CCNode",
+          "name": "12",
+          "canedit": false,
+          "objecttag": 10005,
+          "rotation": 0,
+          "scalex": 0.5,
+          "scaley": 0.5,
+          "visible": 1,
+          "x": 182.85714721679688,
+          "y": 594.28564453125,
+          "zorder": 1,
+          "gameobjects": [],
+          "components": [
+            {
+              "__type": "ComArmatureAdapterSurrogate:#EditorCommon.JsonModel.Component",
+              "classname": "CCArmature",
+              "name": "CCArmature",
+              "file": null,
+              "fileData": {
+                "path": "Hero/Hero.ExportJson",
+                "plistFile": "",
+                "resourceType": 0
+              },
+              "isShowColliderRect": false,
+              "selectedactionname": "loading"
+            }
+          ]
+        },
+        {
+          "__type": "ComGameObjectSurrogate:#EditorCommon.JsonModel",
+          "classname": "CCNode",
+          "name": "13",
+          "canedit": false,
+          "objecttag": 10006,
+          "rotation": 0,
+          "scalex": 0.5,
+          "scaley": 0.5,
+          "visible": 1,
+          "x": 64.28570556640625,
+          "y": 552.8570556640625,
+          "zorder": 1,
+          "gameobjects": [],
+          "components": [
+            {
+              "__type": "ComArmatureAdapterSurrogate:#EditorCommon.JsonModel.Component",
+              "classname": "CCArmature",
+              "name": "CCArmature",
+              "file": null,
+              "fileData": {
+                "path": "Hero/Hero.ExportJson",
+                "plistFile": "",
+                "resourceType": 0
+              },
+              "isShowColliderRect": false,
+              "selectedactionname": "loading"
+            }
+          ]
+        },
+        {
+          "__type": "ComGameObjectSurrogate:#EditorCommon.JsonModel",
+          "classname": "CCNode",
+          "name": "14",
+          "canedit": false,
+          "objecttag": 10007,
+          "rotation": 0,
+          "scalex": 0.5,
+          "scaley": 0.5,
+          "visible": 1,
+          "x": 62.857147216796875,
+          "y": 658.57135009765625,
+          "zorder": 1,
+          "gameobjects": [],
+          "components": [
+            {
+              "__type": "ComArmatureAdapterSurrogate:#EditorCommon.JsonModel.Component",
+              "classname": "CCArmature",
+              "name": "CCArmature",
+              "file": null,
+              "fileData": {
+                "path": "Hero/Hero.ExportJson",
+                "plistFile": "",
+                "resourceType": 0
+              },
+              "isShowColliderRect": false,
+              "selectedactionname": "loading"
+            }
+          ]
+        },
+        {
+          "__type": "ComGameObjectSurrogate:#EditorCommon.JsonModel",
+          "classname": "CCNode",
+          "name": "15",
+          "canedit": false,
+          "objecttag": 10008,
+          "rotation": 0,
+          "scalex": 0.5,
+          "scaley": 0.5,
+          "visible": 1,
+          "x": 65.71429443359375,
+          "y": 772.85711669921875,
+          "zorder": 1,
+          "gameobjects": [],
+          "components": [
+            {
+              "__type": "ComArmatureAdapterSurrogate:#EditorCommon.JsonModel.Component",
+              "classname": "CCArmature",
+              "name": "CCArmature",
+              "file": null,
+              "fileData": {
+                "path": "Hero/Hero.ExportJson",
+                "plistFile": "",
+                "resourceType": 0
+              },
+              "isShowColliderRect": false,
+              "selectedactionname": "loading"
+            }
+          ]
+        },
+        {
+          "__type": "ComGameObjectSurrogate:#EditorCommon.JsonModel",
+          "classname": "CCNode",
+          "name": "21",
+          "canedit": true,
+          "objecttag": 10009,
+          "rotation": 0,
+          "scalex": -0.5,
+          "scaley": 0.5,
+          "visible": 1,
+          "x": 314.2857666015625,
+          "y": 728.57135009765625,
+          "zorder": 1,
+          "gameobjects": [],
+          "components": [
+            {
+              "__type": "ComArmatureAdapterSurrogate:#EditorCommon.JsonModel.Component",
+              "classname": "CCArmature",
+              "name": "CCArmature",
+              "file": null,
+              "fileData": {
+                "path": "Hero/Hero.ExportJson",
+                "plistFile": "",
+                "resourceType": 0
+              },
+              "isShowColliderRect": false,
+              "selectedactionname": "loading"
+            }
+          ]
+        },
+        {
+          "__type": "ComGameObjectSurrogate:#EditorCommon.JsonModel",
+          "classname": "CCNode",
+          "name": "22",
+          "canedit": true,
+          "objecttag": 10010,
+          "rotation": 0,
+          "scalex": -0.5,
+          "scaley": 0.5,
+          "visible": 1,
+          "x": 320.00003051757812,
+          "y": 607.142822265625,
+          "zorder": 1,
+          "gameobjects": [],
+          "components": [
+            {
+              "__type": "ComArmatureAdapterSurrogate:#EditorCommon.JsonModel.Component",
+              "classname": "CCArmature",
+              "name": "CCArmature",
+              "file": null,
+              "fileData": {
+                "path": "Hero/Hero.ExportJson",
+                "plistFile": "",
+                "resourceType": 0
+              },
+              "isShowColliderRect": false,
+              "selectedactionname": "loading"
+            }
+          ]
+        },
+        {
+          "__type": "ComGameObjectSurrogate:#EditorCommon.JsonModel",
+          "classname": "CCNode",
+          "name": "23",
+          "canedit": true,
+          "objecttag": 10011,
+          "rotation": 0,
+          "scalex": -0.5,
+          "scaley": 0.5,
+          "visible": 1,
+          "x": 448.57147216796875,
+          "y": 535.71417236328125,
+          "zorder": 1,
+          "gameobjects": [],
+          "components": [
+            {
+              "__type": "ComArmatureAdapterSurrogate:#EditorCommon.JsonModel.Component",
+              "classname": "CCArmature",
+              "name": "CCArmature",
+              "file": null,
+              "fileData": {
+                "path": "Hero/Hero.ExportJson",
+                "plistFile": "",
+                "resourceType": 0
+              },
+              "isShowColliderRect": false,
+              "selectedactionname": "loading"
+            }
+          ]
+        },
+        {
+          "__type": "ComGameObjectSurrogate:#EditorCommon.JsonModel",
+          "classname": "CCNode",
+          "name": "23",
+          "canedit": true,
+          "objecttag": 10012,
+          "rotation": 0,
+          "scalex": -0.5,
+          "scaley": 0.5,
+          "visible": 1,
+          "x": 440.00006103515625,
+          "y": 661.42852783203125,
+          "zorder": 1,
+          "gameobjects": [],
+          "components": [
+            {
+              "__type": "ComArmatureAdapterSurrogate:#EditorCommon.JsonModel.Component",
+              "classname": "CCArmature",
+              "name": "CCArmature",
+              "file": null,
+              "fileData": {
+                "path": "Hero/Hero.ExportJson",
+                "plistFile": "",
+                "resourceType": 0
+              },
+              "isShowColliderRect": false,
+              "selectedactionname": "loading"
+            }
+          ]
+        },
+        {
+          "__type": "ComGameObjectSurrogate:#EditorCommon.JsonModel",
+          "classname": "CCNode",
+          "name": "25",
+          "canedit": true,
+          "objecttag": 10013,
+          "rotation": 0,
+          "scalex": -0.5,
+          "scaley": 0.5,
+          "visible": 1,
+          "x": 427.14291381835938,
+          "y": 782.85711669921875,
+          "zorder": 1,
+          "gameobjects": [],
+          "components": [
+            {
+              "__type": "ComArmatureAdapterSurrogate:#EditorCommon.JsonModel.Component",
+              "classname": "CCArmature",
+              "name": "CCArmature",
+              "file": null,
+              "fileData": {
+                "path": "Hero/Hero.ExportJson",
+                "plistFile": "",
+                "resourceType": 0
+              },
+              "isShowColliderRect": false,
+              "selectedactionname": "loading"
+            }
+          ]
+        }
+      ],
+      "components": [
+        {
+          "__type": "ComGUIAdapterSurrogate:#EditorCommon.JsonModel.Component",
+          "classname": "GUIComponent",
+          "name": "GUIComponent",
+          "file": null,
+          "fileData": {
+            "path": "ui.fight.json",
+            "plistFile": "",
+            "resourceType": 0
+          }
+        }
+      ]
+    }
+  ],
+  "CanvasSize": {
+    "_height": 960,
+    "_width": 640
+  },
+  "Triggers": null,
+  "Version": "1.6.0.0",
+  "components": [
+    {
+      "__type": "ComSceneSurrogate:#EditorCommon.JsonModel.Component",
+      "classname": "CCScene",
+      "name": "CCScene",
+      "scenename": "scene.fight"
+    },
+    {
+      "__type": "ComSimpleAudioSurrogate:#EditorCommon.JsonModel.Component",
+      "classname": "CCBackgroundAudio",
+      "name": "CCBackgroundAudio",
+      "file": null,
+      "fileData": {
+        "path": null,
+        "plistFile": null,
+        "resourceType": 0
+      },
+      "loop": 0
+    }
+  ]
+}

@@ -8,7 +8,9 @@ var Handler = function() {
 	this.app = pomelo.app;
 };
 
-Handler.prototype.queryEntry = function(msg, session, next) {
+var pro = Handler.prototype;
+
+pro.queryEntry = function(msg, session, next) {
 	var uid = msg.uid;
 	if (!uid) {
 		next(null, {

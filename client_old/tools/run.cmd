@@ -1,0 +1,1 @@
+browserify export.js -o ../src/lib/bundle.js
