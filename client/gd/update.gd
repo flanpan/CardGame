@@ -19,26 +19,24 @@ func _ready():
 	global = get_node("/root/global")
 	print(global,global.userData)
 	curFiles = {}.parse_json(global.userData.get_value('user','res'))
-	#set_process(true)
+	set_process(true)
 	http = get_node("/root/global").httpClient
 	label = get_node('Label')
 	progress = get_node('ProgressBar')
-	#http.post(global.host,global.port,'/getResourceInfo',{},{instance=self,f='onGetResourceInfo'})
+	http.post(global.host,global.port,'/getResourceInfo',{},{instance=self,f='onGetResourceInfo'})
 	label.set_text('check update...')
-	var f1 = File.new()
-	var f2 = File.new()
-	var err = f1.open('res://icon.png',File.READ)
-	print(err)
-	print(f1.get_len())
-	f1.seek_end()
-	print(f1.get_pos())
-	var buf = f1.get_buffer(f1.get_len())
-	print(typeof(buf))
-	err = f2.open('res://icon1.png',File.WRITE)
-	print(err)
-	f2.store_var(buf)
-	f1.close()
-	f2.close()
+	#var f1 = File.new()
+	#var f2 = File.new()
+	#var err = f1.open('res://icon.png',File.READ)
+	#print(err)
+	#print(f1.get_len())
+	#var buf = f1.get_buffer(f1.get_len())
+	#print(typeof(buf))
+	#err = f2.open('res://icon1.png',File.WRITE)
+	#print(err)
+	#f2.store_buffer(buf)
+	#f1.close()
+	#f2.close()
 	pass
 	
 func _process(d):
@@ -72,8 +70,10 @@ func onGetFileData(err,data):
 		return updateDone()
 	var f = File.new()
 	var file = needUpdateFiles[updateFileIdx]
-	var err = f.open('res://'+file.path,File.WRITE)
-	print(err)
+	err = f.open('res://'+file.path,File.WRITE)
+	
+	if err:
+		return updateDone()
 	f.store_buffer(data)
 	f.close()
 	updateFileIdx += 1
