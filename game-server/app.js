@@ -9,15 +9,15 @@ global.app = app;
 app.set('name', 'CardGame');
 app.enable('systemMonitor');
 //app.registerAdmin(require('./app/module/script'), {app: app});
-//app.enable('rpcDebugLog');
+app.enable('rpcDebugLog');
 
 global.mongoose = require("mongoose");
 //'mongodb://flan:flan@localhost/game';
 global.mongoose.connect('mongodb://localhost/game');
 
 app.modelMgr = {
-    user:mongoose.model('user', require('../shared/schema/user')),
-    chr:mongoose.model('chr', require('../shared/schema/chr'))
+    //user:mongoose.model('user', require('../shared/schema/user')),
+    //chr:mongoose.model('chr', require('../shared/schema/chr'))
 }
 //app.load(require('./app/com/base'),{});
 //app.load(require('./app/com/chr'),{});
@@ -35,7 +35,7 @@ app.configure('production|development', 'connector', function() {
 app.configure('production|development', 'gate', function() {
     app.set('connectorConfig', {
         connector: pomelo.connectors.hybridconnector,
-        useProtobuf: true
+        useProtobuf: false
     });
 });
 
