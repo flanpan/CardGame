@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<AnimationProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <ProjectDir>E:\mysrc\game\client\CocoStudio\ccsprojs\anim.hero</ProjectDir>
+  <Version>1.6.0.0</Version>
+  <Resources>E:\mysrc\game\client\CocoStudio\assets</Resources>
+  <Name>anim.hero</Name>
+  <JsonFileName>anim.hero.json</JsonFileName>
+  <JsonFolder>E:\mysrc\game\client\CocoStudio\ccsprojs\anim.hero\Json</JsonFolder>
+  <JsonList />
+  <CanvasSize>
+    <Width>0</Width>
+    <Height>0</Height>
+  </CanvasSize>
+  <filePath>E:\mysrc\game\client\CocoStudio\ccsprojs\anim.hero\anim.hero.xml.animation</filePath>
+  <ProjectType>AnimationProject</ProjectType>
+  <ResRelativePath>\\..\\..\\assets</ResRelativePath>
+  <ResourceFileList />
+  <bBatchImage>false</bBatchImage>
+</AnimationProject>
