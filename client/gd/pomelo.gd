@@ -3,8 +3,8 @@ extends Node
 var socket = StreamPeerTCP.new()
 var _connected = false
 var isHandshaked = false
-var protobuf = load("res://pomelo_protobuf.gd").new() 
-var protocol = load("res://pomelo_protocol.gd").new()
+var protobuf = load("res://gd/pomelo_protobuf.gd").new() 
+var protocol = load("res://gd/pomelo_protocol.gd").new()
 var package = protocol.package
 var message = protocol.message
 var heartbeatInterval = 1000
@@ -30,7 +30,7 @@ var packageSize = 0
 var packageBuffer = RawArray()
 var state = ST_HEAD
 var headBuffer = RawArray()
-
+var userDataPath = "res://data/user.cfg"
 var signals = {}
 var callbacks = {}
 var routeMap = {}
@@ -49,10 +49,10 @@ var routes = {}
 var data
 
 func _ready():
-	headBuffer.resize(4)
-	var err = localStorage.load("res://user_config.cfg")
+	var err = localStorage.load(userDataPath)
 	if err:
 		return print("load user config error. code:",err)
+	headBuffer.resize(4)
 	add_user_signal("error")
 	add_user_signal("io-error")
 	set_process(true)
@@ -385,4 +385,4 @@ func _initData(data):
 			var d = {encoderProtos=protos.client,decoderProtos=protos.server}
 			protobuf.init(d)
 		localStorage.set_value("pomelo","protos",protos.to_json())
-	localStorage.save('res://user_config.cfg')
+	localStorage.save(userDataPath)

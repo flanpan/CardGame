@@ -8,17 +8,17 @@ var port = args[2];
 var remotePath = args[3];
 var pwd = args[4];
 if (!path)
-    path = '../client/CocoStudio/assets';
+    path = '../client';
 if (!ip)
     ip = '127.0.0.1';
 if (!port)
-    port = 3001;
+    port = 30001;
 if (!remotePath)
     remotePath = '/updateResourceInfo';
 if (!pwd)
     pwd = 'updAte res';
 
-var files = [];
+var files = {};
 // 深度优先遍历方式
 var getFiles = function(dir) {
     var arr = fs.readdirSync(dir);
@@ -29,11 +29,15 @@ var getFiles = function(dir) {
             var obj = {};
             var p = dir + '/' + file;
             var t = (new Date(fs.statSync(p).mtime)).getTime();
+			var size = fs.statSync(p).size
             p = p.substring(path.length + 1, p.length);
-            var file = {};
-            file.file = p;
+			
+            var file = [size,t];
+            /*file.file = p;
             file.date = t;
             files.push(file);
+			*/
+			files[p] = file
         }
     });
 };

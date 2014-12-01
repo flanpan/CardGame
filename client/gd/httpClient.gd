@@ -16,12 +16,14 @@ func _process(d):
 				if req.http.get_status() != HTTPClient.STATUS_CONNECTED:
 					req.state = 4
 					req.err = 'err when connecting.'
+					req.cb.call_func(req.err)
 				else:
 					req.err = req.http.request(HTTPClient.METHOD_POST,req.path,req.headers)
 					if req.err == OK:
 						req.state = 2
 					else:
 						req.state = 4
+						req.cb.call_func(req.err)
 		elif req.state == 2:
 			if req.http.get_status() == HTTPClient.STATUS_REQUESTING:
 				req.http.poll()
@@ -29,6 +31,7 @@ func _process(d):
 				if req.http.get_status() != HTTPClient.STATUS_BODY and req.http.get_status() != HTTPClient.STATUS_CONNECTED:
 					req.state = 4
 					req.err = 'err when request.'
+					req.cb.call_func(req.err)
 				else:
 					if req.http.has_response():
 						req.state = 3
@@ -47,11 +50,12 @@ func _process(d):
 		else:
 			if req.err != OK:
 				print('http err:',req.err)
+				req.cb.call_func(req.err)
 			else:
 				if req.isRaw:
-					req.cb.call_func(req.rb)
+					req.cb.call_func(null,req.rb)
 				else:
-					req.cb.call_func(req.rb.get_string_from_ascii())
+					req.cb.call_func(null,req.rb.get_string_from_utf8())
 			reqs.erase(key)
 			print('cur http reqs size:',reqs.size())
 

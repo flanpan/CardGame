@@ -1,0 +1,14 @@
+::res://::1417425712
+icon.png::ImageTexture::1415610321::
+::res://gd::1417425732
+crypto.gd::GDScript::1417168830::
+global.gd::GDScript::1417425732::
+httpClient.gd::GDScript::1417425732::
+pomelo.gd::GDScript::1417425732::
+pomelo_protobuf.gd::GDScript::1417168830::
+pomelo_protocol.gd::GDScript::1417168830::
+test.gd::GDScript::1417422930::
+update.gd::GDScript::1417425732::
+::res://scn::1417425633
+test.scn::PackedScene::1417166765::
+update.scn::PackedScene::1417425633::

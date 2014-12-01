@@ -8,20 +8,13 @@ var secret = require('../shared/config/session').secret;
 var app = express();
 var db = require('mongoose');
 //var everyauth = require('./lib/oauth');
-var config = require('./config/config.json');
-var resource = null;
-var compressRes = null;
+//var config = require('./config/config.json');
+var getCfgs = require('../shared/getCfgs');
+var cfg = getCfgs('./config',true);
+//var resource = null;
 db.connect('mongodb://127.0.0.1:27017/game');
 var User = db.model('User', require('../shared/schema/user'));
-//var Area = db.model('Area', new require('./schema/Area'));
-//var Resource = db.model('Resource', new require('./schema/Resource'));
-/*
-Resource.find().sort({
-date: -1
-}).limit(1).exec(function(err, data) {
-return resource = data;
-});
-*/
+
 app.configure(function() {
     app.use(express.methodOverride());
     app.use(express.bodyParser());
@@ -58,13 +51,18 @@ app.get('/auth_success', function(req, res) {
 });
 
 app.post('/getResourceInfo', function(req, res) {
+    console.log('getResourceInfo res:',JSON.stringify(cfg.res))
     res.send({
-        compressRes: compressRes
+        res: JSON.stringify(cfg.res)
     });
 });
-/*
+
 app.post('/updateResourceInfo', function(req, res) {
-    if (config.updateResPwd === req.body.pwd) {
+    if (cfg.config.updateResPwd === req.body.pwd) {
+        console.log(req.body.files)
+        fs.writeFileSync('./config/res.json',req.body.files);
+        res.send('更新完成!');
+        /*
         resource = JSON.parse(req.body.files);
         Resource.create({res: resource}, function(err, data) {
             if (err) {
@@ -78,11 +76,12 @@ app.post('/updateResourceInfo', function(req, res) {
                 res.send('更新完成!');
             });
         });
+        */
     } else {
         res.send('密码错误,更新失败.');
     }
 });
-*/
+
 app.post('/getNumber', function(req, res) {
     res.send({id: new Date().getTime()});
 });
@@ -142,8 +141,8 @@ app.get('/../client/', function(req, res) {
     console.log('Sent index.html');
 });
 
-app.listen(process.env.PORT || 3001);
-console.log("Web server has started.\n Please log on http://127.0.0.1:3001/");
+app.listen(process.env.PORT || 30001);
+console.log("Web server has started.\n Please log on http://127.0.0.1:30001/");
 process.on('uncaughtException', function(err) {
     console.error(' Caught exception: ' + err.stack);
 });
