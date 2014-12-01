@@ -7,18 +7,23 @@ var label
 var progress
 var global
 var needUpdateFiles = []
-var curFiles
+var curFiles = {}
 var needUpdateSize = 0
+var updatedSize = 0
 var updateFileIdx = 0
 var updateFileCount = 0
 var isSavedUserdata = false
-var curFileUpdated = false
+var isFileUpdating = false
 
 func _ready():
+	var raw = RawArray()
+	raw.push_back(1)
+	raw.push_back(2)
+	raw.resize(1)
+	print('aaaaaaa',raw.get(0))
 	# Initalization here
 	global = get_node("/root/global")
-	print(global,global.userData)
-	curFiles = {}.parse_json(global.userData.get_value('user','res'))
+	curFiles.parse_json(global.userData.get_value('user','res'))
 	set_process(true)
 	http = get_node("/root/global").httpClient
 	label = get_node('Label')
@@ -42,17 +47,26 @@ func _ready():
 func _process(d):
 	if isSavedUserdata:
 		return
-	if updateFileIdx < updateFileCount and curFileUpdated:
+	if updateFileIdx < updateFileCount and not isFileUpdating:
 		var file = needUpdateFiles[updateFileIdx]
-		http.post('https://raw.githubusercontent.com',80,'/flanpan/CardGame/master/client/'+file.path,{},{instance=self,f='onGetFileData'},true)
-		curFileUpdated = false
+		print(file.path)
+		http.post('raw.githubusercontent.com',80,'/flanpan/CardGame/master/client/'+file.path,{},{instance=self,f='onGetFileData'},true)
+		isFileUpdating = true
+		label.set_text(file.path)
 	
 func _on_Button_pressed():
 	label.set_text('hot update.')
 	pass # replace with function body
 
 func onGetResourceInfo(err,msg):
-	var msg = {}.parse_json(msg)
+	print(err,msg)
+	if err:
+		return label.set_text('get res info err.'+err)
+	var json = {}
+	err = json.parse_json(msg)
+	if err:
+		return label.set_text('parse res info err.'+err)
+	msg = json
 	for path in msg:
 		var stat = msg[path]
 		if curFiles.has(path) and curFiles[path][1] == stat[1]:
@@ -66,7 +80,10 @@ func onGetResourceInfo(err,msg):
 			updateFileCount += 1
 
 func onGetFileData(err,data):
+	print(err,data.get_string_from_utf8())
+	return
 	if err != null:
+		label.set_text('get res info err.'+err)
 		return updateDone()
 	var f = File.new()
 	var file = needUpdateFiles[updateFileIdx]
@@ -77,7 +94,11 @@ func onGetFileData(err,data):
 	f.store_buffer(data)
 	f.close()
 	updateFileIdx += 1
-	curFileUpdated = true
+	isFileUpdating = false
+	updatedSize += file.stat[0]
+	var val = ceil(updatedSize/needUpdateSize*100)
+	print('aaaaaaaaaaaaaaaaaaaaaaaa',val)
+	progress.set_val(val)
 	if updateFileIdx == updateFileCount-1:
 		updateDone()
 

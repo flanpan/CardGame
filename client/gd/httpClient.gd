@@ -35,6 +35,8 @@ func _process(d):
 				else:
 					if req.http.has_response():
 						req.state = 3
+						var bl = req.http.get_response_body_length()
+						req.bl = bl
 					else:
 						req.state = 4
 		elif req.state == 3:
@@ -44,7 +46,12 @@ func _process(d):
 				if chunk.size()==0:
 					pass
 				else:
-					req.rb = req.rb + chunk
+					if req.rb.size() < req.bl:
+						if req.rb.size()+chunk.size()<=req.bl:
+							req.rb = req.rb + chunk
+						else:
+							chunk.resize(req.bl-req.rb.size())
+							req.rb =req.rb + chunk
 			else:
 				req.state = 4
 		else:
@@ -60,6 +67,7 @@ func _process(d):
 			print('cur http reqs size:',reqs.size())
 
 func post(host,port,path,msg,cb,isRaw = false):
+	print('req:',host,':',port,path)
 	var http = HTTPClient.new()
 	var err = http.connect(host,port)
 	msg = msg.to_json()
