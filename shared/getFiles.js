@@ -25,12 +25,16 @@ var getAllFiles = function(paths,exts) {
 
             var ext = path.extname(p);
             var flag = false;
-            for(var k = 0; k<exts.length;k++) {
-                if(ext === exts[k]) {
-                    flag = true;
-                    break;
+            if(exts) {
+                for(var k = 0; k<exts.length;k++) {
+                    if(ext === exts[k]) {
+                        flag = true;
+                        break;
+                    }
                 }
-            }
+            } else
+                flag = true;
+
             if(flag) {
                 files.push(path.resolve(p));
             }
