@@ -7,6 +7,7 @@ var label
 var lblProgress
 var progress
 var isUpdate
+var text
 var cancalUpdate
 var global
 var needUpdateFiles = []
@@ -18,6 +19,7 @@ var updateFileCount = 0
 var isUpdateDone = false
 var isUpdateStop = true
 var isFileUpdating = false
+var updateHost
 
 func _ready():
 	global = get_node("/root/global")
@@ -26,11 +28,14 @@ func _ready():
 	http = get_node("/root/global").httpClient
 	label = get_node('Label')
 	lblProgress = get_node('lblProgress')
+	text = get_node('TextEdit')
+	updateHost = global.userData.get_value('user','updateHost')
+	text.set_text(updateHost)
 	isUpdate = get_node('isUpdate')
 	cancalUpdate = isUpdate.get_cancel()
 	cancalUpdate.connect('pressed',self,'onCancelUpdate')
 	progress = get_node('ProgressBar')
-	http.post('127.0.0.1',30002,'/.filesinfo',{},{instance=self,f='onGetResourceInfo'})
+	http.post(updateHost,30002,'/.filesinfo',{},{instance=self,f='onGetResourceInfo'})
 	label.set_text('check update...')
 	
 func _process(d):
@@ -119,3 +124,11 @@ func _on_isUpdate_confirmed():
 
 func onCancelUpdate():
 	get_tree().quit()
+
+
+
+func _on_save_pressed():
+	updateHost = text.get_text()
+	global.userData.set_value('user','updateHost',updateHost)
+	global.saveUserData()
+	pass # replace with function body
