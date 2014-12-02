@@ -13,16 +13,11 @@ var needUpdateSize = 0
 var updatedSize = 0
 var updateFileIdx = 0
 var updateFileCount = 0
-var isSavedUserdata = false
+var isUpdateDone = false
+var isUpdateStop = true
 var isFileUpdating = false
 
 func _ready():
-	var raw = RawArray()
-	raw.push_back(1)
-	raw.push_back(2)
-	raw.resize(1)
-	print('aaaaaaa',raw.get(0))
-	# Initalization here
 	global = get_node("/root/global")
 	curFiles.parse_json(global.userData.get_value('user','res'))
 	set_process(true)
@@ -32,22 +27,11 @@ func _ready():
 	progress = get_node('ProgressBar')
 	http.post('127.0.0.1',30002,'/.filesinfo',{},{instance=self,f='onGetResourceInfo'})
 	label.set_text('check update...')
-	#var f1 = File.new()
-	#var f2 = File.new()
-	#var err = f1.open('res://icon.png',File.READ)
-	#print(err)
-	#print(f1.get_len())
-	#var buf = f1.get_buffer(f1.get_len())
-	#print(typeof(buf))
-	#err = f2.open('res://icon1.png',File.WRITE)
-	#print(err)
-	#f2.store_buffer(buf)
-	#f1.close()
-	#f2.close()
-	pass
 	
 func _process(d):
-	if isSavedUserdata:
+	if isUpdateStop:
+		return
+	if isUpdateDone:
 		return
 	if updateFileIdx < updateFileCount and not isFileUpdating:
 		var file = needUpdateFiles[updateFileIdx]
@@ -57,8 +41,11 @@ func _process(d):
 		label.set_text(file.path)
 	
 func _on_Button_pressed():
-	label.set_text('hot update.')
-	pass # replace with function body
+	if isUpdateStop:
+		onUpdateContinue()
+	else:
+		onUpdateStop()
+
 
 func onGetResourceInfo(err,msg):
 	print(err,msg)
@@ -71,7 +58,7 @@ func onGetResourceInfo(err,msg):
 	msg = json
 	for path in msg:
 		var stat = msg[path]
-		if curFiles.has(path) and curFiles[path][1] == stat[1]:
+		if curFiles.has(path) and curFiles[path][0] == stat[0] and curFiles[path][1] == stat[1]:
 			pass
 		else:
 			var obj = {}
@@ -84,28 +71,37 @@ func onGetResourceInfo(err,msg):
 func onGetFileData(err,data):
 	if err != null:
 		label.set_text('get res info err.'+err)
-		return updateDone()
+		return onUpdateStop()
 	var f = File.new()
 	var file = needUpdateFiles[updateFileIdx]
 	err = f.open('res://'+file.path,File.WRITE)
 	
 	if err:
-		return updateDone()
+		return onUpdateStop()
 	f.store_buffer(data)
 	f.close()
 	updateFileIdx += 1
 	isFileUpdating = false
 	updatedSize += file.stat[0]
 	var val = ceil(updatedSize/needUpdateSize*100)
-	print('aaaaaaaaaaaaaaaaaaaaaaaa',val)
 	progress.set_val(val)
-	lblProgress.set_text(str(updatedSize)+'/'+str(needUpdateSize))
+	lblProgress.set_text(str(ceil(updatedSize/1024))+'k/'+str(ceil(needUpdateSize/1024))+'k')
+	print(file.path,'|',updateFileIdx,'|',updateFileCount)
 	curFiles[file.path] = file.stat
-	if updateFileIdx == updateFileCount-1:
-		updateDone()
+	if updateFileIdx == updateFileCount:
+		onUpdateDone()
 
-func updateDone():
+func onUpdateDone():
 	print('hot update done')
 	global.userData.set_value('user','res',curFiles.to_json())
 	global.saveUserData()
-	isSavedUserdata = true
+	isUpdateDone = true
+	
+
+func onUpdateStop():
+	global.userData.set_value('user','res',curFiles.to_json())
+	global.saveUserData()
+	isUpdateStop = true
+
+func onUpdateContinue():
+	isUpdateStop = false
