@@ -50,6 +50,7 @@ app.get('/auth_success', function(req, res) {
     }
 });
 
+/*
 app.post('/getResourceInfo', function(req, res) {
     //console.log('getResourceInfo res:',JSON.stringify(cfg.res))
     res.send(JSON.stringify(cfg.res));
@@ -60,7 +61,7 @@ app.post('/updateResourceInfo', function(req, res) {
         console.log(req.body.files)
         fs.writeFileSync('./config/res.json',req.body.files);
         res.send('更新完成!');
-        /*
+
         resource = JSON.parse(req.body.files);
         Resource.create({res: resource}, function(err, data) {
             if (err) {
@@ -74,11 +75,12 @@ app.post('/updateResourceInfo', function(req, res) {
                 res.send('更新完成!');
             });
         });
-        */
+
     } else {
         res.send('密码错误,更新失败.');
     }
 });
+*/
 
 app.post('/getNumber', function(req, res) {
     res.send({id: new Date().getTime()});

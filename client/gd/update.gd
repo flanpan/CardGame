@@ -6,6 +6,8 @@ var state = 0
 var label
 var lblProgress
 var progress
+var isUpdate
+var cancalUpdate
 var global
 var needUpdateFiles = []
 var curFiles = {}
@@ -24,6 +26,9 @@ func _ready():
 	http = get_node("/root/global").httpClient
 	label = get_node('Label')
 	lblProgress = get_node('lblProgress')
+	isUpdate = get_node('isUpdate')
+	cancalUpdate = isUpdate.get_cancel()
+	cancalUpdate.connect('pressed',self,'onCancelUpdate')
 	progress = get_node('ProgressBar')
 	http.post('127.0.0.1',30002,'/.filesinfo',{},{instance=self,f='onGetResourceInfo'})
 	label.set_text('check update...')
@@ -67,6 +72,8 @@ func onGetResourceInfo(err,msg):
 			needUpdateFiles.push_back(obj)
 			needUpdateSize += stat[0]
 			updateFileCount += 1
+	if needUpdateFiles.size():
+		isUpdate.show()
 
 func onGetFileData(err,data):
 	if err != null:
@@ -83,9 +90,9 @@ func onGetFileData(err,data):
 	updateFileIdx += 1
 	isFileUpdating = false
 	updatedSize += file.stat[0]
-	var val = ceil(updatedSize/needUpdateSize*100)
+	var val = updatedSize/needUpdateSize*100
 	progress.set_val(val)
-	lblProgress.set_text(str(ceil(updatedSize/1024))+'k/'+str(ceil(needUpdateSize/1024))+'k')
+	lblProgress.set_text(str(updatedSize/1024/1024)+'M/'+str(needUpdateSize/1024/1024)+'M')
 	print(file.path,'|',updateFileIdx,'|',updateFileCount)
 	curFiles[file.path] = file.stat
 	if updateFileIdx == updateFileCount:
@@ -96,6 +103,7 @@ func onUpdateDone():
 	global.userData.set_value('user','res',curFiles.to_json())
 	global.saveUserData()
 	isUpdateDone = true
+	#global.gotoScene('res://scn/login.scn')
 	
 
 func onUpdateStop():
@@ -105,3 +113,9 @@ func onUpdateStop():
 
 func onUpdateContinue():
 	isUpdateStop = false
+
+func _on_isUpdate_confirmed():
+	isUpdateStop = false
+
+func onCancelUpdate():
+	get_tree().quit()
