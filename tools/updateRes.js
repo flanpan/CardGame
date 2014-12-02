@@ -43,7 +43,7 @@ var getFiles = function(dir) {
 };
 
 getFiles(path);
-
+console.log(files)
 var options = {
     hostname: ip,
     port: port,

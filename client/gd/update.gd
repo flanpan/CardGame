@@ -4,6 +4,7 @@ extends Panel
 var http 
 var state = 0
 var label
+var lblProgress
 var progress
 var global
 var needUpdateFiles = []
@@ -27,8 +28,9 @@ func _ready():
 	set_process(true)
 	http = get_node("/root/global").httpClient
 	label = get_node('Label')
+	lblProgress = get_node('lblProgress')
 	progress = get_node('ProgressBar')
-	http.post(global.host,global.port,'/getResourceInfo',{},{instance=self,f='onGetResourceInfo'})
+	http.post('127.0.0.1',30002,'/.filesinfo',{},{instance=self,f='onGetResourceInfo'})
 	label.set_text('check update...')
 	#var f1 = File.new()
 	#var f2 = File.new()
@@ -97,11 +99,13 @@ func onGetFileData(err,data):
 	var val = ceil(updatedSize/needUpdateSize*100)
 	print('aaaaaaaaaaaaaaaaaaaaaaaa',val)
 	progress.set_val(val)
+	lblProgress.set_text(str(updatedSize)+'/'+str(needUpdateSize))
+	curFiles[file.path] = file.stat
 	if updateFileIdx == updateFileCount-1:
 		updateDone()
 
 func updateDone():
 	print('hot update done')
-	global.userdata.set_value('user','res',curFiles.to_json())
+	global.userData.set_value('user','res',curFiles.to_json())
 	global.saveUserData()
 	isSavedUserdata = true
