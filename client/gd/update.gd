@@ -50,7 +50,7 @@ func _process(d):
 	if updateFileIdx < updateFileCount and not isFileUpdating:
 		var file = needUpdateFiles[updateFileIdx]
 		print(file.path)
-		http.post('raw.githubusercontent.com',80,'/flanpan/CardGame/master/client/'+file.path,{},{instance=self,f='onGetFileData'},true)
+		http.post('127.0.0.1',30002,'/'+file.path,{},{instance=self,f='onGetFileData'},true)
 		isFileUpdating = true
 		label.set_text(file.path)
 	
@@ -80,8 +80,6 @@ func onGetResourceInfo(err,msg):
 			updateFileCount += 1
 
 func onGetFileData(err,data):
-	print(err,data.get_string_from_utf8())
-	return
 	if err != null:
 		label.set_text('get res info err.'+err)
 		return updateDone()

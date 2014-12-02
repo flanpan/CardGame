@@ -52,9 +52,7 @@ app.get('/auth_success', function(req, res) {
 
 app.post('/getResourceInfo', function(req, res) {
     console.log('getResourceInfo res:',JSON.stringify(cfg.res))
-    res.send({
-        res: JSON.stringify(cfg.res)
-    });
+    res.send(JSON.stringify(cfg.res));
 });
 
 app.post('/updateResourceInfo', function(req, res) {
