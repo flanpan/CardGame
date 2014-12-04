@@ -62,11 +62,11 @@ func _on_Button_pressed():
 func onGetResourceInfo(err,msg):
 	print(err,msg)
 	if err:
-		return label.set_text('get res info err.'+err)
+		return label.set_text('get res info err.'+str(err))
 	var json = {}
 	err = json.parse_json(msg)
 	if err:
-		return label.set_text('parse res info err.'+err)
+		return label.set_text('parse res info err.'+str(err))
 	msg = json
 	for path in msg:
 		var stat = msg[path]
@@ -83,8 +83,8 @@ func onGetResourceInfo(err,msg):
 		isUpdate.show()
 
 func onGetFileData(err,data):
-	if err != null:
-		label.set_text('get res info err.'+err)
+	if err:
+		label.set_text('get res info err.'+str(err))
 		return onUpdateStop()
 	var f = File.new()
 	var file = needUpdateFiles[updateFileIdx]

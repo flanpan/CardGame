@@ -2,6 +2,7 @@ extends Node
 
 var reqId = 0
 var reqs = {}
+var connectTimeout = 5000
 
 func _ready():
 	set_process(true)
@@ -11,33 +12,35 @@ func _process(d):
 		var req = reqs[key]
 		if req.state == 1:
 			if req.http.get_status()==HTTPClient.STATUS_CONNECTING or req.http.get_status()==HTTPClient.STATUS_RESOLVING:
-				req.http.poll()
+				if OS.get_ticks_msec() - req.connectTime >= connectTimeout:
+					req.state = 4
+					req.err = ERR_TIMEOUT
+				else:
+					req.http.poll()
 			else:
 				if req.http.get_status() != HTTPClient.STATUS_CONNECTED:
 					req.state = 4
-					req.err = 'err when connecting.'
-					req.cb.call_func(req.err)
+					req.err = FAILED
 				else:
 					req.err = req.http.request(HTTPClient.METHOD_POST,req.path,req.headers)
 					if req.err == OK:
 						req.state = 2
 					else:
 						req.state = 4
-						req.cb.call_func(req.err)
 		elif req.state == 2:
 			if req.http.get_status() == HTTPClient.STATUS_REQUESTING:
 				req.http.poll()
 			else:
 				if req.http.get_status() != HTTPClient.STATUS_BODY and req.http.get_status() != HTTPClient.STATUS_CONNECTED:
 					req.state = 4
-					req.err = 'err when request.'
-					req.cb.call_func(req.err)
+					req.err = FAILED
 				else:
 					if req.http.has_response():
 						req.state = 3
 						var bl = req.http.get_response_body_length()
 						req.bl = bl
 					else:
+						req.err = FAILED
 						req.state = 4
 		elif req.state == 3:
 			if req.http.get_status()==HTTPClient.STATUS_BODY:
@@ -57,7 +60,7 @@ func _process(d):
 		else:
 			if req.err != OK:
 				print('http err:',req.err)
-				req.cb.call_func(req.err)
+				req.cb.call_func(req.err,null)
 			else:
 				if req.isRaw:
 					req.cb.call_func(null,req.rb)
@@ -94,6 +97,7 @@ func post(host,port,path,msg,cb,isRaw = false):
 		err = err,
 		headers = headers,
 		isRaw = isRaw,
-		rb = RawArray()
+		rb = RawArray(),
+		connectTime = OS.get_ticks_msec()
 	}
 
