@@ -10,6 +10,7 @@ var isUpdate
 var text
 var cancalUpdate
 var global
+var dir = Directory.new()
 var needUpdateFiles = []
 var curFiles = {}
 var needUpdateSize = 0
@@ -22,6 +23,7 @@ var isFileUpdating = false
 var updateHost
 
 func _ready():
+	dir.open('.')
 	global = get_node("/root/global")
 	curFiles.parse_json(global.userData.get_value('user','res'))
 	set_process(true)
@@ -86,7 +88,12 @@ func onGetFileData(err,data):
 		return onUpdateStop()
 	var f = File.new()
 	var file = needUpdateFiles[updateFileIdx]
-	err = f.open('res://'+file.path,File.WRITE)
+	var path = 'res://'+file.path
+	if not dir.dir_exists(path.get_base_dir()):
+		err = dir.make_dir_recursive(path.get_base_dir())
+		if err:
+			return onUpdateStop()
+	err = f.open(path,File.WRITE)
 	
 	if err:
 		return onUpdateStop()
@@ -130,5 +137,6 @@ func onCancelUpdate():
 func _on_save_pressed():
 	updateHost = text.get_text()
 	global.userData.set_value('user','updateHost',updateHost)
-	global.saveUserData()
+	var res = global.saveUserData()
+	get_node('save').set_text(str(res))
 	pass # replace with function body

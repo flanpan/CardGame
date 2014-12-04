@@ -38,4 +38,4 @@ func _ready():
 	#	print(root.get_child(i).get_type())
 	
 func saveUserData():
-	userData.save(userDataPath)
+	return userData.save(userDataPath)
