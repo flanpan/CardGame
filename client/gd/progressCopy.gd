@@ -41,6 +41,7 @@ func _process(d):
 		print(copyFileIdx,'|',needCopyFiles.size())
 		if copyFileIdx < needCopyFiles.size():
 			var filePath = needCopyFiles[copyFileIdx]
+			print(filePath)
 			var fileSize = fileList[filePath][0]
 			#var path = 'user://'+filePath
 			if not dirUser.dir_exists(filePath.get_base_dir()):
