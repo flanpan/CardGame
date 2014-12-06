@@ -4,6 +4,7 @@ var path = require('path')
 var fs = require('fs')
 var mime = require('mime')
 var useMem = true
+//var isWatch = true 添加删除文件无法监控
 var filesDir = '../client'
 var port = 30002
 var files = {}
@@ -56,7 +57,10 @@ var getFileBuffer = function(filePath,cb) {
                             return cb()
                         }
                         files[filePath] = data
-                        //watch(filePath)
+                        /*
+                        if(isWatch)
+                            watch(filePath)
+                            */
                         return cb(data)
                     });
                 }
@@ -122,5 +126,4 @@ var watch = function(p) {
             }
         })
     });
-};
-*/
+};*/

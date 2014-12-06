@@ -7,7 +7,7 @@ var current_scene = null
 var pomelo  = load("res://gd/pomelo.gd").new()
 var httpClient = load('res://gd/httpClient.gd').new()
 var userData = ConfigFile.new()
-var userDataPath = 'res://data/user'
+var userDataPath
 
 func gotoScene(scene):
 	#load new scene
@@ -18,19 +18,16 @@ func gotoScene(scene):
 	current_scene = s.instance()
 	#add it to the active scene, as child of root
 	get_tree().get_root().add_child(current_scene)
-	
 
-func _init():
+
+func _ready():
+	print(get_tree().get_root().get_node('first'))
+	userDataPath = get_tree().get_root().get_node('first').userDataPath
 	set_process(true)
 	add_child(pomelo)
 	add_child(httpClient)
 	userData.load(userDataPath)
-
-func _process(d):
-	#print("g")
-	pass
-
-func _ready():
+	
 	var root = get_tree().get_root()
 	current_scene = root.get_child( root.get_child_count() -1 )
 	#current_scene.add_child(pomelo)
