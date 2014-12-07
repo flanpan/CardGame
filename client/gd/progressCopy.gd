@@ -77,7 +77,7 @@ func initGame():
 		else:
 			Globals.set_resource_path(OS.get_data_dir())
 			var global = load('res://gd/global.gd')
-			global = global.new()
+			global = global.new(userDataPath)
 			global.set_name('global')
 			get_node('/root').add_child(global)
 			cfg.save(userDataPath)

@@ -19,14 +19,15 @@ func gotoScene(scene):
 	#add it to the active scene, as child of root
 	get_tree().get_root().add_child(current_scene)
 
-
-func _ready():
-	print(get_tree().get_root().get_node('first'))
-	userDataPath = get_tree().get_root().get_node('first').userDataPath
-	set_process(true)
+func _init(userDataPath):
+	print('init global')
+	self.userDataPath = userDataPath
 	add_child(pomelo)
 	add_child(httpClient)
 	userData.load(userDataPath)
+	
+func _ready():
+	set_process(true)
 	
 	var root = get_tree().get_root()
 	current_scene = root.get_child( root.get_child_count() -1 )

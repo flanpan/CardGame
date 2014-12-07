@@ -28,7 +28,8 @@ func _ready():
 
 func startUpdate():
 	dir.open('.')
-	global = get_node("/root/global")
+	global = get_node("/root").get_node('global')
+	print(global)
 	curFiles.parse_json(global.userData.get_value('user','res'))
 	set_process(true)
 	http = get_node("/root/global").httpClient
