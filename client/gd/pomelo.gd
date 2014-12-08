@@ -217,7 +217,8 @@ func init(host, port):
 	#return _initSocket(host,port)
 	print("connect to",host,':',port)
 	if(localStorage.has_section_key("pomelo","protos") and protoVersion==0):
-		var protos = {}.parse_json(localStorage.get_value("pomelo","protos") )
+		var protos = {}
+		protos.parse_json(localStorage.get_value("pomelo","protos") )
 		if not protoVersion:
 			protoVersion = 0
 		if protos.server:

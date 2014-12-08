@@ -4,10 +4,6 @@ var host = "127.0.0.1"
 var port = 30001
 
 var current_scene = null
-var pomelo  = load("res://gd/pomelo.gd").new()
-var httpClient = load('res://gd/httpClient.gd').new()
-var userData = ConfigFile.new()
-var userDataPath
 
 func gotoScene(scene):
 	#load new scene
@@ -19,12 +15,11 @@ func gotoScene(scene):
 	#add it to the active scene, as child of root
 	get_tree().get_root().add_child(current_scene)
 
-func _init(userDataPath):
+func _init():
 	print('init global')
-	self.userDataPath = userDataPath
-	add_child(pomelo)
-	add_child(httpClient)
-	userData.load(userDataPath)
+	#add_child(pomelo)
+	#add_child(httpClient)
+
 	
 func _ready():
 	set_process(true)
@@ -35,5 +30,6 @@ func _ready():
 	#for i in range(root.get_child_count()):
 	#	print(root.get_child(i).get_type())
 	
-func saveUserData():
-	return userData.save(userDataPath)
+#func saveUserData():
+#	return userData.save(userDataPath)
+	

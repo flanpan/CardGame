@@ -4,27 +4,26 @@ extends Panel
 var progressUpdate
 var progressCopy
 var isDone
-var init = false
+var button
+
 func _ready():
 	progressUpdate = get_node('progressUpdate')
 	progressCopy = get_node('progressCopy')
-	
+	button = get_node('Button')
+	button.set_disabled(true)
+	progressUpdate.hide()
+	progressCopy.startCopy()
 	set_process(true)
 
 func _process(d):
-	if not init:
-		var isNeedCopy = get_node('/root/first').isNeedCopy
-		if isNeedCopy:
-			progressUpdate.hide()
-			progressCopy.startCopy()
-		else:
-			progressCopy.hide()
-			progressUpdate.startUpdate()
-		init = true
-	
 	if progressCopy.isDone && progressUpdate.is_hidden():
 		progressCopy.hide()
 		progressUpdate.show()
 		progressUpdate.startUpdate()
 	if progressUpdate.isDone:
 		isDone = true
+		button.set_disabled(false)
+
+func _on_Button_pressed():
+	var global = get_node('/root/global')
+	global.gotoScene('res://scn/login.scn')

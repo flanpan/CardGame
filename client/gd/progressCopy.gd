@@ -14,15 +14,16 @@ var isStartCopy = false
 var dirRes = Directory.new()
 var dirUser = Directory.new()
 var isFailed = false
-
+var fileInfoName
 
 func _ready():
+	fileInfoName = Globals.get('user/fileInfoName')
 	first = get_node('/root/first')
 	label = get_node('Label')
 	label.set_text('copy')
 	if first.isNeedCopy:
 		var file = File.new()
-		print(file.open('res://'+first.fileInfoName,File.READ))
+		print(file.open('res://'+fileInfoName,File.READ))
 		var txt = file.get_buffer(file.get_len()).get_string_from_utf8()
 		print('aaa',txt)
 		fileList.parse_json(txt)
@@ -33,6 +34,29 @@ func _ready():
 			needCopyFiles.push_back(filePath)
 			needCopySize += fileSize
 		set_process(true)
+	else:
+		onDone()
+
+func initGame():
+	print('init game.')
+	var fileList = {}
+	var file = File.new()
+	print(file.open('res://'+Globals.get('user/fileInfoName'),File.READ))
+	var txt = file.get_buffer(file.get_len()).get_string_from_utf8()
+	fileList.parse_json(txt)
+	
+	var cfg = ConfigFile.new()
+	cfg.set_value('pomelo','protos',"{}")
+	cfg.set_value('user','res',fileList.to_json())
+	var userDataPath = Globals.get('user/userDataPath')#get_node('/root/first').userDataPath
+	var baseDir = userDataPath.substr('user://'.length(),userDataPath.length()-'user://'.length()).get_base_dir()
+	
+	if not dirUser.dir_exists(baseDir):
+		print('makedir:',dirUser.make_dir_recursive(baseDir))
+	if not file.file_exists(userDataPath):
+		print('save user data. res:',cfg.save(userDataPath))
+	Globals.set_resource_path(OS.get_data_dir())
+	return true
 
 func _process(d):
 	if isFailed or isDone:
@@ -58,34 +82,19 @@ func _process(d):
 			if isFailed:
 				label.set_text('init failed.')
 		else:
-			if not dirRes.copy(first.fileInfoName,'user://'+first.fileInfoName):
-				if initGame():
-					isStartCopy = false
-					isDone = true
-					label.set_text('init done.')
+			if not dirRes.copy(fileInfoName,'user://'+fileInfoName):
+				isStartCopy = false
+				label.set_text('init done.')
+				onDone()
+				
 		if isFailed:
 			label.set_text('init failed.')
 
-func initGame():
-	var cfg = ConfigFile.new()
-	cfg.set_value('pomelo','protos',{})
-	cfg.set_value('user','res',fileList)
-	var userDataPath = get_node('/root/first').userDataPath
-	if not dirUser.dir_exists(userDataPath.get_base_dir()):
-		if dirUser.make_dir_recursive(userDataPath.get_base_dir()):
-			isFailed = true
-		else:
-			Globals.set_resource_path(OS.get_data_dir())
-			var global = load('res://gd/global.gd')
-			global = global.new(userDataPath)
-			global.set_name('global')
-			get_node('/root').add_child(global)
-			cfg.save(userDataPath)
-	if isFailed:
-		return false
-	else:
-		return true
-
 func startCopy():
 	isStartCopy = true
+	
+func onDone():
+	if not initGame():
+		get_tree().quit()
+	isDone = true
 

@@ -2,7 +2,6 @@ extends Node
 
 var reqId = 0
 var reqs = {}
-var connectTimeout = 5000
 
 func _ready():
 	set_process(true)
@@ -12,7 +11,7 @@ func _process(d):
 		var req = reqs[key]
 		if req.state == 1:
 			if req.http.get_status()==HTTPClient.STATUS_CONNECTING or req.http.get_status()==HTTPClient.STATUS_RESOLVING:
-				if OS.get_ticks_msec() - req.connectTime >= connectTimeout:
+				if OS.get_ticks_msec() - req.connectTime >= req.timeout:
 					req.state = 4
 					req.err = ERR_TIMEOUT
 				else:
@@ -69,7 +68,7 @@ func _process(d):
 			reqs.erase(key)
 			print('cur http reqs size:',reqs.size())
 
-func post(host,port,path,msg,cb,isRaw = false):
+func post(host,port,path,msg,cb,isRaw = false,timeout=3000):
 	print('req:',host,':',port,path)
 	var http = HTTPClient.new()
 	var err = http.connect(host,port)
@@ -98,6 +97,7 @@ func post(host,port,path,msg,cb,isRaw = false):
 		headers = headers,
 		isRaw = isRaw,
 		rb = RawArray(),
-		connectTime = OS.get_ticks_msec()
+		connectTime = OS.get_ticks_msec(),
+		timeout = timeout
 	}
 
