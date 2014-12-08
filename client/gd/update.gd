@@ -11,6 +11,7 @@ func _ready():
 	progressCopy = get_node('progressCopy')
 	button = get_node('Button')
 	button.set_disabled(true)
+	button.set_text(OS.get_name())
 	progressUpdate.hide()
 	progressCopy.startCopy()
 	set_process(true)

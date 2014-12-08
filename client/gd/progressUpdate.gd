@@ -6,7 +6,8 @@ var state = 0
 var label
 var lblProgress
 var isUpdate
-var text
+var txtHost
+var txtUpdateHost
 var cancalUpdate
 var dir = Directory.new()
 var needUpdateFiles = []
@@ -38,12 +39,16 @@ func startUpdate():
 	set_process(true)
 	label = get_node('Label')
 	lblProgress = get_node('lblProgress')
-	text = get_node('TextEdit')
+	txtHost = get_node('host')
+	txtUpdateHost = get_node('updateHost')
 	if not userData.has_section_key('user','updateHost'):
 		userData.set_value('user','updateHost',Globals.get('user/updateHost'))
+	if not userData.has_section_key('user','host'):
+		userData.set_value('user','host',Globals.get('user/host'))
 	updateHost = userData.get_value('user','updateHost')
 	updatePort = Globals.get('user/updatePort')
-	text.set_text(updateHost)
+	txtUpdateHost.set_text(updateHost)
+	txtHost.set_text(userData.get_value('user','host'))
 	isUpdate = get_node('isUpdate')
 	cancalUpdate = isUpdate.get_cancel()
 	cancalUpdate.connect('pressed',self,'onCancelUpdate')
@@ -148,8 +153,9 @@ func onCancelUpdate():
 
 
 func _on_save_pressed():
-	updateHost = text.get_text()
+	updateHost = txtUpdateHost.get_text()
 	userData.set_value('user','updateHost',updateHost)
+	userData.set_value('user','host',txtHost.get_text())
 	var res = userData.save(Globals.get('user/userDataPath'))
 	get_node('save').set_text(str(res))
 
