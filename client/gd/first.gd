@@ -29,4 +29,3 @@ func isPlatformNeedCopy():
 		if p == platform:
 			return true
 	return false
-	

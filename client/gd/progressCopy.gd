@@ -34,6 +34,7 @@ func _ready():
 			needCopyFiles.push_back(filePath)
 			needCopySize += fileSize
 		set_process(true)
+		file.close()
 	else:
 		onDone()
 
@@ -44,7 +45,7 @@ func initGame():
 	print(file.open('res://'+Globals.get('user/fileInfoName'),File.READ))
 	var txt = file.get_buffer(file.get_len()).get_string_from_utf8()
 	fileList.parse_json(txt)
-	
+	file.close()
 	var cfg = ConfigFile.new()
 	cfg.set_value('pomelo','protos',"{}")
 	cfg.set_value('user','res',fileList.to_json())
@@ -72,6 +73,8 @@ func _process(d):
 				if dirUser.make_dir_recursive(filePath.get_base_dir()):
 					print(filePath.get_base_dir())
 					isFailed = true
+					label.set_text('init failed when makedir.')
+					return
 
 			if not dirRes.copy(filePath,'user://'+filePath):
 				copiedSize += fileSize
@@ -79,16 +82,13 @@ func _process(d):
 				set_val(copiedSize/needCopySize*100)
 			else:
 				isFailed = true
-			if isFailed:
 				label.set_text('init failed.')
+				return
 		else:
-			if not dirRes.copy(fileInfoName,'user://'+fileInfoName):
+			if not dirRes.copy('res://'+fileInfoName,'user://'+fileInfoName):
 				isStartCopy = false
 				label.set_text('init done.')
 				onDone()
-				
-		if isFailed:
-			label.set_text('init failed.')
 
 func startCopy():
 	isStartCopy = true
@@ -97,4 +97,4 @@ func onDone():
 	if not initGame():
 		get_tree().quit()
 	isDone = true
-
+	
