@@ -131,18 +131,7 @@ app.post('/login', function(req, res) {
     });
 });
 
-app.use('/', express["static"](__dirname + '/../client/'));
-app.use('/assetsManager', express["static"](__dirname + '/../client/tools/assetsManager/'));
-//app.use('/shared', express["static"](__dirname + '/../client/script/shared'));
-//app.use('/res', express["static"](__dirname + '/../client/res'));
-
-app.get('/../client/', function(req, res) {
-    res.sendfile('index.html');
-    console.log('Sent index.html');
-});
-
 app.listen(process.env.PORT || 30001);
-console.log("Web server has started.\n Please log on http://127.0.0.1:30001/");
 process.on('uncaughtException', function(err) {
     console.error(' Caught exception: ' + err.stack);
 });

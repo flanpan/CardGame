@@ -39,9 +39,13 @@ func _ready():
 		onDone()
 
 func initGame():
+	var file = File.new()
+	var userDataPath = Globals.get('user/userDataPath')#get_node('/root/first').userDataPath
+	if file.file_exists(userDataPath):
+		return true
 	print('init game.')
 	var fileList = {}
-	var file = File.new()
+	
 	print(file.open('res://'+Globals.get('user/fileInfoName'),File.READ))
 	var txt = file.get_buffer(file.get_len()).get_string_from_utf8()
 	fileList.parse_json(txt)
@@ -49,9 +53,7 @@ func initGame():
 	var cfg = ConfigFile.new()
 	cfg.set_value('pomelo','protos',"{}")
 	cfg.set_value('user','res',fileList.to_json())
-	var userDataPath = Globals.get('user/userDataPath')#get_node('/root/first').userDataPath
 	var baseDir = userDataPath.substr('user://'.length(),userDataPath.length()-'user://'.length()).get_base_dir()
-	
 	if not dirUser.dir_exists(baseDir):
 		print('makedir:',dirUser.make_dir_recursive(baseDir))
 	if not file.file_exists(userDataPath):
@@ -76,16 +78,16 @@ func _process(d):
 					label.set_text('init failed when makedir.')
 					return
 
-			if not dirRes.copy(filePath,'user://'+filePath):
+			if not copy('res://'+filePath,'user://'+filePath):
 				copiedSize += fileSize
 				copyFileIdx += 1
 				set_val(copiedSize/needCopySize*100)
 			else:
 				isFailed = true
-				label.set_text('init failed.')
+				#label.set_text('init failed.'+'user://'+filePath)
 				return
 		else:
-			if not dirRes.copy('res://'+fileInfoName,'user://'+fileInfoName):
+			if not copy('res://'+fileInfoName,'user://'+fileInfoName):
 				isStartCopy = false
 				label.set_text('init done.')
 				onDone()
@@ -97,4 +99,20 @@ func onDone():
 	if not initGame():
 		get_tree().quit()
 	isDone = true
-	
+
+func copy(f,t):
+	var from = File.new()
+	var to = File.new()
+	var res = from.open(f,File.READ)
+	if res:
+		label.set_text('open read file failed.'+f)
+		return res
+	res = to.open(t,File.WRITE)
+	if res:
+		label.set_text('open write file failed.'+t)
+		return res
+	var buf = from.get_buffer(from.get_len())
+	to.store_buffer(buf)
+	from.close()
+	to.close()
+

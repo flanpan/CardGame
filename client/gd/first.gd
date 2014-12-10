@@ -3,6 +3,7 @@ extends Node
 var isNeedCopy = false
 
 # bug Directory.dir_exists
+# bug Directory.copy at android
 
 var global
 func _init():
@@ -20,10 +21,9 @@ func isPlatformNeedCopy():
 	var platform = OS.get_name()
 	print('cur platform is ',platform)
 	var platforms = [
-		'Windows',
+		#'Windows',
 		'Android',
 		'ios'
-		
 	]
 	for p in platforms:
 		if p == platform:
